@@ -45,7 +45,7 @@ export default function SetupPage() {
             <span className={styles.heroTitleAccent}> Setup</span>
           </h1>
           <p className={styles.heroSubtitle}>
-            Your AI-powered workflow for writing tickets, specs, and documentation
+            A Designer in your pocket — powered by buycycle&apos;s design system
           </p>
           <div className={styles.heroMeta}>
             <div className={styles.metaItem}>
