@@ -19,7 +19,7 @@
 
 .progressFill {
   width: 100%;
-  background: var(--content-primary);
+  background: var(--bg-accent-green);
   border-radius: 100px;
   transition: height 100ms ease-out;
 }
@@ -55,8 +55,8 @@
 }
 
 .section.active .number {
-  background: var(--content-primary);
-  color: var(--content-primary-reverse);
+  background: var(--bg-accent-green);
+  color: var(--content-accent-green);
 }
 
 .number {

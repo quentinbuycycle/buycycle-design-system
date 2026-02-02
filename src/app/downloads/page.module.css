@@ -3,6 +3,9 @@
   position: relative;
   padding: var(--space-12) var(--space-6) var(--space-8);
   text-align: center;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, var(--bg-accent-yellow), transparent 70%),
+    var(--bg-primary);
 }
 
 .heroContent {
@@ -67,10 +70,10 @@
   justify-content: center;
   width: 48px;
   height: 48px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-tertiary);
+  background: var(--bg-accent-green);
+  border: 1px solid var(--border-accent-green);
   border-radius: 6px;
-  color: var(--content-primary);
+  color: var(--content-accent-green);
   flex-shrink: 0;
 }
 
@@ -149,9 +152,9 @@
   color: var(--content-primary);
 }
 
-/* Links - Tertiary button pattern */
+/* Links - Tertiary button pattern with accent */
 .link {
-  color: var(--content-primary);
+  color: var(--content-information);
   text-decoration: underline;
   font-weight: var(--font-regular);
   transition: all var(--transition-fast);

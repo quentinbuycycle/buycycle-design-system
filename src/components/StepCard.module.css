@@ -27,19 +27,25 @@
   flex-shrink: 0;
   width: 44px;
   height: 44px;
-  background: var(--bg-quartenary);
-  border: 1px solid var(--border-tertiary);
+  background: var(--bg-accent-green);
+  border: 1px solid var(--border-accent-green);
   border-radius: 6px;
-  color: var(--content-primary);
+  color: var(--content-accent-green);
   font-family: var(--font-primary);
   font-size: var(--text-base);
   font-weight: var(--font-bold);
+  transition: all var(--transition-base);
+}
+
+.card:hover .numberBadge {
+  background: var(--content-accent-green);
+  color: var(--bg-accent-green);
 }
 
 .numberBadge svg {
   width: 20px;
   height: 20px;
-  color: var(--content-primary);
+  color: currentColor;
 }
 
 .titleGroup {

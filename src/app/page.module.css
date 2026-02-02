@@ -7,6 +7,9 @@
   justify-content: center;
   padding: var(--space-12) var(--space-6);
   overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, var(--bg-accent-green), transparent 70%),
+    var(--bg-primary);
 }
 
 .heroContent {
@@ -33,18 +36,19 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-1) var(--space-3);
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-secondary);
+  background: var(--bg-accent-green);
+  border: 1px solid var(--border-accent-green);
   border-radius: 100px;
   font-size: var(--text-sm);
-  color: var(--content-tertiary);
+  color: var(--content-accent-green);
+  font-weight: var(--font-medium);
   margin-bottom: var(--space-6);
 }
 
 .badgeDot {
   width: 6px;
   height: 6px;
-  background: var(--content-positive);
+  background: var(--content-accent-green);
   border-radius: 50%;
   animation: pulse 2s ease-in-out infinite;
 }
@@ -64,7 +68,20 @@
 }
 
 .heroTitleAccent {
-  color: var(--content-primary);
+  position: relative;
+  display: inline-block;
+}
+
+.heroTitleAccent::after {
+  content: '';
+  position: absolute;
+  bottom: 0.1em;
+  left: 0;
+  right: 0;
+  height: 0.3em;
+  background: var(--bg-accent-yellow);
+  z-index: -1;
+  border-radius: 2px;
 }
 
 .heroSubtitle {
@@ -90,7 +107,7 @@
 }
 
 .metaItem svg {
-  color: var(--content-primary);
+  color: var(--content-accent-green);
 }
 
 /* Container */
@@ -112,9 +129,9 @@
   gap: var(--space-8);
 }
 
-/* Links - Tertiary button pattern */
+/* Links - Tertiary button pattern with accent */
 .link {
-  color: var(--content-primary);
+  color: var(--content-information);
   text-decoration: underline;
   font-weight: var(--font-regular);
   transition: all var(--transition-fast);
@@ -124,21 +141,32 @@
   font-weight: var(--font-medium);
 }
 
-/* Tips and Notes */
-.tip,
+/* Tips - using accent yellow for visual pop */
+.tip {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: var(--bg-accent-yellow);
+  border: 1px solid var(--border-accent-yellow);
+  border-left: 3px solid var(--content-accent-yellow);
+  border-radius: 6px;
+  font-size: var(--text-sm);
+  color: var(--content-accent-yellow);
+}
+
+.tip strong {
+  color: var(--content-accent-yellow);
+}
+
+/* Notes - using information blue for important info */
 .note {
   margin-top: var(--space-4);
   padding: var(--space-4);
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-tertiary);
+  background: var(--bg-information);
+  border: 1px solid var(--border-information);
+  border-left: 3px solid var(--content-information);
   border-radius: 6px;
   font-size: var(--text-sm);
-  color: var(--content-secondary);
-}
-
-.note {
-  background: var(--bg-tertiary);
-  border-color: var(--border-secondary);
+  color: var(--content-information);
 }
 
 /* Shortcuts Card */
@@ -160,7 +188,9 @@
 /* Reference Section */
 .referenceSection {
   padding: var(--space-12) 0;
-  background: var(--bg-secondary);
+  background:
+    linear-gradient(135deg, var(--bg-accent-green) 0%, transparent 50%),
+    var(--bg-secondary);
   border-top: 1px solid var(--border-tertiary);
   border-bottom: 1px solid var(--border-tertiary);
 }
@@ -170,6 +200,7 @@
   background: var(--bg-tertiary);
   border: 1px solid var(--border-tertiary);
   border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
 .referenceTitle {

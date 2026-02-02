@@ -61,6 +61,16 @@
   --border-tertiary: #EAEAEA;
   --border-quartenary: #D0D0D0;
   --border-primary-reverse: #FCFCFC;
+  --border-positive: #146C43;
+  --border-information: #1D4ED8;
+  --border-accent-green: #DAFDA0;
+  --border-accent-yellow: #FDFDA0;
+
+  /* Accent Colors */
+  --bg-accent-green: #DAFDA0;
+  --bg-accent-yellow: #FDFDA0;
+  --content-accent-green: #2F4B02;
+  --content-accent-yellow: #4B4B02;
 
   /* Spacing Scale (4px grid) */
   --space-1: 4px;
@@ -102,10 +112,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Selection */
+/* Selection - using accent green for brand presence */
 ::selection {
-  background: var(--bg-quartenary);
-  color: var(--content-primary);
+  background: var(--bg-accent-green);
+  color: var(--content-accent-green);
 }
 
 /* Scrollbar */
