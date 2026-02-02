@@ -2,49 +2,25 @@ import { VersionCard } from "@/components";
 import styles from "./page.module.css";
 import Link from "next/link";
 
-// Placeholder versions - replace {{PLACEHOLDERS}} with actual values
-const DESIGN_SYSTEM_VERSION = "{{DESIGN_SYSTEM_VERSION}}";
-const COMMANDS_VERSION = "{{COMMANDS_VERSION}}";
-const DESIGN_SYSTEM_DOWNLOAD_URL = "{{DESIGN_SYSTEM_DOWNLOAD_URL}}";
-const COMMANDS_DOWNLOAD_URL = "{{COMMANDS_DOWNLOAD_URL}}";
+// Version configuration
+const DESIGN_SYSTEM_VERSION = "v1.0.0";
+const COMMANDS_VERSION = "Coming soon";
+const DESIGN_SYSTEM_DOWNLOAD_URL = "https://github.com/quentinbuycycle/buycycle-design-system/releases/download/v1.0.0/design-system-v1.0.0.zip";
+const COMMANDS_DOWNLOAD_URL = "#commands-coming-soon";
 
 const designSystemVersions = [
   {
     version: DESIGN_SYSTEM_VERSION,
-    date: "January 2025",
+    date: "February 2026",
     isCurrent: true,
     downloadUrl: DESIGN_SYSTEM_DOWNLOAD_URL,
-    summary: "Latest design tokens with updated component specifications.",
+    summary: "Initial release of the buycycle design system for Claude Code.",
     releaseNotes: [
-      { type: "added" as const, text: "New color tokens for dark mode variants" },
-      { type: "added" as const, text: "Typography scale documentation" },
-      { type: "changed" as const, text: "Updated spacing system to 4px base grid" },
-      { type: "fixed" as const, text: "Button component hover state inconsistencies" },
-    ],
-  },
-  {
-    version: "v2.0.0",
-    date: "December 2024",
-    isCurrent: false,
-    downloadUrl: "#",
-    summary: "Major update with new component library structure.",
-    releaseNotes: [
-      { type: "added" as const, text: "Complete component library documentation" },
-      { type: "added" as const, text: "Figma integration tokens" },
-      { type: "changed" as const, text: "Restructured file organization" },
-      { type: "removed" as const, text: "Deprecated v1 token format" },
-    ],
-  },
-  {
-    version: "v1.5.0",
-    date: "November 2024",
-    isCurrent: false,
-    downloadUrl: "#",
-    summary: "Enhanced form components and input patterns.",
-    releaseNotes: [
-      { type: "added" as const, text: "Form validation patterns" },
-      { type: "added" as const, text: "Input component variants" },
-      { type: "fixed" as const, text: "Select dropdown z-index issues" },
+      { type: "added" as const, text: "CLAUDE.md configuration file" },
+      { type: "added" as const, text: "Complete component documentation (buttons, inputs, navigation, cards)" },
+      { type: "added" as const, text: "Color tokens with semantic naming" },
+      { type: "added" as const, text: "Typography scale and spacing system (4px grid)" },
+      { type: "added" as const, text: "UX patterns and guidelines" },
     ],
   },
 ];
@@ -52,38 +28,14 @@ const designSystemVersions = [
 const commandsVersions = [
   {
     version: COMMANDS_VERSION,
-    date: "January 2025",
+    date: "TBD",
     isCurrent: true,
     downloadUrl: COMMANDS_DOWNLOAD_URL,
-    summary: "New commands for ticket writing and spec generation.",
+    summary: "Custom slash commands for ticket writing, specs, and design reviews.",
     releaseNotes: [
       { type: "added" as const, text: "/ticket command for structured ticket creation" },
       { type: "added" as const, text: "/spec command for technical specifications" },
       { type: "added" as const, text: "/review command for design reviews" },
-      { type: "changed" as const, text: "Improved prompts for better output quality" },
-    ],
-  },
-  {
-    version: "v1.1.0",
-    date: "December 2024",
-    isCurrent: false,
-    downloadUrl: "#",
-    summary: "Added documentation generation commands.",
-    releaseNotes: [
-      { type: "added" as const, text: "/docs command for API documentation" },
-      { type: "added" as const, text: "/changelog command for release notes" },
-      { type: "fixed" as const, text: "Template variable substitution" },
-    ],
-  },
-  {
-    version: "v1.0.0",
-    date: "November 2024",
-    isCurrent: false,
-    downloadUrl: "#",
-    summary: "Initial release with core commands.",
-    releaseNotes: [
-      { type: "added" as const, text: "Basic ticket template" },
-      { type: "added" as const, text: "Component documentation template" },
     ],
   },
 ];
