@@ -4,9 +4,9 @@ import Link from "next/link";
 
 // Version configuration
 const DESIGN_SYSTEM_VERSION = "v1.0.0";
-const COMMANDS_VERSION = "Coming soon";
+const COMMANDS_VERSION = "v1.0.0";
 const DESIGN_SYSTEM_DOWNLOAD_URL = "https://github.com/quentinbuycycle/buycycle-design-system/releases/download/v1.0.0/design-system-v1.0.0.zip";
-const COMMANDS_DOWNLOAD_URL = "#commands-coming-soon";
+const COMMANDS_DOWNLOAD_URL = "https://github.com/quentinbuycycle/buycycle-design-system/releases/download/commands-v1.0.0/commands-v1.0.0.zip";
 
 const designSystemVersions = [
   {
@@ -28,7 +28,7 @@ const designSystemVersions = [
 const commandsVersions = [
   {
     version: COMMANDS_VERSION,
-    date: "TBD",
+    date: "February 2026",
     isCurrent: true,
     downloadUrl: COMMANDS_DOWNLOAD_URL,
     summary: "Custom slash commands for ticket writing, specs, and design reviews.",
