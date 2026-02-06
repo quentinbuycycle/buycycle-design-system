@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Explore</title>
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #FCFCFC;
+      --bg-secondary: #F3F3F3;
+      --bg-tertiary: #FFFFFF;
+      --bg-quartenary: #EAEAEA;
+      --bg-category: #F0F0F0;
+      --border-primary: #090907;
+      --border-tertiary: #EAEAEA;
+      --border-quartenary: #D0D0D0;
+      --content-primary: #090907;
+      --content-secondary: #333333;
+      --content-tertiary: #535353;
+      --content-quartenary: #A9A9A9;
+    }
+
+    body {
+      font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+      background: #e5e5e5;
+      display: flex;
+      justify-content: center;
+    }
+
+    .phone-frame {
+      width: 390px;
+      background: var(--bg-primary);
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Screens ── */
+    .screen {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      min-height: 100%;
+      background: var(--bg-primary);
+      transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    /* Screen 1 is the base layer — relative so it sets phone-frame height */
+    #screen-explore {
+      position: relative;
+      transform: none;
+    }
+
+    /* Screen 2 slides in from right */
+    #screen-search {
+      transform: translateX(100%);
+    }
+    #screen-search.active {
+      transform: translateX(0);
+    }
+
+    /* Screen 3 slides in from bottom */
+    #screen-filters {
+      transform: translateY(100%);
+    }
+    #screen-filters.active {
+      transform: translateY(0);
+    }
+
+    /* ══════════════════════════════════════
+       SCREEN 1: Explore
+       ══════════════════════════════════════ */
+    .screen--explore { gap: 16px; }
+
+    .header {
+      background: var(--bg-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .header-inner {
+      width: 390px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-tertiary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Status Bar (shared) */
+    .status-bar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10.67px 15.52px;
+      gap: 5.82px;
+    }
+
+    .status-bar__time {
+      flex: 1;
+      text-align: center;
+      font-weight: 600;
+      font-size: 16.49px;
+      line-height: 21.34px;
+      color: black;
+    }
+
+    .status-bar__island {
+      width: 121.27px;
+      height: 35.9px;
+      border-radius: 100px;
+    }
+
+    .status-bar__levels {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6.79px;
+    }
+
+    .status-bar__levels svg { display: block; }
+
+    /* Search Bar (screen 1) */
+    .search-bar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 16px 16px;
+    }
+
+    .search-input {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 40px;
+      padding: 10px 16px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-tertiary);
+      border-radius: 6px;
+    }
+
+    .search-input svg { flex-shrink: 0; }
+
+    .search-input span {
+      flex: 1;
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--content-quartenary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .profile-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 150px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .profile-pic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Sub-navigation Tabs */
+    .subnav-wrapper {
+      width: 390px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .subnav-wrapper::-webkit-scrollbar { display: none; }
+
+    .subnav {
+      display: flex;
+      align-items: stretch;
+      white-space: nowrap;
+    }
+
+    .subnav__item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 12px 16px;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-tertiary);
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .subnav__item--active {
+      background: var(--bg-quartenary);
+      border-bottom: 2px solid var(--border-primary);
+    }
+
+    .subnav__item-inner {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .subnav__item-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .subnav__item-icon svg { display: block; }
+
+    .subnav__item-label {
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--content-tertiary);
+    }
+
+    .subnav__item--active .subnav__item-label {
+      color: var(--content-primary);
+    }
+
+    /* Category Row */
+    .categories {
+      display: flex;
+      gap: 12px;
+      padding: 0 16px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .categories::-webkit-scrollbar { display: none; }
+
+    .category-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+      width: 78px;
+      cursor: pointer;
+    }
+
+    .category-item__image {
+      width: 78px;
+      height: 78px;
+      border-radius: 4px;
+      background: var(--bg-category);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .category-item__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .category-item__image--placeholder {
+      background: linear-gradient(224deg, #fff 3.27%, #fff 18.86%, #ededed 37.5%, #fff 52.45%, #f1f1f1 67.96%, #fff 91.64%);
+    }
+
+    .category-item__label {
+      font-size: 12px;
+      line-height: normal;
+      color: var(--content-primary);
+      text-align: center;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ══════════════════════════════════════
+       SCREEN 2: Search / Filters
+       ══════════════════════════════════════ */
+    .header--search {
+      width: 390px;
+      height: 114px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-tertiary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 16px;
+      flex-shrink: 0;
+    }
+
+    .search-row {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 16px;
+    }
+
+    .clear-filters {
+      font-size: 14px;
+      line-height: 21px;
+      color: var(--content-secondary);
+      white-space: nowrap;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+      padding: 16px;
+    }
+
+    /* Related Categories Row */
+    .related-cats {
+      width: calc(100% + 32px);
+      margin-left: -16px;
+      padding-left: 16px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .related-cats::-webkit-scrollbar { display: none; }
+
+    .related-cat {
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      background: var(--bg-secondary);
+      border-radius: 50px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .related-cat__label {
+      font-size: 14px;
+      line-height: 21px;
+      color: var(--content-tertiary);
+      white-space: nowrap;
+    }
+
+    /* Filter + Sort Row */
+    .filters-row {
+      width: calc(100% + 32px);
+      margin-left: -16px;
+      padding-left: 16px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .filters-row::-webkit-scrollbar { display: none; }
+
+    .filter-chip {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 12px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-quartenary);
+      border-radius: 6px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .filter-chip__icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .filter-chip__label {
+      font-size: 14px;
+      line-height: 21px;
+      color: var(--content-primary);
+      white-space: nowrap;
+    }
+
+    .filter-chip--active {
+      background: var(--bg-secondary);
+      border-color: var(--border-primary);
+    }
+
+    .filter-chip__badge {
+      width: 18px;
+      height: 18px;
+      background: black;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .filter-chip__badge span {
+      font-size: 12px;
+      line-height: 18px;
+      color: var(--bg-primary);
+    }
+
+    .results-count {
+      width: 100%;
+      padding: 8px 0;
+    }
+
+    .results-count span {
+      font-size: 12px;
+      line-height: 18px;
+      color: var(--content-tertiary);
+    }
+
+    /* ══════════════════════════════════════
+       SCREEN 3: Filter Panel
+       ══════════════════════════════════════ */
+    .screen--filters {
+      background: var(--bg-secondary);
+    }
+
+    .filter-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .filter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      padding: 16px;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-tertiary);
+      cursor: pointer;
+    }
+
+    .filter-row__label {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 24px;
+      color: var(--content-primary);
+    }
+
+    .filter-row__right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .filter-row__tag {
+      background: var(--bg-quartenary);
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-size: 14px;
+      line-height: 21px;
+      color: var(--content-secondary);
+    }
+
+    .filter-row__chevron {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+
+    <!-- ════════════════════════════════════
+         SCREEN 1: Explore
+         ════════════════════════════════════ -->
+    <div id="screen-explore" class="screen screen--explore active">
+      <div class="header">
+        <div class="header-inner">
+          <div class="status-bar">
+            <div class="status-bar__time">9:41</div>
+            <div class="status-bar__island"></div>
+            <div class="status-bar__levels">
+              <svg width="19" height="12" viewBox="0 0 19 12" fill="none"><rect x="0.5" y="4.5" width="3" height="7" rx="0.5" fill="black"/><rect x="4.5" y="3" width="3" height="8.5" rx="0.5" fill="black"/><rect x="8.5" y="1.5" width="3" height="10" rx="0.5" fill="black"/><rect x="12.5" y="0" width="3" height="11.5" rx="0.5" fill="black"/><rect x="16" y="0" width="3" height="11.5" rx="0.5" fill="black" fill-opacity="0.25"/></svg>
+              <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M8.5 3.2C10.6 3.2 12.5 4 13.9 5.3L15.3 3.9C13.5 2.2 11.1 1.2 8.5 1.2C5.9 1.2 3.5 2.2 1.7 3.9L3.1 5.3C4.5 4 6.4 3.2 8.5 3.2Z" fill="black"/><path d="M8.5 6.4C9.8 6.4 11 6.9 11.9 7.7L13.3 6.3C12 5.1 10.3 4.4 8.5 4.4C6.7 4.4 5 5.1 3.7 6.3L5.1 7.7C6 6.9 7.2 6.4 8.5 6.4Z" fill="black"/><circle cx="8.5" cy="10.5" r="1.5" fill="black"/></svg>
+              <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="2" stroke="black" stroke-opacity="0.35"/><rect x="2" y="2" width="19" height="9" rx="1" fill="black"/><path d="M24 4.5V8.5C24.8 8.2 25.5 7.2 25.5 6.5C25.5 5.8 24.8 4.8 24 4.5Z" fill="black" fill-opacity="0.4"/></svg>
+            </div>
+          </div>
+          <div class="search-bar">
+            <div class="search-input">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#A9A9A9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 21L16.65 16.65" stroke="#A9A9A9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Search</span>
+            </div>
+            <div class="profile-pic">
+              <img src="https://www.figma.com/api/mcp/asset/d003273a-6e60-4dd7-b54c-16beec1ff769" alt="Profile">
+            </div>
+          </div>
+        </div>
+
+        <!-- Sub-navigation -->
+        <div class="subnav-wrapper">
+          <div class="subnav">
+            <div class="subnav__item">
+              <div class="subnav__item-inner">
+                <div class="subnav__item-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6" stroke="#535353" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="12" x2="21" y2="12" stroke="#535353" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="18" x2="21" y2="18" stroke="#535353" stroke-width="2" stroke-linecap="round"/></svg>
+                </div>
+                <span class="subnav__item-label">All</span>
+              </div>
+            </div>
+            <div class="subnav__item">
+              <div class="subnav__item-inner">
+                <div class="subnav__item-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="5.5" cy="16.5" r="3.5" stroke="#535353" stroke-width="1.5"/><circle cx="18.5" cy="16.5" r="3.5" stroke="#535353" stroke-width="1.5"/><path d="M5.5 16.5L9 8H14L18.5 16.5" stroke="#535353" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 8L12 16.5H18.5" stroke="#535353" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 8H16" stroke="#535353" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <span class="subnav__item-label">Bikes</span>
+              </div>
+            </div>
+            <div class="subnav__item subnav__item--active">
+              <div class="subnav__item-inner">
+                <div class="subnav__item-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#090907" stroke-width="1.5"/><path d="M12 2V5" stroke="#090907" stroke-width="1.5" stroke-linecap="round"/><path d="M12 19V22" stroke="#090907" stroke-width="1.5" stroke-linecap="round"/><path d="M2 12H5" stroke="#090907" stroke-width="1.5" stroke-linecap="round"/><path d="M19 12H22" stroke="#090907" stroke-width="1.5" stroke-linecap="round"/><path d="M4.93 4.93L7.05 7.05" stroke="#090907" stroke-width="1.5" stroke-linecap="round"/><path d="M16.95 16.95L19.07 19.07" stroke="#090907" stroke-width="1.5" stroke-linecap="round"/><path d="M4.93 19.07L7.05 16.95" stroke="#090907" stroke-width="1.5" stroke-linecap="round"/><path d="M16.95 7.05L19.07 4.93" stroke="#090907" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <span class="subnav__item-label">Cycling Gear</span>
+              </div>
+            </div>
+            <div class="subnav__item">
+              <div class="subnav__item-inner">
+                <div class="subnav__item-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="14" cy="4" r="2" stroke="#535353" stroke-width="1.5"/><path d="M9 9L11.5 7L14.5 9.5L18 8" stroke="#535353" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5 7L8 13H12L10 21" stroke="#535353" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.5 9.5L17 14L14 16" stroke="#535353" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <span class="subnav__item-label">Running</span>
+              </div>
+            </div>
+            <div class="subnav__item">
+              <div class="subnav__item-inner">
+                <div class="subnav__item-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 20L9 8L15 20" stroke="#535353" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 20L17 10L21 20" stroke="#535353" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17" cy="6" r="2" stroke="#535353" stroke-width="1.5"/></svg>
+                </div>
+                <span class="subnav__item-label">Outdoor</span>
+              </div>
+            </div>
+            <div class="subnav__item">
+              <div class="subnav__item-inner">
+                <div class="subnav__item-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><line x1="12" y1="2" x2="12" y2="22" stroke="#535353" stroke-width="1.5" stroke-linecap="round"/><line x1="2" y1="12" x2="22" y2="12" stroke="#535353" stroke-width="1.5" stroke-linecap="round"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" stroke="#535353" stroke-width="1.5" stroke-linecap="round"/><line x1="19.07" y1="4.93" x2="4.93" y2="19.07" stroke="#535353" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <span class="subnav__item-label">Winter Sports</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Items -->
+      <div class="categories">
+        <div class="category-item" onclick="showScreen('search')">
+          <div class="category-item__image category-item__image--placeholder">
+            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=156&h=156&fit=crop" alt="Clothing" style="mix-blend-mode: multiply;">
+          </div>
+          <span class="category-item__label">Clothing</span>
+        </div>
+        <div class="category-item" onclick="showScreen('search')">
+          <div class="category-item__image category-item__image--placeholder">
+            <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=156&h=156&fit=crop" alt="Accessories" style="mix-blend-mode: multiply;">
+          </div>
+          <span class="category-item__label">Accessories</span>
+        </div>
+        <div class="category-item" onclick="showScreen('search')">
+          <div class="category-item__image category-item__image--placeholder">
+            <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=156&h=156&fit=crop" alt="Shoes" style="mix-blend-mode: multiply;">
+          </div>
+          <span class="category-item__label">Shoes</span>
+        </div>
+        <div class="category-item" onclick="showScreen('search')">
+          <div class="category-item__image">
+            <img src="https://www.figma.com/api/mcp/asset/731cb5e8-4361-469c-99d2-132e5a5156e1" alt="Fork">
+          </div>
+          <span class="category-item__label">Fork</span>
+        </div>
+        <div class="category-item" onclick="showScreen('search')">
+          <div class="category-item__image">
+            <img src="https://www.figma.com/api/mcp/asset/b3a438b5-80ea-4ee2-90ad-95ff0c203134" alt="Drivetrain & Pedals">
+          </div>
+          <span class="category-item__label">Drivetrain & Pedals</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         SCREEN 2: Search / Filters Selected
+         ════════════════════════════════════ -->
+    <div id="screen-search" class="screen">
+      <div class="header--search">
+        <div class="status-bar">
+          <div class="status-bar__time">9:41</div>
+          <div class="status-bar__island"></div>
+          <div class="status-bar__levels">
+            <svg width="19" height="12" viewBox="0 0 19 12" fill="none"><rect x="0.5" y="4.5" width="3" height="7" rx="0.5" fill="black"/><rect x="4.5" y="3" width="3" height="8.5" rx="0.5" fill="black"/><rect x="8.5" y="1.5" width="3" height="10" rx="0.5" fill="black"/><rect x="12.5" y="0" width="3" height="11.5" rx="0.5" fill="black"/><rect x="16" y="0" width="3" height="11.5" rx="0.5" fill="black" fill-opacity="0.25"/></svg>
+            <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M8.5 3.2C10.6 3.2 12.5 4 13.9 5.3L15.3 3.9C13.5 2.2 11.1 1.2 8.5 1.2C5.9 1.2 3.5 2.2 1.7 3.9L3.1 5.3C4.5 4 6.4 3.2 8.5 3.2Z" fill="black"/><path d="M8.5 6.4C9.8 6.4 11 6.9 11.9 7.7L13.3 6.3C12 5.1 10.3 4.4 8.5 4.4C6.7 4.4 5 5.1 3.7 6.3L5.1 7.7C6 6.9 7.2 6.4 8.5 6.4Z" fill="black"/><circle cx="8.5" cy="10.5" r="1.5" fill="black"/></svg>
+            <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="2" stroke="black" stroke-opacity="0.35"/><rect x="2" y="2" width="19" height="9" rx="1" fill="black"/><path d="M24 4.5V8.5C24.8 8.2 25.5 7.2 25.5 6.5C25.5 5.8 24.8 4.8 24 4.5Z" fill="black" fill-opacity="0.4"/></svg>
+          </div>
+        </div>
+        <div class="search-row">
+          <div class="search-input">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#A9A9A9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 21L16.65 16.65" stroke="#A9A9A9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Search in wheels</span>
+          </div>
+          <span class="clear-filters" onclick="showScreen('explore')">Clear filters</span>
+        </div>
+      </div>
+
+      <div class="content">
+        <!-- Related Categories -->
+        <div class="related-cats" id="related-cats">
+          <div class="related-cat" onclick="selectCategory('Computers')">
+            <span class="related-cat__label">Computers</span>
+          </div>
+          <div class="related-cat" onclick="selectCategory('Locks')">
+            <span class="related-cat__label">Locks</span>
+          </div>
+          <div class="related-cat" onclick="selectCategory('Lights')">
+            <span class="related-cat__label">Lights</span>
+          </div>
+          <div class="related-cat" onclick="selectCategory('Glasses')">
+            <span class="related-cat__label">Glasses</span>
+          </div>
+          <div class="related-cat" onclick="selectCategory('Helmets')">
+            <span class="related-cat__label">Helmets</span>
+          </div>
+          <div class="related-cat" onclick="selectCategory('Trainers')">
+            <span class="related-cat__label">Trainers</span>
+          </div>
+          <div class="related-cat" onclick="selectCategory('Batteries')">
+            <span class="related-cat__label">Batteries</span>
+          </div>
+          <div class="related-cat" onclick="selectCategory('Bells')">
+            <span class="related-cat__label">Bells</span>
+          </div>
+        </div>
+
+        <!-- Filter + Sort Row -->
+        <div class="filters-row">
+          <div class="filter-chip" onclick="showScreen('filters')">
+            <div class="filter-chip__icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2.5 4H17.5" stroke="#090907" stroke-width="1.5" stroke-linecap="round"/><path d="M5 10H15" stroke="#090907" stroke-width="1.5" stroke-linecap="round"/><path d="M7.5 16H12.5" stroke="#090907" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <span class="filter-chip__label">Filter</span>
+          </div>
+          <div class="filter-chip">
+            <span class="filter-chip__label">Sort by</span>
+          </div>
+          <div class="filter-chip filter-chip--active">
+            <span class="filter-chip__label">Category</span>
+            <div class="filter-chip__badge"><span>1</span></div>
+          </div>
+          <div class="filter-chip">
+            <span class="filter-chip__label">Condition</span>
+          </div>
+        </div>
+
+        <!-- Results Count -->
+        <div class="results-count">
+          <span id="results-count">21 results</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         SCREEN 3: Filter Panel
+         ════════════════════════════════════ -->
+    <div id="screen-filters" class="screen screen--filters">
+      <div class="header--search">
+        <div class="status-bar">
+          <div class="status-bar__time">9:41</div>
+          <div class="status-bar__island"></div>
+          <div class="status-bar__levels">
+            <svg width="19" height="12" viewBox="0 0 19 12" fill="none"><rect x="0.5" y="4.5" width="3" height="7" rx="0.5" fill="black"/><rect x="4.5" y="3" width="3" height="8.5" rx="0.5" fill="black"/><rect x="8.5" y="1.5" width="3" height="10" rx="0.5" fill="black"/><rect x="12.5" y="0" width="3" height="11.5" rx="0.5" fill="black"/><rect x="16" y="0" width="3" height="11.5" rx="0.5" fill="black" fill-opacity="0.25"/></svg>
+            <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M8.5 3.2C10.6 3.2 12.5 4 13.9 5.3L15.3 3.9C13.5 2.2 11.1 1.2 8.5 1.2C5.9 1.2 3.5 2.2 1.7 3.9L3.1 5.3C4.5 4 6.4 3.2 8.5 3.2Z" fill="black"/><path d="M8.5 6.4C9.8 6.4 11 6.9 11.9 7.7L13.3 6.3C12 5.1 10.3 4.4 8.5 4.4C6.7 4.4 5 5.1 3.7 6.3L5.1 7.7C6 6.9 7.2 6.4 8.5 6.4Z" fill="black"/><circle cx="8.5" cy="10.5" r="1.5" fill="black"/></svg>
+            <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="2" stroke="black" stroke-opacity="0.35"/><rect x="2" y="2" width="19" height="9" rx="1" fill="black"/><path d="M24 4.5V8.5C24.8 8.2 25.5 7.2 25.5 6.5C25.5 5.8 24.8 4.8 24 4.5Z" fill="black" fill-opacity="0.4"/></svg>
+          </div>
+        </div>
+        <div class="search-row">
+          <div class="search-input">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#A9A9A9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 21L16.65 16.65" stroke="#A9A9A9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Search</span>
+          </div>
+          <span class="clear-filters" onclick="showScreen('search')">Clear All</span>
+        </div>
+      </div>
+
+      <div class="filter-list">
+        <!-- Category (with value) -->
+        <div class="filter-row">
+          <span class="filter-row__label">Category</span>
+          <div class="filter-row__right">
+            <span class="filter-row__tag" id="filter-category-tag">Accessories</span>
+            <div class="filter-row__chevron">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12H19" stroke="#090907" stroke-width="1.5" stroke-linecap="round"/><path d="M12 5L19 12L12 19" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Other filters -->
+        <div class="filter-group">
+          <div class="filter-row">
+            <span class="filter-row__label">Price</span>
+            <div class="filter-row__chevron">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 6L15 12L9 18" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="filter-row">
+            <span class="filter-row__label">Brands</span>
+            <div class="filter-row__chevron">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 6L15 12L9 18" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="filter-row">
+            <span class="filter-row__label">Location</span>
+            <div class="filter-row__chevron">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 6L15 12L9 18" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="filter-row">
+            <span class="filter-row__label">Year</span>
+            <div class="filter-row__chevron">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 6L15 12L9 18" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="filter-row">
+            <span class="filter-row__label">Condition</span>
+            <div class="filter-row__chevron">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 6L15 12L9 18" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="filter-row">
+            <span class="filter-row__label">Seller type</span>
+            <div class="filter-row__chevron">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 6L15 12L9 18" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let selectedCategory = 'Accessories';
+
+    function showScreen(name) {
+      if (name === 'explore') {
+        // Going back to explore — slide everything away
+        document.getElementById('screen-search').classList.remove('active');
+        document.getElementById('screen-filters').classList.remove('active');
+      } else if (name === 'search') {
+        // Could be navigating forward from explore, or back from filters
+        document.getElementById('screen-filters').classList.remove('active');
+        document.getElementById('screen-search').classList.add('active');
+      } else if (name === 'filters') {
+        // Slide filters up over search
+        document.getElementById('screen-filters').classList.add('active');
+      }
+    }
+
+    function selectCategory(name) {
+      const prev = selectedCategory;
+      selectedCategory = name;
+
+      // Update chip visibility
+      document.querySelectorAll('#related-cats .related-cat').forEach(chip => {
+        const label = chip.querySelector('.related-cat__label').textContent;
+        chip.style.display = (label === name) ? 'none' : '';
+      });
+
+      // Update filter tag on Screen 3
+      document.getElementById('filter-category-tag').textContent = name;
+
+      // Update results count with a random number
+      const count = Math.floor(Math.random() * 80) + 3;
+      document.getElementById('results-count').textContent = count + ' results';
+    }
+
+    // Hide "Accessories" chip on init (it's the default selected category)
+    // Accessories isn't in the related cats, so no chip to hide initially.
+  </script>
+</body>
+</html>
