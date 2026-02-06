@@ -124,6 +124,16 @@
   transform: scale(0.97);
 }
 
+.superseded {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--content-quartenary);
+  font-style: italic;
+}
+
 .summary {
   margin: var(--space-4) 0 0;
   color: var(--content-secondary);

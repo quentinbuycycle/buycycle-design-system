@@ -41,7 +41,8 @@ const commandsVersions = [
     version: "v1.0.0",
     date: "February 2026",
     isCurrent: false,
-    downloadUrl: "https://github.com/quentinbuycycle/buycycle-design-system/releases/download/commands-v1.0.0/commands-v1.0.0.zip",
+    downloadUrl: "",
+    supersededBy: "v1.0.1",
     summary: "Custom slash commands for ticket writing, specs, and design reviews.",
     releaseNotes: [
       { type: "added" as const, text: "/ticket command for structured ticket creation" },

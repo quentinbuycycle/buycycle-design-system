@@ -13,6 +13,7 @@ interface VersionCardProps {
   date: string;
   isCurrent?: boolean;
   downloadUrl: string;
+  supersededBy?: string;
   releaseNotes: ReleaseNote[];
   summary?: string;
 }
@@ -22,6 +23,7 @@ export function VersionCard({
   date,
   isCurrent = false,
   downloadUrl,
+  supersededBy,
   releaseNotes,
   summary,
 }: VersionCardProps) {
@@ -63,14 +65,18 @@ export function VersionCard({
               <polyline points="6 9 12 15 18 9" />
             </svg>
           </button>
-          <a href={downloadUrl} className={styles.downloadButton}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            <span>Download</span>
-          </a>
+          {supersededBy ? (
+            <span className={styles.superseded}>Superseded by {supersededBy}</span>
+          ) : (
+            <a href={downloadUrl} className={styles.downloadButton}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span>Download</span>
+            </a>
+          )}
         </div>
       </div>
 
