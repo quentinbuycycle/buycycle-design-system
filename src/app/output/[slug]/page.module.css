@@ -177,11 +177,18 @@
   color: var(--content-secondary);
 }
 
-.prose ul,
+.prose ul {
+  margin: 0 0 var(--space-4);
+  padding-left: var(--space-6);
+  color: var(--content-secondary);
+  list-style-type: disc;
+}
+
 .prose ol {
   margin: 0 0 var(--space-4);
   padding-left: var(--space-6);
   color: var(--content-secondary);
+  list-style-type: decimal;
 }
 
 .prose li {
