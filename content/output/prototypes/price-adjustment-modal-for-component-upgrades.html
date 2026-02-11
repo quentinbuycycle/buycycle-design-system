@@ -1,1 +1,1152 @@
-<html></html>
+<!-- AGENTS.MD READ SUCCESSFULLY -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Price Adjustment Modal - Bike Upload Flow</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Neue Haas Grotesk Text Pro', -apple-system, BlinkMacSystemFont, sans-serif; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // ==================== RESPONSIVE HOOK ====================
+    const useIsMobile = (breakpoint = 768) => {
+      const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
+      useEffect(() => {
+        const handler = () => setIsMobile(window.innerWidth < breakpoint);
+        window.addEventListener('resize', handler);
+        return () => window.removeEventListener('resize', handler);
+      }, [breakpoint]);
+      return isMobile;
+    };
+
+    // ==================== DESIGN TOKENS ====================
+    const tokens = {
+      colors: {
+        background: {
+          primary: '#FCFCFC',
+          secondary: '#F3F3F3',
+          tertiary: '#FFFFFF',
+          quaternary: '#EAEAEA',
+          reverse: '#090907',
+          overlay: 'rgba(9, 9, 7, 0.5)',
+          backgroundPositive: '#E8F8F0',
+        },
+        content: {
+          primary: '#090907',
+          secondary: '#333333',
+          tertiary: '#535353',
+          quaternary: '#A9A9A9',
+          reverse: '#FCFCFC',
+          alert: '#B91C1C',
+          contentPositive: '#146C43',
+        },
+        border: {
+          primary: '#090907',
+          secondary: '#757575',
+          tertiary: '#EAEAEA',
+          quaternary: '#D0D0D0',
+          alert: '#B91C1C',
+        }
+      },
+      typography: {
+        fontFamily: "'Neue Haas Grotesk Text Pro', -apple-system, BlinkMacSystemFont, sans-serif",
+      },
+      spacing: {
+        1: '4px',
+        2: '8px',
+        3: '12px',
+        4: '16px',
+        6: '24px',
+        8: '32px',
+        12: '48px',
+      },
+      breakpoints: {
+        modal: '480px',
+      }
+    };
+
+    // ==================== ICONS ====================
+    const IconClose = ({ color = tokens.colors.content.primary, size = 24 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+        <path d="M18 6L6 18M6 6L18 18" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    );
+
+    const IconEdit = ({ color = tokens.colors.content.primary, size = 20 }) => (
+      <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
+        <path d="M14.17 3.03a2.5 2.5 0 1 1 3.54 3.54L6.5 17.78l-4.72 1.18 1.18-4.72L14.17 3.03z" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    );
+
+    const IconCheck = ({ color = '#FFFFFF', size = 24 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+        <path d="M20 6L9 17L4 12" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    );
+
+    // ==================== HELPER FUNCTIONS ====================
+    const formatPrice = (price) => {
+      if (!price && price !== 0) return '';
+      return new Intl.NumberFormat('de-DE').format(price);
+    };
+
+    // ==================== TOAST COMPONENT ====================
+    const Toast = ({ message, onClose }) => {
+      const [isVisible, setIsVisible] = useState(true);
+
+      useEffect(() => {
+        const timer = setTimeout(() => {
+          setIsVisible(false);
+          if (onClose) onClose();
+        }, 3000); // Auto-close after 3 seconds
+        return () => clearTimeout(timer);
+      }, [onClose]);
+
+      if (!isVisible) return null;
+
+      return (
+        <div
+          style={{
+            position: 'fixed',
+            top: '24px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 2000,
+            width: '100%',
+            maxWidth: '826px',
+            padding: '0 16px',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div
+            role="alert"
+            aria-live="polite"
+            style={{
+              display: 'flex',
+              alignItems: 'start',
+              width: '100%',
+              padding: '8px 16px',
+              paddingLeft: '10px',
+              background: tokens.colors.background.backgroundPositive,
+              borderLeft: `6px solid ${tokens.colors.content.contentPositive}`,
+              boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.08)',
+              fontFamily: tokens.typography.fontFamily,
+              boxSizing: 'border-box',
+            }}
+          >
+            <div style={{
+              display: 'flex',
+              alignItems: 'start',
+              gap: '20px',
+              flex: 1,
+            }}>
+              <div style={{
+                width: '34px',
+                height: '34px',
+                minWidth: '34px',
+                background: tokens.colors.content.contentPositive,
+                borderRadius: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                <IconCheck color={tokens.colors.content.reverse} size={24} />
+              </div>
+              <div style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '16px',
+              }}>
+                <div style={{
+                  fontSize: '16px',
+                  lineHeight: '24px',
+                  color: tokens.colors.content.contentPositive,
+                  flex: 1,
+                }}>
+                  {message}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ==================== SHARED COMPONENTS ====================
+    const Modal = ({ children, onClose, title }) => {
+      const isMobile = useIsMobile();
+
+      return (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: tokens.colors.background.overlay,
+            display: 'flex',
+            alignItems: isMobile ? 'flex-end' : 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: isMobile ? 0 : tokens.spacing[4],
+          }}
+          onClick={onClose}
+        >
+          <div
+            style={{
+              width: '100%',
+              maxWidth: isMobile ? '100%' : tokens.breakpoints.modal,
+              maxHeight: isMobile ? '95vh' : '90vh',
+              backgroundColor: tokens.colors.background.tertiary,
+              borderRadius: isMobile ? '12px 12px 0 0' : '12px',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden',
+              fontFamily: tokens.typography.fontFamily,
+              position: 'relative',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: `${tokens.spacing[4]} ${tokens.spacing[6]}`,
+            borderBottom: `1px solid ${tokens.colors.border.tertiary}`,
+          }}>
+            <h2 style={{
+              fontSize: '24px',
+              fontWeight: 500,
+              color: tokens.colors.content.primary,
+              fontFamily: tokens.typography.fontFamily,
+              margin: 0,
+            }}>
+              {title}
+            </h2>
+            <button
+              onClick={onClose}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: '4px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '4px'
+              }}
+              aria-label="Close"
+            >
+              <IconClose />
+            </button>
+          </div>
+          <div style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: `${tokens.spacing[6]} ${tokens.spacing[6]} ${tokens.spacing[8]}`
+          }}>
+            {children}
+          </div>
+        </div>
+      </div>
+      );
+    };
+
+    const PrimaryButton = ({ label, onClick, disabled, fullWidth = true, type = 'button' }) => (
+      <button
+        type={type}
+        onClick={onClick}
+        disabled={disabled}
+        style={{
+          width: fullWidth ? '100%' : 'auto',
+          height: '48px',
+          padding: '12px 16px',
+          backgroundColor: disabled ? tokens.colors.background.quaternary : tokens.colors.content.primary,
+          color: disabled ? tokens.colors.content.tertiary : tokens.colors.content.reverse,
+          border: 'none',
+          borderRadius: '6px',
+          fontSize: '16px',
+          fontWeight: 400,
+          lineHeight: '24px',
+          fontFamily: tokens.typography.fontFamily,
+          cursor: disabled ? 'not-allowed' : 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          transition: 'background-color 150ms ease',
+          boxSizing: 'border-box',
+        }}
+      >
+        {label}
+      </button>
+    );
+
+    const SecondaryButton = ({ label, onClick, disabled, fullWidth = true }) => (
+      <button
+        onClick={onClick}
+        disabled={disabled}
+        style={{
+          width: fullWidth ? '100%' : 'auto',
+          height: '48px',
+          padding: '12px 16px',
+          backgroundColor: 'transparent',
+          color: disabled ? tokens.colors.content.tertiary : tokens.colors.content.primary,
+          border: `1px solid ${disabled ? tokens.colors.border.tertiary : tokens.colors.border.secondary}`,
+          borderRadius: '6px',
+          fontSize: '16px',
+          fontWeight: 400,
+          lineHeight: '24px',
+          fontFamily: tokens.typography.fontFamily,
+          cursor: disabled ? 'not-allowed' : 'pointer',
+          transition: 'background-color 150ms ease',
+          boxSizing: 'border-box',
+        }}
+      >
+        {label}
+      </button>
+    );
+
+    // ==================== COMPONENT EDIT MODAL ====================
+    const RadioButton = ({ checked, label, onChange }) => (
+      <label style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: tokens.spacing[3],
+        cursor: 'pointer',
+        padding: tokens.spacing[4],
+        backgroundColor: checked ? tokens.colors.background.secondary : tokens.colors.background.tertiary,
+        border: `1px solid ${checked ? tokens.colors.border.secondary : tokens.colors.border.tertiary}`,
+        borderRadius: '8px',
+        transition: 'all 150ms ease',
+      }}>
+        <div style={{
+          width: '20px',
+          height: '20px',
+          minWidth: '20px',
+          borderRadius: '50%',
+          border: `2px solid ${checked ? tokens.colors.content.primary : tokens.colors.border.quaternary}`,
+          backgroundColor: checked ? tokens.colors.content.primary : 'transparent',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          transition: 'all 150ms ease',
+        }}>
+          {checked && (
+            <div style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              backgroundColor: tokens.colors.content.reverse,
+            }} />
+          )}
+        </div>
+        <input
+          type="radio"
+          checked={checked}
+          onChange={onChange}
+          style={{ display: 'none' }}
+        />
+        <span style={{
+          fontSize: '16px',
+          fontWeight: 400,
+          color: tokens.colors.content.primary,
+          fontFamily: tokens.typography.fontFamily,
+        }}>{label}</span>
+      </label>
+    );
+
+    const ComponentEditModal = ({ componentName, initialValue, onUpdate, onClose }) => {
+      const [componentValue, setComponentValue] = useState(initialValue);
+      const [status, setStatus] = useState('changed');
+
+      const handleUpdate = () => {
+        onUpdate(componentValue, status);
+      };
+
+      const handleReset = () => {
+        setComponentValue(initialValue);
+        setStatus('changed');
+      };
+
+      return (
+        <Modal onClose={onClose} title={`${componentName} ✨`}>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: tokens.spacing[3],
+            marginBottom: tokens.spacing[6],
+          }}>
+            <RadioButton
+              checked={status === 'broken'}
+              label="Broken"
+              onChange={() => setStatus('broken')}
+            />
+            <RadioButton
+              checked={status === 'changed'}
+              label="Changed"
+              onChange={() => setStatus('changed')}
+            />
+          </div>
+
+          <div style={{ marginBottom: tokens.spacing[6] }}>
+            <input
+              type="text"
+              value={componentValue}
+              onChange={(e) => setComponentValue(e.target.value)}
+              style={{
+                width: '100%',
+                height: '48px',
+                padding: '0 16px',
+                fontSize: '16px',
+                fontFamily: tokens.typography.fontFamily,
+                color: tokens.colors.content.primary,
+                backgroundColor: tokens.colors.background.tertiary,
+                border: `1px solid ${tokens.colors.border.tertiary}`,
+                borderRadius: '6px',
+                outline: 'none',
+                boxSizing: 'border-box',
+              }}
+            />
+          </div>
+
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: tokens.spacing[3],
+          }}>
+            <PrimaryButton
+              label="Update"
+              onClick={handleUpdate}
+            />
+            <button
+              onClick={handleReset}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                cursor: 'pointer',
+                fontSize: '16px',
+                fontWeight: 400,
+                lineHeight: '24px',
+                fontFamily: tokens.typography.fontFamily,
+                color: tokens.colors.content.primary,
+                textDecoration: 'underline',
+                textAlign: 'center',
+              }}
+            >
+              Reset
+            </button>
+          </div>
+        </Modal>
+      );
+    };
+
+    // ==================== PRICE ADJUSTMENT COMPONENTS ====================
+    const CurrencyTextField = ({ value, onChange, error, placeholder, autoFocus }) => {
+      const [focused, setFocused] = useState(false);
+
+      const formatValue = (val) => {
+        const cleaned = val.replace(/[^\d]/g, '');
+        if (!cleaned) return '';
+        return formatPrice(parseInt(cleaned));
+      };
+
+      const handleChange = (e) => {
+        const cleaned = e.target.value.replace(/[^\d]/g, '');
+        onChange(cleaned);
+      };
+
+      const getBorderColor = () => {
+        if (error) return tokens.colors.border.alert;
+        if (focused) return tokens.colors.border.secondary;
+        return tokens.colors.border.tertiary;
+      };
+
+      return (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          height: '40px',
+          border: `${focused || error ? '2px' : '1px'} solid ${getBorderColor()}`,
+          borderRadius: '6px',
+          padding: '0 16px',
+          gap: '8px',
+          backgroundColor: tokens.colors.background.tertiary,
+          transition: 'border-color 150ms ease',
+          boxSizing: 'border-box',
+        }}>
+          <span style={{
+            fontSize: '16px',
+            color: tokens.colors.content.tertiary,
+            fontWeight: 400
+          }}>€</span>
+          <input
+            type="text"
+            value={formatValue(value)}
+            onChange={handleChange}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            placeholder={placeholder}
+            autoFocus={autoFocus}
+            style={{
+              flex: 1,
+              border: 'none',
+              outline: 'none',
+              fontSize: '16px',
+              fontWeight: 400,
+              lineHeight: '24px',
+              color: tokens.colors.content.primary,
+              fontFamily: tokens.typography.fontFamily,
+              backgroundColor: 'transparent',
+            }}
+          />
+        </div>
+      );
+    };
+
+    const PriceComparison = ({ beforePrice, afterPrice }) => {
+      return (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr auto 1fr',
+          gap: tokens.spacing[4],
+          alignItems: 'center',
+          padding: tokens.spacing[6],
+          backgroundColor: tokens.colors.background.secondary,
+          borderRadius: '8px',
+          margin: `${tokens.spacing[4]} 0`,
+        }}>
+          <div style={{ textAlign: 'left' }}>
+            <p style={{
+              fontSize: '12px',
+              color: tokens.colors.content.tertiary,
+              marginBottom: tokens.spacing[1],
+              fontFamily: tokens.typography.fontFamily,
+            }}>Before</p>
+            <p style={{
+              fontSize: '20px',
+              fontWeight: 500,
+              color: tokens.colors.content.secondary,
+              fontFamily: tokens.typography.fontFamily,
+            }}>€{formatPrice(beforePrice)}</p>
+          </div>
+
+          <div style={{
+            fontSize: '24px',
+            color: tokens.colors.content.quaternary,
+            fontFamily: tokens.typography.fontFamily,
+          }}>→</div>
+
+          <div style={{ textAlign: 'right' }}>
+            <p style={{
+              fontSize: '12px',
+              color: tokens.colors.content.tertiary,
+              marginBottom: tokens.spacing[1],
+              fontFamily: tokens.typography.fontFamily,
+            }}>After</p>
+            <p style={{
+              fontSize: '20px',
+              fontWeight: 500,
+              color: afterPrice ? tokens.colors.content.primary : tokens.colors.content.quaternary,
+              fontFamily: tokens.typography.fontFamily,
+            }}>
+              {afterPrice ? `€${formatPrice(afterPrice)}` : '—'}
+            </p>
+          </div>
+        </div>
+      );
+    };
+
+    const PriceAdjustmentModal = ({
+      currentOriginalPrice,
+      sellingPrice,
+      componentNames,
+      onConfirm,
+      onSkip
+    }) => {
+      const [newPrice, setNewPrice] = useState('');
+      const [error, setError] = useState('');
+
+      const numericNewPrice = newPrice ? parseInt(newPrice) : null;
+
+      const validatePrice = (value) => {
+        if (!value) return '';
+        const numValue = parseInt(value);
+
+        if (isNaN(numValue)) {
+          return 'Please enter a valid price';
+        }
+        if (numValue <= 0) {
+          return 'Price must be greater than €0';
+        }
+        return '';
+      };
+
+      const handleConfirm = () => {
+        const validationError = validatePrice(newPrice);
+        if (validationError) {
+          setError(validationError);
+          return;
+        }
+        onConfirm(numericNewPrice);
+      };
+
+      const handlePriceChange = (val) => {
+        setNewPrice(val);
+        if (error) {
+          setError('');
+        }
+      };
+
+      useEffect(() => {
+        if (newPrice) {
+          const validationError = validatePrice(newPrice);
+          if (validationError) {
+            setError(validationError);
+          }
+        }
+      }, [newPrice]);
+
+      return (
+        <Modal onClose={onSkip} title="Adjust original price (UVP)">
+          <p style={{
+            fontSize: '14px',
+            lineHeight: '21px',
+            color: tokens.colors.content.secondary,
+            marginBottom: tokens.spacing[6],
+            fontFamily: tokens.typography.fontFamily,
+          }}>
+            You have changed {componentNames && componentNames.length === 1 ? 'a component' : 'components'}. If you upgraded or downgraded {componentNames && componentNames.length === 1 ? 'this component' : 'these components'}, adjusting the original price (UVP) helps buyers see the true value of your bike.
+          </p>
+
+          <PriceComparison
+            beforePrice={currentOriginalPrice}
+            afterPrice={numericNewPrice}
+          />
+
+          <div style={{ marginBottom: tokens.spacing[4] }}>
+            <label style={{
+              fontSize: '16px',
+              fontWeight: 400,
+              color: tokens.colors.content.primary,
+              marginBottom: tokens.spacing[2],
+              display: 'block',
+              fontFamily: tokens.typography.fontFamily,
+            }}>New original price (UVP)</label>
+            <CurrencyTextField
+              value={newPrice}
+              onChange={handlePriceChange}
+              error={error}
+              placeholder={formatPrice(currentOriginalPrice)}
+              autoFocus
+            />
+            {error && (
+              <p style={{
+                fontSize: '12px',
+                color: tokens.colors.content.alert,
+                marginTop: tokens.spacing[1],
+                fontFamily: tokens.typography.fontFamily,
+              }}>{error}</p>
+            )}
+          </div>
+
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: tokens.spacing[3],
+            marginTop: tokens.spacing[6],
+          }}>
+            <PrimaryButton
+              label="Confirm new price"
+              onClick={handleConfirm}
+              disabled={!newPrice || !!error}
+            />
+            <SecondaryButton
+              label="Skip for now"
+              onClick={onSkip}
+            />
+          </div>
+        </Modal>
+      );
+    };
+
+    // ==================== DEMO HARNESS ====================
+    const BikeUploadSimulator = () => {
+      const isMobile = useIsMobile();
+      const [showPriceAdjustmentModal, setShowPriceAdjustmentModal] = useState(false);
+      const [showSuccessToast, setShowSuccessToast] = useState(false);
+      const [originalPrice, setOriginalPrice] = useState(4999);
+      const [sellingPrice] = useState(3999);
+      const [editingIndex, setEditingIndex] = useState(null);
+      const [modifiedComponents, setModifiedComponents] = useState([]);
+      const [components, setComponents] = useState([
+        { name: 'Front derailleur', value: 'Shimano 105 Di2', status: 'changed', originalValue: 'Shimano 105 Di2', modified: false },
+        { name: 'Rear derailleur', value: 'Shimano 105 Di2', status: 'changed', originalValue: 'Shimano 105 Di2', modified: false },
+        { name: 'Crank', value: 'Shimano 105', status: 'changed', originalValue: 'Shimano 105', modified: false },
+        { name: 'Wheels', value: 'DT Swiss ARC 1600', status: 'changed', originalValue: 'DT Swiss ARC 1600', modified: false },
+      ]);
+      const [tempComponentValue, setTempComponentValue] = useState('');
+      const [tempComponentStatus, setTempComponentStatus] = useState('changed');
+
+      const handleEditComponent = (index) => {
+        setEditingIndex(index);
+        setTempComponentValue(components[index].value);
+        setTempComponentStatus(components[index].status);
+      };
+
+      const handleComponentUpdate = (index) => {
+        // Update component value in the list
+        const updatedComponents = [...components];
+        const hasChanged = tempComponentValue !== updatedComponents[index].originalValue ||
+                          tempComponentStatus !== updatedComponents[index].status;
+
+        updatedComponents[index] = {
+          ...updatedComponents[index],
+          value: tempComponentValue,
+          status: tempComponentStatus,
+          modified: hasChanged
+        };
+        setComponents(updatedComponents);
+
+        // Track modified components
+        if (hasChanged && !modifiedComponents.includes(updatedComponents[index].name)) {
+          setModifiedComponents([...modifiedComponents, updatedComponents[index].name]);
+        }
+
+        // Close inline editing
+        setEditingIndex(null);
+      };
+
+      const handleComponentReset = (index) => {
+        setTempComponentValue(components[index].value);
+        setTempComponentStatus(components[index].status);
+      };
+
+      const handlePriceConfirm = (newPrice) => {
+        setOriginalPrice(newPrice);
+        setShowPriceAdjustmentModal(false);
+        setModifiedComponents([]);
+        setShowSuccessToast(true);
+      };
+
+      const handlePriceSkip = () => {
+        setShowPriceAdjustmentModal(false);
+      };
+
+      const handleContinue = () => {
+        // Check if any components were modified
+        if (modifiedComponents.length > 0) {
+          setShowPriceAdjustmentModal(true);
+        } else {
+          // Proceed to next step
+          console.log('Continue to next step');
+        }
+      };
+
+      return (
+        <div style={{
+          minHeight: '100vh',
+          backgroundColor: tokens.colors.background.primary,
+          padding: isMobile ? tokens.spacing[4] : tokens.spacing[8],
+          fontFamily: tokens.typography.fontFamily,
+        }}>
+          <div style={{
+            maxWidth: '1200px',
+            margin: '0 auto',
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+            gap: tokens.spacing[8],
+          }}>
+            {/* Left side - Upload form */}
+            <div style={{
+              backgroundColor: tokens.colors.background.tertiary,
+              borderRadius: '12px',
+              padding: tokens.spacing[6],
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+            }}>
+              <h1 style={{
+                fontSize: '28px',
+                fontWeight: 500,
+                marginBottom: tokens.spacing[6],
+                color: tokens.colors.content.primary,
+              }}>Create your bike listing</h1>
+
+              <div style={{ marginBottom: tokens.spacing[6] }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: tokens.spacing[3],
+                  marginBottom: tokens.spacing[4],
+                }}>
+                  <div style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    backgroundColor: tokens.colors.content.primary,
+                    color: tokens.colors.content.reverse,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                  }}>3</div>
+                  <h2 style={{
+                    fontSize: '18px',
+                    lineHeight: '27px',
+                    fontWeight: 500,
+                    color: tokens.colors.content.primary,
+                    fontFamily: tokens.typography.fontFamily,
+                  }}>Edit components</h2>
+                </div>
+
+                <p style={{
+                  fontSize: '16px',
+                  lineHeight: '24px',
+                  color: tokens.colors.content.tertiary,
+                  marginBottom: tokens.spacing[6],
+                  fontFamily: tokens.typography.fontFamily,
+                }}>
+                  We have pre-filled some information based on the selected model template. Please specify if you made any changes.
+                </p>
+
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: tokens.spacing[4],
+                }}>
+                  {components.map((component, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        boxSizing: 'border-box',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        padding: '16px',
+                        gap: editingIndex === index ? '12px' : '8px',
+                        width: '554px',
+                        background: tokens.colors.background.primary,
+                        border: `1px solid ${tokens.colors.border.tertiary}`,
+                        borderRadius: '10px',
+                      }}
+                    >
+                      {/* Header with title and edit icon */}
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'flex-start',
+                        gap: '8px',
+                      }}>
+                        <div style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '4px',
+                          flex: 1,
+                        }}>
+                          <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: tokens.spacing[2],
+                          }}>
+                            <p style={{
+                              margin: 0,
+                              fontSize: '14px',
+                              lineHeight: '21px',
+                              fontWeight: 400,
+                              color: tokens.colors.content.secondary,
+                              fontFamily: tokens.typography.fontFamily,
+                            }}>{component.name}</p>
+                            {editingIndex === index && (
+                              <span style={{
+                                fontSize: '16px',
+                                color: tokens.colors.content.primary,
+                              }}>✨</span>
+                            )}
+                          </div>
+                          {editingIndex !== index && (
+                            <p style={{
+                              margin: 0,
+                              fontSize: '15px',
+                              lineHeight: '21px',
+                              fontWeight: 400,
+                              color: tokens.colors.content.primary,
+                              fontFamily: tokens.typography.fontFamily,
+                            }}>{component.value}</p>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => editingIndex === index ? setEditingIndex(null) : handleEditComponent(index)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            padding: 0,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: '24px',
+                            height: '24px',
+                          }}
+                          aria-label={editingIndex === index ? 'Cancel edit' : `Edit ${component.name}`}
+                        >
+                          {editingIndex === index ? <IconClose size={20} /> : <IconEdit />}
+                        </button>
+                      </div>
+
+                      {/* Editing interface */}
+                      {editingIndex === index && (
+                        <>
+                          <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: tokens.spacing[3],
+                          }}>
+                            <RadioButton
+                              checked={tempComponentStatus === 'broken'}
+                              label="Broken"
+                              onChange={() => setTempComponentStatus('broken')}
+                            />
+                            <RadioButton
+                              checked={tempComponentStatus === 'changed'}
+                              label="Changed"
+                              onChange={() => setTempComponentStatus('changed')}
+                            />
+                          </div>
+
+                          <input
+                            type="text"
+                            value={tempComponentValue}
+                            onChange={(e) => setTempComponentValue(e.target.value)}
+                            style={{
+                              width: '100%',
+                              height: '48px',
+                              padding: '0 16px',
+                              fontSize: '16px',
+                              fontFamily: tokens.typography.fontFamily,
+                              color: tokens.colors.content.primary,
+                              backgroundColor: tokens.colors.background.tertiary,
+                              border: `1px solid ${tokens.colors.border.tertiary}`,
+                              borderRadius: '6px',
+                              outline: 'none',
+                              boxSizing: 'border-box',
+                            }}
+                          />
+
+                          <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: tokens.spacing[3],
+                          }}>
+                            <PrimaryButton
+                              label="Update"
+                              onClick={() => handleComponentUpdate(index)}
+                            />
+                            <button
+                              onClick={() => handleComponentReset(index)}
+                              style={{
+                                background: 'none',
+                                border: 'none',
+                                padding: 0,
+                                cursor: 'pointer',
+                                fontSize: '16px',
+                                fontWeight: 400,
+                                lineHeight: '24px',
+                                fontFamily: tokens.typography.fontFamily,
+                                color: tokens.colors.content.primary,
+                                textDecoration: 'underline',
+                                textAlign: 'center',
+                              }}
+                            >
+                              Reset
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <PrimaryButton label="Continue" onClick={handleContinue} />
+            </div>
+
+            {/* Right side - Preview */}
+            <div style={{
+              backgroundColor: tokens.colors.background.tertiary,
+              borderRadius: '12px',
+              padding: tokens.spacing[6],
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+              height: 'fit-content',
+            }}>
+              <div style={{
+                textAlign: 'center',
+                marginBottom: tokens.spacing[6],
+              }}>
+                <div style={{
+                  width: '120px',
+                  height: '120px',
+                  margin: '0 auto',
+                  marginBottom: tokens.spacing[4],
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+                    <circle cx="30" cy="70" r="18" stroke={tokens.colors.content.tertiary} strokeWidth="2"/>
+                    <circle cx="90" cy="70" r="18" stroke={tokens.colors.content.tertiary} strokeWidth="2"/>
+                    <path d="M30 70 L40 40 L80 40 L90 70" stroke={tokens.colors.content.tertiary} strokeWidth="2" fill="none"/>
+                    <path d="M50 40 L55 55 L70 55" stroke={tokens.colors.content.tertiary} strokeWidth="2"/>
+                  </svg>
+                </div>
+                <p style={{
+                  fontSize: '14px',
+                  color: tokens.colors.content.tertiary,
+                  marginBottom: tokens.spacing[2],
+                }}>This is a preview of your bike listing</p>
+              </div>
+
+              <h3 style={{
+                fontSize: '14px',
+                color: tokens.colors.content.tertiary,
+                marginBottom: tokens.spacing[1],
+              }}>Canyon</h3>
+              <h2 style={{
+                fontSize: '20px',
+                fontWeight: 500,
+                color: tokens.colors.content.primary,
+                marginBottom: tokens.spacing[4],
+              }}>Speedmax CF 7 Di2 2026</h2>
+
+              <div style={{
+                marginBottom: tokens.spacing[6],
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  gap: tokens.spacing[2],
+                  marginBottom: tokens.spacing[3],
+                }}>
+                  <span style={{
+                    fontSize: '28px',
+                    fontWeight: 500,
+                    color: tokens.colors.content.primary,
+                  }}>€{formatPrice(sellingPrice)}</span>
+                  <span style={{
+                    fontSize: '18px',
+                    color: tokens.colors.content.tertiary,
+                    textDecoration: 'line-through',
+                  }}>€{formatPrice(originalPrice)}</span>
+                </div>
+                <p style={{
+                  fontSize: '14px',
+                  color: tokens.colors.content.secondary,
+                }}>
+                  {Math.round((1 - sellingPrice / originalPrice) * 100)}% off original price
+                </p>
+              </div>
+
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: tokens.spacing[4],
+                paddingTop: tokens.spacing[4],
+                borderTop: `1px solid ${tokens.colors.border.tertiary}`,
+              }}>
+                <div>
+                  <p style={{
+                    fontSize: '12px',
+                    color: tokens.colors.content.tertiary,
+                    marginBottom: tokens.spacing[1],
+                  }}>Year</p>
+                  <p style={{
+                    fontSize: '14px',
+                    color: tokens.colors.content.primary,
+                  }}>2026</p>
+                </div>
+                <div>
+                  <p style={{
+                    fontSize: '12px',
+                    color: tokens.colors.content.tertiary,
+                    marginBottom: tokens.spacing[1],
+                  }}>Frame size</p>
+                  <p style={{
+                    fontSize: '14px',
+                    color: tokens.colors.content.primary,
+                  }}>45</p>
+                </div>
+                <div>
+                  <p style={{
+                    fontSize: '12px',
+                    color: tokens.colors.content.tertiary,
+                    marginBottom: tokens.spacing[1],
+                  }}>Frame material</p>
+                  <p style={{
+                    fontSize: '14px',
+                    color: tokens.colors.content.primary,
+                  }}>Carbon</p>
+                </div>
+                <div>
+                  <p style={{
+                    fontSize: '12px',
+                    color: tokens.colors.content.tertiary,
+                    marginBottom: tokens.spacing[1],
+                  }}>Condition</p>
+                  <p style={{
+                    fontSize: '14px',
+                    color: tokens.colors.content.primary,
+                  }}>Excellent</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Price Adjustment Modal */}
+          {showPriceAdjustmentModal && (
+            <PriceAdjustmentModal
+              currentOriginalPrice={originalPrice}
+              sellingPrice={sellingPrice}
+              componentNames={modifiedComponents}
+              onConfirm={handlePriceConfirm}
+              onSkip={handlePriceSkip}
+            />
+          )}
+
+          {/* Success Toast */}
+          {showSuccessToast && (
+            <Toast
+              message="Original price updated successfully"
+              onClose={() => setShowSuccessToast(false)}
+            />
+          )}
+
+          <style>{`
+            @keyframes spin { to { transform: rotate(360deg); } }
+            * { box-sizing: border-box; }
+            input::placeholder { color: ${tokens.colors.content.quaternary}; }
+            button:hover:not(:disabled) { opacity: 0.9; }
+            button:active:not(:disabled) { transform: scale(0.98); }
+            ::-webkit-scrollbar { width: 6px; }
+            ::-webkit-scrollbar-track { background: transparent; }
+            ::-webkit-scrollbar-thumb { background: ${tokens.colors.border.quaternary}; border-radius: 3px; }
+            ::-webkit-scrollbar-thumb:hover { background: ${tokens.colors.border.secondary}; }
+          `}</style>
+        </div>
+      );
+    };
+
+    // Render the app
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<BikeUploadSimulator />);
+  </script>
+</body>
+</html>
