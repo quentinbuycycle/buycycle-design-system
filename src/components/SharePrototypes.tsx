@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import styles from "./SharePrototypes.module.css";
 
 interface SharePrototypesProps {
@@ -23,9 +23,9 @@ export default function SharePrototypes({
   finalPrototypes,
 }: SharePrototypesProps) {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [copied, setCopied] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [copiedProto, setCopiedProto] = useState<string | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
 
   const allPrototypes = [...prototypes, ...finalPrototypes];
@@ -42,37 +42,38 @@ export default function SharePrototypes({
     return () => document.removeEventListener("mousedown", handleClick);
   }, [open]);
 
-  function toggle(proto: string) {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(proto)) next.delete(proto);
-      else next.add(proto);
-      return next;
-    });
-    setCopied(false);
-  }
-
-  async function handleCopy() {
-    if (selected.size === 0) return;
+  // Generate token when popover opens
+  const generateToken = useCallback(async () => {
+    if (token) return; // already generated
     setLoading(true);
     try {
       const res = await fetch("/api/share", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug, prototypes: Array.from(selected) }),
+        body: JSON.stringify({ slug, prototypes: allPrototypes }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-
-      const url = `${window.location.origin}/output/${slug}?share=${data.token}`;
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      if (res.ok) setToken(data.token);
     } catch (err) {
-      console.error("Share error:", err);
+      console.error("Share token error:", err);
     } finally {
       setLoading(false);
     }
+  }, [slug, allPrototypes, token]);
+
+  function handleOpen() {
+    const next = !open;
+    setOpen(next);
+    if (next) generateToken();
+  }
+
+  async function copyLink(proto: string) {
+    if (!token) return;
+    const filename = proto.replace(/^\/prototypes\//, "");
+    const url = `${window.location.origin}/output/prototypes/${filename}?share=${token}`;
+    await navigator.clipboard.writeText(url);
+    setCopiedProto(proto);
+    setTimeout(() => setCopiedProto(null), 2000);
   }
 
   if (allPrototypes.length === 0) return null;
@@ -81,10 +82,7 @@ export default function SharePrototypes({
     <div className={styles.wrapper} ref={popoverRef}>
       <button
         className={styles.trigger}
-        onClick={() => {
-          setOpen(!open);
-          setCopied(false);
-        }}
+        onClick={handleOpen}
         aria-label="Share prototypes"
       >
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -99,64 +97,67 @@ export default function SharePrototypes({
 
       {open && (
         <div className={styles.popover}>
-          <p className={styles.popoverTitle}>Select prototypes to share</p>
+          <p className={styles.popoverTitle}>Share prototype links</p>
 
-          {prototypes.length > 0 && (
-            <div className={styles.group}>
-              <span className={styles.groupLabel}>To review</span>
-              {prototypes.map((proto) => (
-                <label key={proto} className={styles.option}>
-                  <input
-                    type="checkbox"
-                    checked={selected.has(proto)}
-                    onChange={() => toggle(proto)}
-                    className={styles.checkbox}
-                  />
-                  <span className={styles.optionLabel}>{protoLabel(proto)}</span>
-                </label>
-              ))}
-            </div>
+          {loading && <p className={styles.loading}>Generating links...</p>}
+
+          {!loading && token && (
+            <>
+              {prototypes.length > 0 && (
+                <div className={styles.group}>
+                  <span className={styles.groupLabel}>To review</span>
+                  {prototypes.map((proto) => (
+                    <div key={proto} className={styles.linkRow}>
+                      <span className={styles.linkLabel}>{protoLabel(proto)}</span>
+                      <button
+                        className={styles.copyIcon}
+                        onClick={() => copyLink(proto)}
+                        aria-label={`Copy link for ${protoLabel(proto)}`}
+                      >
+                        {copiedProto === proto ? (
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        ) : (
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {finalPrototypes.length > 0 && (
+                <div className={styles.group}>
+                  <span className={styles.groupLabel}>Final</span>
+                  {finalPrototypes.map((proto) => (
+                    <div key={proto} className={styles.linkRow}>
+                      <span className={styles.linkLabel}>{protoLabel(proto)}</span>
+                      <button
+                        className={styles.copyIcon}
+                        onClick={() => copyLink(proto)}
+                        aria-label={`Copy link for ${protoLabel(proto)}`}
+                      >
+                        {copiedProto === proto ? (
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        ) : (
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
           )}
-
-          {finalPrototypes.length > 0 && (
-            <div className={styles.group}>
-              <span className={styles.groupLabel}>Final</span>
-              {finalPrototypes.map((proto) => (
-                <label key={proto} className={styles.option}>
-                  <input
-                    type="checkbox"
-                    checked={selected.has(proto)}
-                    onChange={() => toggle(proto)}
-                    className={styles.checkbox}
-                  />
-                  <span className={styles.optionLabel}>{protoLabel(proto)}</span>
-                </label>
-              ))}
-            </div>
-          )}
-
-          <button
-            className={styles.copyBtn}
-            onClick={handleCopy}
-            disabled={selected.size === 0 || loading}
-          >
-            {copied ? (
-              <>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-                Copied!
-              </>
-            ) : (
-              <>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                  <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
-                </svg>
-                {loading ? "Generating..." : "Copy share link"}
-              </>
-            )}
-          </button>
         </div>
       )}
     </div>
