@@ -6,7 +6,8 @@ team: "Product Design"
 tags: ["Buyer & Seller","Seller XP"]
 prototypes:
   - "/prototypes/seller-fit-opinion-in-listing-funnel-pdp.html"
-finalPrototypes: []
+finalPrototypes:
+  - "/prototypes/buycycle-listing-funnel-size-fit-app.html"
 ---
 
 ## Problem
