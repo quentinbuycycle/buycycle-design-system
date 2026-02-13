@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<!-- AGENTS.MD READ SUCCESSFULLY -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>buycycle - Create Listing (Size & Fit)</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Neue Haas Grotesk Text Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #FCFCFC;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // ==================== RESPONSIVE HOOK ====================
+    const useIsMobile = (breakpoint = 768) => {
+      const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
+      useEffect(() => {
+        const handler = () => setIsMobile(window.innerWidth < breakpoint);
+        window.addEventListener('resize', handler);
+        return () => window.removeEventListener('resize', handler);
+      }, [breakpoint]);
+      return isMobile;
+    };
+
+    // ==================== DESIGN TOKENS (from Figma) ====================
+    const tokens = {
+      colors: {
+        background: {
+          primary: '#FCFCFC',
+          secondary: '#F3F3F3',
+          tertiary: '#FFFFFF',
+          quaternary: '#EAEAEA',
+          reverse: '#090907',
+          positive: '#E8F8F0',
+          information: '#EFF6FF',
+          accentGreen: '#DAFDA0',
+          prefillBorder: '#C9F484',
+        },
+        content: {
+          primary: '#090907',
+          secondary: '#333333',
+          tertiary: '#535353',
+          quaternary: '#A9A9A9',
+          reverse: '#FCFCFC',
+          positive: '#146C43',
+        },
+        border: {
+          primary: '#090907',
+          secondary: '#757575',
+          tertiary: '#EAEAEA',
+          quaternary: '#D0D0D0',
+          information: '#1D4ED8',
+        }
+      },
+      typography: {
+        fontFamily: "'Neue Haas Grotesk Text Pro', -apple-system, BlinkMacSystemFont, sans-serif",
+      },
+    };
+
+    // ==================== BIKE PREVIEW DATA ====================
+    const bikePreview = {
+      brand: "Canyon",
+      model: "Speedmax CF 7 Di2",
+      year: 2026,
+      price: 4010,
+      frameSize: "45",
+      frameMaterial: "Carbon",
+      groupset: "Shimano 105 Di2",
+      brakeType: "Disc",
+      condition: "Very good",
+      imageUrl: "https://buycycle-prod-images.s3.eu-central-1.amazonaws.com/8f8d3f26-21ef-4b26-8d72-ed57d6b8e5c2/original",
+    };
+
+    // Recommended height ranges by frame size
+    const frameSizeToHeight = {
+      "45": "155-165cm",
+      "48": "160-170cm",
+      "50": "165-175cm",
+      "52": "168-178cm",
+      "54": "173-183cm",
+      "56": "178-188cm",
+      "58": "183-193cm",
+      "60": "188-198cm",
+      "62": "191-201cm",
+    };
+
+    // ==================== AI PREFILL ICON ====================
+    const AIPrefillIcon = ({ size = 15 }) => (
+      <svg width={size} height={size} viewBox="0 0 15 15" fill="none">
+        <defs>
+          <linearGradient id="aiGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#B7FF40"/>
+            <stop offset="100%" stopColor="#79B810"/>
+          </linearGradient>
+        </defs>
+        <circle cx="7.5" cy="7.5" r="7.5" fill="url(#aiGrad)"/>
+        <circle cx="6.5" cy="6.5" r="1.5" fill="#05061A"/>
+        <circle cx="5" cy="8.5" r="1.5" fill="#05061A"/>
+      </svg>
+    );
+
+    // ==================== HEADER ====================
+    const Header = ({ isMobile }) => (
+      <header style={{
+        borderBottom: `1px solid ${tokens.colors.border.tertiary}`,
+        backgroundColor: tokens.colors.background.tertiary,
+        padding: isMobile ? '12px 16px' : '16px 48px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}>
+        <div style={{
+          fontSize: '24px',
+          fontWeight: 700,
+          color: tokens.colors.content.primary,
+          letterSpacing: '-0.5px',
+          fontStyle: 'italic',
+        }}>
+          buycycle.
+        </div>
+        <div style={{ fontSize: '24px' }}>🇩🇪</div>
+      </header>
+    );
+
+    // ==================== DROPDOWN FIELD (Figma spec) ====================
+    const DropdownField = ({ label, value, required, options, onChange, prefilled, infoIcon }) => (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 8px 0 0',
+          gap: '4px',
+        }}>
+          <span style={{
+            fontSize: '16px',
+            lineHeight: '24px',
+            color: tokens.colors.content.primary,
+            fontWeight: 500,
+            fontFamily: tokens.typography.fontFamily,
+          }}>
+            {label}{required && '*'}
+          </span>
+          {infoIcon && (
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <circle cx="10" cy="10" r="8.33" stroke={tokens.colors.content.primary} strokeWidth="1.25"/>
+              <path d="M10 9V14M10 7V6" stroke={tokens.colors.content.primary} strokeWidth="1.25" strokeLinecap="round"/>
+            </svg>
+          )}
+        </div>
+        <div style={{ position: 'relative' }}>
+          <select
+            value={value}
+            onChange={onChange}
+            style={{
+              width: '100%',
+              height: '40px',
+              padding: '10px 16px',
+              paddingRight: '40px',
+              paddingLeft: prefilled ? '36px' : '16px',
+              border: prefilled ? `1px solid ${tokens.colors.background.prefillBorder}` : `1px solid ${tokens.colors.border.tertiary}`,
+              borderRadius: '6px',
+              fontSize: '16px',
+              lineHeight: '24px',
+              color: tokens.colors.content.primary,
+              backgroundColor: tokens.colors.background.tertiary,
+              fontFamily: tokens.typography.fontFamily,
+              appearance: 'none',
+              cursor: 'pointer',
+              fontWeight: 400,
+            }}
+          >
+            {options.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+          {prefilled && (
+            <div style={{
+              position: 'absolute',
+              left: '10px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              pointerEvents: 'none',
+              display: 'flex',
+            }}>
+              <AIPrefillIcon />
+            </div>
+          )}
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{
+            position: 'absolute',
+            right: '10px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            pointerEvents: 'none',
+          }}>
+            <path d="M5 7.5L10 12.5L15 7.5" stroke={tokens.colors.content.primary} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    );
+
+    // ==================== TEXT INPUT (Figma spec) ====================
+    const TextInputField = ({ label, value, placeholder, onChange, disabled, helperText, suffix }) => (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 8px 0 0',
+        }}>
+          <span style={{
+            fontSize: '16px',
+            lineHeight: '24px',
+            color: tokens.colors.content.primary,
+            fontWeight: 500,
+            fontFamily: tokens.typography.fontFamily,
+          }}>
+            {label}
+          </span>
+        </div>
+        {/* Input + Hint (4px gap per DS) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <div style={{ position: 'relative' }}>
+            <input
+              type="text"
+              value={value}
+              placeholder={placeholder}
+              onChange={onChange}
+              disabled={disabled}
+              style={{
+                width: '100%',
+                height: '40px',
+                padding: suffix ? '10px 40px 10px 16px' : '10px 16px',
+                border: `1px solid ${tokens.colors.border.tertiary}`,
+                borderRadius: '6px',
+                fontSize: '16px',
+                lineHeight: '24px',
+                color: disabled ? tokens.colors.content.quaternary : tokens.colors.content.primary,
+                backgroundColor: disabled ? tokens.colors.background.secondary : tokens.colors.background.tertiary,
+                fontFamily: tokens.typography.fontFamily,
+                outline: 'none',
+                fontWeight: 400,
+              }}
+            />
+            {suffix && (
+              <span style={{
+                position: 'absolute',
+                right: '12px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                fontSize: '14px',
+                color: tokens.colors.content.quaternary,
+                pointerEvents: 'none',
+              }}>
+                {suffix}
+              </span>
+            )}
+          </div>
+          {helperText && (
+            <span style={{
+              fontSize: '14px',
+              lineHeight: '21px',
+              color: tokens.colors.content.secondary,
+            }}>
+              {helperText}
+            </span>
+          )}
+        </div>
+      </div>
+    );
+
+    // ==================== RADIO BUTTON RICH (Figma spec) ====================
+    const RadioButtonRich = ({ name, options, value, onChange, prefilled }) => (
+      <div style={{ display: 'flex', gap: '12px' }}>
+        {options.map(opt => {
+          const isSelected = value === opt.value;
+          return (
+            <label
+              key={opt.value}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                padding: '0',
+                height: '44px',
+                flex: 1,
+                minWidth: 0,
+                backgroundColor: tokens.colors.background.tertiary,
+                border: `1px solid ${isSelected ? tokens.colors.border.secondary : tokens.colors.border.tertiary}`,
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontFamily: tokens.typography.fontFamily,
+              }}
+            >
+              <input
+                type="radio"
+                name={name}
+                value={opt.value}
+                checked={isSelected}
+                onChange={() => onChange(opt.value)}
+                style={{ position: 'absolute', opacity: 0, width: 0, height: 0 }}
+              />
+              {/* Radio circle */}
+              <div style={{
+                width: '44px',
+                height: '44px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                <div style={{
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '50%',
+                  border: `1.5px solid ${isSelected ? tokens.colors.border.primary : tokens.colors.border.tertiary}`,
+                  backgroundColor: tokens.colors.background.tertiary,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  {isSelected && (
+                    <div style={{
+                      width: '12px',
+                      height: '12px',
+                      borderRadius: '50%',
+                      backgroundColor: tokens.colors.content.primary,
+                    }} />
+                  )}
+                </div>
+              </div>
+              {/* Label */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}>
+                {prefilled && isSelected && <AIPrefillIcon size={15} />}
+                <span style={{
+                  fontSize: '14px',
+                  lineHeight: '21px',
+                  fontWeight: 500,
+                  color: tokens.colors.content.primary,
+                }}>
+                  {opt.label}
+                </span>
+              </div>
+            </label>
+          );
+        })}
+      </div>
+    );
+
+    // ==================== STEP HEADER ====================
+    const StepHeader = ({ number, title, isOpen, isCompleted }) => (
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        width: '100%',
+      }}>
+        {/* Number or checkmark */}
+        {isCompleted ? (
+          <div style={{
+            width: '24px',
+            height: '24px',
+            borderRadius: '50%',
+            backgroundColor: tokens.colors.content.positive,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M3 7L6 10L11 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+        ) : (
+          <div style={{
+            width: '24px',
+            height: '24px',
+            borderRadius: '50%',
+            backgroundColor: tokens.colors.background.reverse,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <span style={{
+              fontSize: '14px',
+              lineHeight: '20px',
+              fontWeight: 500,
+              color: tokens.colors.content.reverse,
+            }}>
+              {number}
+            </span>
+          </div>
+        )}
+        {/* Title */}
+        <span style={{
+          fontSize: '18px',
+          lineHeight: '27px',
+          fontWeight: 500,
+          color: tokens.colors.content.primary,
+          flex: 1,
+        }}>
+          {title}
+        </span>
+        {/* Chevron */}
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path
+            d={isOpen ? "M6 15L12 9L18 15" : "M6 9L12 15L18 9"}
+            stroke={tokens.colors.content.primary}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+    );
+
+    // ==================== SIZE & FIT SECTION ====================
+    const SizeFitSection = ({ frameSize }) => {
+      const defaultHeight = frameSizeToHeight[frameSize] || "\u2014";
+      const [agreesWithRecommendation, setAgreesWithRecommendation] = useState(null);
+      const [sellerHeight, setSellerHeight] = useState('');
+      const [sellerLegLength, setSellerLegLength] = useState('');
+      const [fitFeeling, setFitFeeling] = useState(null);
+
+      return (
+        <div style={{
+          padding: '16px',
+          border: `1px solid ${tokens.colors.border.tertiary}`,
+          borderRadius: '8px',
+          backgroundColor: tokens.colors.background.secondary,
+          marginBottom: '4px',
+        }}>
+          {/* Section title */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            marginBottom: '4px',
+          }}>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+              <path d="M10 2L3 6V14L10 18L17 14V6L10 2Z" stroke={tokens.colors.content.primary} strokeWidth="1.5" strokeLinejoin="round"/>
+              <circle cx="10" cy="10" r="2" stroke={tokens.colors.content.primary} strokeWidth="1.5"/>
+            </svg>
+            <span style={{
+              fontSize: '16px',
+              lineHeight: '24px',
+              fontWeight: 500,
+              color: tokens.colors.content.primary,
+            }}>
+              Size & fit
+            </span>
+          </div>
+          {/* Helper text — subdued */}
+          <p style={{
+            fontSize: '14px',
+            lineHeight: '21px',
+            color: tokens.colors.content.secondary,
+            marginBottom: '12px',
+          }}>
+            Help buyers find the right size. Your fit information will be shown on the product page.
+          </p>
+
+          {/* Recommended height */}
+          <div style={{
+            padding: '16px',
+            backgroundColor: tokens.colors.background.primary,
+            borderRadius: '8px',
+            marginBottom: '20px',
+          }}>
+            <div style={{
+              fontSize: '14px',
+              lineHeight: '21px',
+              color: tokens.colors.content.secondary,
+              marginBottom: '4px',
+            }}>
+              Recommended height for frame size {frameSize}
+            </div>
+            <div style={{
+              fontSize: '16px',
+              lineHeight: '24px',
+              fontWeight: 700,
+              color: tokens.colors.content.primary,
+            }}>
+              {defaultHeight}
+            </div>
+          </div>
+
+          {/* Agree with recommendation */}
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{
+              fontSize: '16px',
+              lineHeight: '24px',
+              color: tokens.colors.content.primary,
+              fontWeight: 500,
+              marginBottom: '8px',
+            }}>
+              Do you agree with this recommendation?
+            </div>
+            <RadioButtonRich
+              name="agrees-recommendation"
+              options={[
+                { value: 'yes', label: 'Yes' },
+                { value: 'no', label: 'No' },
+              ]}
+              value={agreesWithRecommendation}
+              onChange={setAgreesWithRecommendation}
+            />
+          </div>
+
+          {/* Seller height & leg length */}
+          <div style={{
+            display: 'flex',
+            gap: '16px',
+            marginBottom: '16px',
+          }}>
+            <div style={{ flex: 1 }}>
+              <TextInputField
+                label="Your height"
+                value={sellerHeight}
+                placeholder="e.g. 182"
+                suffix="cm"
+                onChange={(e) => setSellerHeight(e.target.value)}
+              />
+            </div>
+            <div style={{ flex: 1 }}>
+              <TextInputField
+                label="Your leg length"
+                value={sellerLegLength}
+                placeholder="e.g. 86"
+                suffix="cm"
+                onChange={(e) => setSellerLegLength(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Fit feeling */}
+          <div>
+            <div style={{
+              fontSize: '16px',
+              lineHeight: '24px',
+              color: tokens.colors.content.primary,
+              fontWeight: 500,
+              marginBottom: '8px',
+            }}>
+              How did this bike fit you?
+            </div>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              {[
+                { value: 'too_small', label: 'Too small' },
+                { value: 'perfect', label: 'Perfect fit' },
+                { value: 'too_big', label: 'Too big' },
+              ].map(opt => {
+                const isSelected = fitFeeling === opt.value;
+                return (
+                  <button
+                    key={opt.value}
+                    onClick={() => setFitFeeling(opt.value)}
+                    style={{
+                      flex: 1,
+                      height: '44px',
+                      borderRadius: '8px',
+                      border: isSelected
+                        ? `1.5px solid ${opt.value === 'perfect' ? tokens.colors.content.positive : tokens.colors.border.primary}`
+                        : `1px solid ${tokens.colors.border.tertiary}`,
+                      backgroundColor: isSelected && opt.value === 'perfect'
+                        ? tokens.colors.background.positive
+                        : tokens.colors.background.tertiary,
+                      fontSize: '14px',
+                      lineHeight: '21px',
+                      fontWeight: isSelected ? 500 : 400,
+                      color: isSelected && opt.value === 'perfect'
+                        ? tokens.colors.content.positive
+                        : tokens.colors.content.primary,
+                      cursor: 'pointer',
+                      fontFamily: tokens.typography.fontFamily,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                    }}
+                  >
+                    {opt.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ==================== BIKE PREVIEW CARD ====================
+    const BikePreviewCard = () => (
+      <div style={{
+        backgroundColor: tokens.colors.background.tertiary,
+        borderRadius: '8px',
+        border: `1px solid ${tokens.colors.border.tertiary}`,
+        overflow: 'hidden',
+      }}>
+        {/* Main Image */}
+        <div style={{
+          height: '280px',
+          backgroundColor: tokens.colors.background.secondary,
+          overflow: 'hidden',
+        }}>
+          <img
+            src={bikePreview.imageUrl}
+            alt={`${bikePreview.brand} ${bikePreview.model}`}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
+        </div>
+
+        {/* Thumbnails */}
+        <div style={{
+          display: 'flex',
+          gap: '8px',
+          padding: '12px 16px',
+          overflowX: 'auto',
+        }}>
+          {[1,2,3,4].map((_, i) => (
+            <div key={i} style={{
+              width: '72px',
+              height: '54px',
+              borderRadius: '6px',
+              backgroundColor: tokens.colors.background.secondary,
+              overflow: 'hidden',
+              border: i === 0 ? `2px solid ${tokens.colors.content.primary}` : `1px solid ${tokens.colors.border.tertiary}`,
+            }}>
+              <img
+                src={bikePreview.imageUrl}
+                alt=""
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                onError={(e) => { e.target.outerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:20px;">🚴</div>'; }}
+              />
+            </div>
+          ))}
+          <div style={{
+            width: '72px',
+            height: '54px',
+            borderRadius: '6px',
+            border: `1px solid ${tokens.colors.border.tertiary}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '20px',
+            fontWeight: 700,
+            fontStyle: 'italic',
+            color: tokens.colors.content.primary,
+          }}>
+            b.
+          </div>
+          <div style={{
+            width: '36px',
+            height: '54px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M6 4L10 8L6 12" stroke={tokens.colors.content.tertiary} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        {/* Bike Info */}
+        <div style={{ padding: '12px 16px 16px' }}>
+          <div style={{ fontSize: '14px', lineHeight: '21px', color: tokens.colors.content.tertiary }}>{bikePreview.brand}</div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'baseline',
+            marginTop: '4px',
+          }}>
+            <div style={{
+              fontSize: '16px',
+              fontWeight: 700,
+              color: tokens.colors.content.primary,
+            }}>
+              {bikePreview.model} {bikePreview.year}
+            </div>
+            <div style={{
+              fontSize: '16px',
+              fontWeight: 700,
+              color: tokens.colors.content.primary,
+            }}>
+              {bikePreview.price} €
+            </div>
+          </div>
+        </div>
+
+        {/* Specs Table */}
+        <div style={{
+          margin: '0 16px 16px',
+          border: `1px solid ${tokens.colors.border.tertiary}`,
+          borderRadius: '8px',
+          overflow: 'hidden',
+        }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: `1px solid ${tokens.colors.border.tertiary}` }}>
+            {[
+              { label: 'Year', value: bikePreview.year },
+              { label: 'Frame size', value: bikePreview.frameSize },
+              { label: 'Frame material', value: bikePreview.frameMaterial },
+            ].map((item, i) => (
+              <div key={i} style={{
+                padding: '12px',
+                borderRight: i < 2 ? `1px solid ${tokens.colors.border.tertiary}` : 'none',
+              }}>
+                <div style={{ fontSize: '12px', lineHeight: '18px', color: tokens.colors.content.tertiary }}>{item.label}</div>
+                <div style={{ fontSize: '14px', fontWeight: 500, color: tokens.colors.content.primary, marginTop: '2px' }}>{item.value}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+            {[
+              { label: 'Groupset', value: bikePreview.groupset },
+              { label: 'Brake type', value: bikePreview.brakeType },
+              { label: 'Condition', value: bikePreview.condition },
+            ].map((item, i) => (
+              <div key={i} style={{
+                padding: '12px',
+                borderRight: i < 2 ? `1px solid ${tokens.colors.border.tertiary}` : 'none',
+              }}>
+                <div style={{ fontSize: '12px', lineHeight: '18px', color: tokens.colors.content.tertiary }}>{item.label}</div>
+                <div style={{ fontSize: '14px', fontWeight: 500, color: tokens.colors.content.primary, marginTop: '2px' }}>{item.value}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+
+    // ==================== MAIN APP ====================
+    const App = () => {
+      const [frameSize, setFrameSize] = useState('');
+      const [color, setColor] = useState('White');
+      const [hasReceipt, setHasReceipt] = useState('no');
+      const [isEbike, setIsEbike] = useState('no');
+      const [category, setCategory] = useState('Triathlon');
+      const [modelYear, setModelYear] = useState('2026');
+      const [frameMaterial, setFrameMaterial] = useState('Carbon');
+      const [groupset, setGroupset] = useState('Shimano 105 Di2');
+      const [shifting, setShifting] = useState('Electronic');
+      const [brakeType, setBrakeType] = useState('Disc');
+
+      const isMobile = useIsMobile();
+
+      return (
+        <div style={{ minHeight: '100vh', backgroundColor: tokens.colors.background.primary }}>
+          <Header isMobile={isMobile} />
+
+          <main style={{
+            maxWidth: '1440px',
+            width: '100%',
+            margin: '0 auto',
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+          }}>
+            {/* Left: Form Panel */}
+            <div style={{
+              width: isMobile ? '100%' : '708px',
+              padding: isMobile ? '24px 16px' : '32px 48px',
+              backgroundColor: tokens.colors.background.tertiary,
+              minHeight: 'calc(100vh - 57px)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '24px',
+            }}>
+              {/* Title row */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%',
+                maxWidth: '612px',
+              }}>
+                <h1 style={{
+                  fontSize: '24px',
+                  lineHeight: '32px',
+                  fontWeight: 500,
+                  color: tokens.colors.content.primary,
+                  fontFamily: tokens.typography.fontFamily,
+                }}>
+                  Create your bike listing
+                </h1>
+                <span style={{
+                  fontSize: '14px',
+                  lineHeight: '21px',
+                  fontWeight: 400,
+                  color: tokens.colors.content.primary,
+                  cursor: 'pointer',
+                }}>
+                  Save draft
+                </span>
+              </div>
+
+              {/* Step 1: Find your bike (collapsed) */}
+              <div style={{ width: '100%', maxWidth: '612px' }}>
+                <StepHeader number={1} title="Find your bike model" isOpen={false} isCompleted={true} />
+              </div>
+
+              {/* Step 2: Add basic information (open) */}
+              <div style={{ width: '100%', maxWidth: '612px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                <StepHeader number={2} title="Add basic information" isOpen={true} isCompleted={false} />
+
+                {/* Form fields */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+
+                  {/* Country & Find ZIP code */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? '16px' : '20px' }}>
+                      <div style={{ width: isMobile ? '100%' : '296px' }}>
+                        <DropdownField
+                          label="Country"
+                          value="Germany"
+                          prefilled
+                          options={[{ value: 'Germany', label: 'Germany' }]}
+                        />
+                      </div>
+                      <div style={{ width: isMobile ? '100%' : '296px' }}>
+                        <TextInputField
+                          label="Find your ZIP code"
+                          value="10787 Berlin, Germany"
+                        />
+                      </div>
+                    </div>
+                    <span style={{
+                      fontSize: '14px',
+                      lineHeight: '21px',
+                      color: tokens.colors.content.secondary,
+                    }}>
+                      Your ZIP code helps buyers find your bike. Your exact address won't be shared.
+                    </span>
+                  </div>
+
+                  {/* City & ZIP */}
+                  <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? '16px' : '20px' }}>
+                    <div style={{ width: isMobile ? '100%' : '296px' }}>
+                      <TextInputField label="City" value="Berlin" disabled />
+                    </div>
+                    <div style={{ width: isMobile ? '100%' : '296px' }}>
+                      <TextInputField label="ZIP" value="10787" disabled />
+                    </div>
+                  </div>
+
+                  {/* Frame size & Color */}
+                  <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? '16px' : '20px' }}>
+                    <div style={{ width: isMobile ? '100%' : '296px' }}>
+                      <DropdownField
+                        label="Frame size"
+                        value={frameSize}
+                        required
+                        onChange={(e) => setFrameSize(e.target.value)}
+                        options={[{ value: '', label: 'Select' }, ...Object.keys(frameSizeToHeight).map(s => ({ value: s, label: s }))]}
+                      />
+                    </div>
+                    <div style={{ width: isMobile ? '100%' : '296px' }}>
+                      <DropdownField
+                        label="Color"
+                        value={color}
+                        required
+                        onChange={(e) => setColor(e.target.value)}
+                        options={['White', 'Black', 'Red', 'Blue', 'Green', 'Purple'].map(c => ({ value: c, label: c }))}
+                      />
+                    </div>
+                  </div>
+
+                  {/* SIZE & FIT SECTION — only shown after frame size is selected */}
+                  {frameSize && <SizeFitSection frameSize={frameSize} />}
+
+                  {/* Do you have a receipt? */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '0 8px 0 0',
+                    }}>
+                      <span style={{
+                        fontSize: '16px',
+                        lineHeight: '24px',
+                        color: tokens.colors.content.primary,
+                        fontWeight: 500,
+                      }}>
+                        Do you have a receipt?*
+                      </span>
+                    </div>
+                    <RadioButtonRich
+                      name="has-receipt"
+                      options={[
+                        { value: 'yes', label: 'Yes' },
+                        { value: 'no', label: 'No' },
+                      ]}
+                      value={hasReceipt}
+                      onChange={setHasReceipt}
+                    />
+                  </div>
+
+                  {/* Pre-filled banner */}
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '12px 16px',
+                    backgroundColor: tokens.colors.background.accentGreen,
+                    borderRadius: '8px',
+                  }}>
+                    <AIPrefillIcon size={15} />
+                    <span style={{
+                      fontSize: '14px',
+                      lineHeight: '21px',
+                      fontWeight: 500,
+                      color: tokens.colors.content.primary,
+                    }}>
+                      We pre-filled the rest for you based on your model
+                    </span>
+                  </div>
+
+                  {/* E-Bike */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '0 8px 0 0',
+                    }}>
+                      <span style={{
+                        fontSize: '16px',
+                        lineHeight: '24px',
+                        color: tokens.colors.content.primary,
+                        fontWeight: 500,
+                      }}>
+                        E-Bike*
+                      </span>
+                    </div>
+                    <RadioButtonRich
+                      name="is-ebike"
+                      options={[
+                        { value: 'yes', label: 'Yes' },
+                        { value: 'no', label: 'No' },
+                      ]}
+                      value={isEbike}
+                      onChange={setIsEbike}
+                      prefilled
+                    />
+                  </div>
+
+                  {/* Category */}
+                  <DropdownField
+                    label="Category"
+                    value={category}
+                    required
+                    prefilled
+                    onChange={(e) => setCategory(e.target.value)}
+                    options={['Triathlon', 'Road', 'Gravel', 'MTB', 'City'].map(c => ({ value: c, label: c }))}
+                  />
+
+                  {/* Model year */}
+                  <DropdownField
+                    label="Model year"
+                    value={modelYear}
+                    required
+                    prefilled
+                    onChange={(e) => setModelYear(e.target.value)}
+                    options={['2026', '2025', '2024', '2023', '2022'].map(y => ({ value: y, label: y }))}
+                  />
+
+                  {/* Frame material */}
+                  <DropdownField
+                    label="Frame material"
+                    value={frameMaterial}
+                    required
+                    prefilled
+                    onChange={(e) => setFrameMaterial(e.target.value)}
+                    options={['Carbon', 'Aluminium', 'Steel', 'Titanium'].map(m => ({ value: m, label: m }))}
+                  />
+
+                  {/* Groupset */}
+                  <DropdownField
+                    label="Groupset"
+                    value={groupset}
+                    required
+                    infoIcon
+                    prefilled
+                    onChange={(e) => setGroupset(e.target.value)}
+                    options={['Shimano 105 Di2', 'Shimano Ultegra', 'SRAM Rival', 'Campagnolo'].map(g => ({ value: g, label: g }))}
+                  />
+
+                  {/* Shifting */}
+                  <DropdownField
+                    label="Shifting"
+                    value={shifting}
+                    required
+                    infoIcon
+                    prefilled
+                    onChange={(e) => setShifting(e.target.value)}
+                    options={['Electronic', 'Mechanical'].map(s => ({ value: s, label: s }))}
+                  />
+
+                  {/* Brake type */}
+                  <DropdownField
+                    label="Brake type"
+                    value={brakeType}
+                    required
+                    infoIcon
+                    prefilled
+                    onChange={(e) => setBrakeType(e.target.value)}
+                    options={['Disc', 'Rim'].map(b => ({ value: b, label: b }))}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Preview Panel */}
+            <div style={{
+              flex: isMobile ? 'none' : 1,
+              width: isMobile ? '100%' : 'auto',
+              padding: isMobile ? '24px 16px' : '32px 48px',
+              display: 'flex',
+              justifyContent: 'center',
+            }}>
+              <div style={{ position: isMobile ? 'relative' : 'sticky', top: isMobile ? 'auto' : '32px', width: '100%', maxWidth: '500px' }}>
+                <BikePreviewCard />
+              </div>
+            </div>
+          </main>
+
+          <style>{`
+            select:focus, input:focus { box-shadow: inset 0 0 0 1px ${tokens.colors.content.primary}; outline: none; }
+            button:hover { opacity: 0.95; }
+            button:active { transform: scale(0.99); }
+          `}</style>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
