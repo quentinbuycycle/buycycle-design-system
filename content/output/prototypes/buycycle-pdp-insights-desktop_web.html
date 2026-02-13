@@ -1,0 +1,1539 @@
+<!-- AGENTS.MD READ SUCCESSFULLY -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>buycycle PDP - Bike Insights (Desktop)</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Neue Haas Grotesk Text Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #FCFCFC;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // ==================== RESPONSIVE HOOK ====================
+    const useIsMobile = (breakpoint = 768) => {
+      const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
+      useEffect(() => {
+        const handler = () => setIsMobile(window.innerWidth < breakpoint);
+        window.addEventListener('resize', handler);
+        return () => window.removeEventListener('resize', handler);
+      }, [breakpoint]);
+      return isMobile;
+    };
+
+    // ==================== DESIGN TOKENS ====================
+    const tokens = {
+      colors: {
+        background: {
+          primary: '#FCFCFC',
+          secondary: '#F3F3F3',
+          tertiary: '#FFFFFF',
+          quaternary: '#EAEAEA',
+          reverse: '#090907',
+          positive: '#E8F8F0',
+          alert: '#FFEBEB',
+          overlay: 'rgba(9, 9, 7, 0.5)',
+        },
+        content: {
+          primary: '#090907',
+          secondary: '#333333',
+          tertiary: '#535353',
+          quaternary: '#A9A9A9',
+          reverse: '#FCFCFC',
+          positive: '#146C43',
+          attention: '#92400E',
+          warning: '#EA580C',
+          alert: '#B91C1C',
+          information: '#1D4ED8',
+        },
+        border: {
+          primary: '#090907',
+          secondary: '#757575',
+          tertiary: '#EAEAEA',
+          quaternary: '#D0D0D0',
+        }
+      },
+      typography: {
+        fontFamily: "'Neue Haas Grotesk Text Pro', -apple-system, BlinkMacSystemFont, sans-serif",
+      },
+      spacing: {
+        1: '4px',
+        2: '8px',
+        3: '12px',
+        4: '16px',
+        6: '24px',
+        8: '32px',
+        11: '44px',
+        12: '48px',
+      },
+    };
+
+    // ==================== BIKE DATA ====================
+    const bikeData = {
+      brand: "Specialized",
+      model: "Tarmac SL7 Sport - Shimano 105",
+      year: 2025,
+      frameSize: "58 cm",
+      color: "Purple",
+      condition: "New",
+      price: 2300,
+      originalPrice: 3299,
+      sellerName: "Andre michael k.",
+      sellerLocation: "Germany, Lutherstadt Wittenberg",
+      sellerLastActive: "2h ago",
+      sellerRating: 5,
+      fitsHeight: "178 - 188cm",
+      shiftingType: "Mechanical",
+      brakeType: "Disc",
+      frameMaterial: "Carbon",
+      favorites: 200,
+
+      bikeDetails: [
+        { label: "Fork", value: "FACT Carbon, 12x100mm thru-axle, flat-mount disc" },
+        { label: "Fork material", value: "Carbon" },
+        { label: "Front derailleur", value: "Shimano 105" },
+        { label: "Rear derailleur", value: "Shimano 105" },
+        { label: "Crank", value: "Shimano 105" },
+        { label: "Brakes", value: "Shimano 105" },
+        { label: "Wheels", value: "Bontrager Pradigm SL", replaced: true },
+      ],
+
+      insights: {
+        summary: "The Specialized Tarmac is celebrated as a top-tier race bike, blending lightweight construction, aerodynamic efficiency, and exceptional handling. It's designed for speed and agility, with a focus on comfort and performance across various racing scenarios.",
+
+        rideFeel: {
+          position: 0.78,
+          terrain: 0.25,
+          label: "Race-focused",
+          description: "Aggressive riding position optimized for speed and aerodynamics. Best suited for smooth paved roads and racing scenarios."
+        },
+
+        fit: {
+          heightRange: "178-188cm",
+          heightSource: "estimated",
+          stackReachRatio: 1.38,
+          riderNotes: [
+            {
+              name: "Carlos E.",
+              height: "177cm",
+              legLength: "82cm",
+              fit: "Too small",
+            },
+            {
+              name: "Marco T.",
+              height: "183cm",
+              legLength: "86cm",
+              fit: "Perfect fit",
+            },
+            {
+              name: "Lisa W.",
+              height: "180cm",
+              legLength: "84cm",
+              fit: "Too big",
+            }
+          ],
+          sellerNote: {
+            name: "Andre michael k.",
+            height: "182cm",
+            legLength: "86cm",
+            fit: "Perfect fit",
+            agreesWithRecommendation: true
+          }
+        },
+
+        gearing: {
+          range: 0.65,
+          topSpeed: "66 km/h",
+          similarBikesSpeed: "64 km/h",
+          label: "Versatile",
+          description: "Balanced gearing suitable for both climbing and flat speed. Slightly higher top-end than similar race bikes in this category."
+        },
+
+        specLevel: {
+          level: 3,
+          maxLevel: 5,
+          label: "Mid-range",
+          description: "Upper mid-range components on a premium FACT carbon frame. Excellent value proposition in the race bike category."
+        },
+
+        pros: [
+          "Lightweight and aerodynamic design",
+          "Exceptional handling and comfort",
+          "High-quality carbon frame construction",
+          "Versatile performance for racing",
+          "Innovative Future Shock headset system"
+        ],
+        cons: [
+          "Premium price point",
+          "Integrated components can limit customization",
+          "May lack explosive acceleration vs. competitors"
+        ]
+      }
+    };
+
+    // ==================== ICONS ====================
+    const ChevronIcon = ({ isOpen }) => (
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
+        fill="none"
+        style={{
+          transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+          transition: 'transform 200ms ease-out'
+        }}
+      >
+        <path
+          d="M5 7.5L10 12.5L15 7.5"
+          stroke={tokens.colors.content.tertiary}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+
+    const CheckIcon = () => (
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path
+          d="M4 9L7.5 12.5L14 6"
+          stroke={tokens.colors.content.positive}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+
+    const XIcon = () => (
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path
+          d="M5 5L13 13M13 5L5 13"
+          stroke={tokens.colors.content.quaternary}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+
+    const HeartIcon = ({ filled, count }) => (
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: tokens.spacing[2],
+        backgroundColor: tokens.colors.background.tertiary,
+        padding: `${tokens.spacing[2]} ${tokens.spacing[3]}`,
+        borderRadius: '8px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        cursor: 'pointer',
+      }}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill={filled ? tokens.colors.content.primary : "none"}>
+          <path
+            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+            stroke={tokens.colors.content.primary}
+            strokeWidth="1.5"
+          />
+        </svg>
+        {count && <span style={{ fontSize: '12px', fontWeight: 500, color: tokens.colors.content.primary }}>{count}</span>}
+      </div>
+    );
+
+    const ShareIcon = () => (
+      <div style={{
+        backgroundColor: tokens.colors.background.tertiary,
+        padding: tokens.spacing[2],
+        borderRadius: '8px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+      }}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13" stroke={tokens.colors.content.primary} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </div>
+    );
+
+    const ShieldIcon = ({ size = 16 }) => (
+      <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+        <path d="M8 1L2 3V7C2 10.31 4.55 13.36 8 14.5C11.45 13.36 14 10.31 14 7V3L8 1Z" stroke={tokens.colors.content.positive} strokeWidth="1.5" strokeLinejoin="round"/>
+        <path d="M5.5 8L7 9.5L10.5 6" stroke={tokens.colors.content.positive} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    );
+
+    const StarFilledIcon = () => (
+      <svg width="14" height="14" viewBox="0 0 14 14" fill={tokens.colors.content.primary}>
+        <path d="M7 1L8.47 5.09L12.6 5.35L9.42 7.97L10.37 12L7 9.99L3.63 12L4.58 7.97L1.4 5.35L5.53 5.09L7 1Z"/>
+      </svg>
+    );
+
+    const InfoIcon = () => (
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="7" r="6" stroke={tokens.colors.content.tertiary} strokeWidth="1"/>
+        <path d="M7 6V10M7 4.5V4" stroke={tokens.colors.content.tertiary} strokeWidth="1" strokeLinecap="round"/>
+      </svg>
+    );
+
+    // ==================== EXPANDABLE SECTION ====================
+    const ExpandableSection = ({
+      title,
+      badge,
+      badgeColor = tokens.colors.background.secondary,
+      children,
+      defaultOpen = false
+    }) => {
+      const [isOpen, setIsOpen] = useState(defaultOpen);
+      const contentRef = useRef(null);
+      const [contentHeight, setContentHeight] = useState(0);
+
+      useEffect(() => {
+        if (contentRef.current) {
+          setContentHeight(contentRef.current.scrollHeight);
+        }
+      }, [children, isOpen]);
+
+      return (
+        <div style={{
+          border: `1px solid ${tokens.colors.border.tertiary}`,
+          borderRadius: '12px',
+          backgroundColor: tokens.colors.background.tertiary,
+          marginBottom: tokens.spacing[3],
+          overflow: 'hidden',
+        }}>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: tokens.spacing[4],
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontFamily: tokens.typography.fontFamily,
+            }}
+          >
+            <span style={{
+              fontSize: '14px',
+              fontWeight: 500,
+              color: tokens.colors.content.primary,
+            }}>
+              {title}
+            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: tokens.spacing[3] }}>
+              {badge && !isOpen && (
+                <span style={{
+                  fontSize: '12px',
+                  color: tokens.colors.content.tertiary,
+                  backgroundColor: badgeColor,
+                  padding: `${tokens.spacing[1]} ${tokens.spacing[3]}`,
+                  borderRadius: '4px',
+                }}>
+                  {badge}
+                </span>
+              )}
+              <ChevronIcon isOpen={isOpen} />
+            </div>
+          </button>
+
+          <div style={{
+            height: isOpen ? contentHeight : 0,
+            overflow: 'hidden',
+            transition: 'height 250ms ease-out',
+          }}>
+            <div ref={contentRef} style={{
+              padding: `0 ${tokens.spacing[4]} ${tokens.spacing[4]}`,
+              borderTop: `1px solid ${tokens.colors.border.tertiary}`,
+              paddingTop: tokens.spacing[4],
+            }}>
+              {children}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ==================== VISUAL SCALE ====================
+    const VisualScale = ({ value, leftLabel, rightLabel }) => (
+      <div style={{ marginBottom: tokens.spacing[4] }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginBottom: tokens.spacing[2],
+        }}>
+          <span style={{ fontSize: '12px', color: tokens.colors.content.tertiary }}>{leftLabel}</span>
+          <span style={{ fontSize: '12px', color: tokens.colors.content.tertiary }}>{rightLabel}</span>
+        </div>
+        <div style={{
+          position: 'relative',
+          height: '8px',
+          backgroundColor: tokens.colors.background.secondary,
+          borderRadius: '4px',
+        }}>
+          <div style={{
+            position: 'absolute',
+            left: `${value * 100}%`,
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '18px',
+            height: '18px',
+            backgroundColor: tokens.colors.content.primary,
+            borderRadius: '50%',
+            border: '3px solid white',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.15)',
+          }} />
+        </div>
+      </div>
+    );
+
+    // ==================== SPEC LEVEL INDICATOR ====================
+    const SpecLevelIndicator = ({ level, maxLevel = 5, size = 'medium' }) => {
+      const dotSize = size === 'large' ? '14px' : '10px';
+      return (
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          {Array.from({ length: maxLevel }).map((_, i) => (
+            <div
+              key={i}
+              style={{
+                width: dotSize,
+                height: dotSize,
+                borderRadius: '50%',
+                backgroundColor: i < level
+                  ? tokens.colors.content.primary
+                  : tokens.colors.background.quaternary,
+              }}
+            />
+          ))}
+        </div>
+      );
+    };
+
+    // ==================== COMPARISON BAR ====================
+    const ComparisonBar = ({ value, label, compareValue = 0.5, compareLabel = "Similar bikes" }) => (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: tokens.spacing[3] }}>
+        <div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: tokens.spacing[2],
+          }}>
+            <span style={{ fontSize: '14px', fontWeight: 500, color: tokens.colors.content.primary }}>
+              This bike
+            </span>
+            <span style={{ fontSize: '14px', fontWeight: 500, color: tokens.colors.content.primary }}>{label}</span>
+          </div>
+          <div style={{
+            height: '10px',
+            backgroundColor: tokens.colors.background.secondary,
+            borderRadius: '5px',
+            overflow: 'hidden',
+          }}>
+            <div style={{
+              width: `${value * 100}%`,
+              height: '100%',
+              backgroundColor: tokens.colors.content.primary,
+              borderRadius: '5px',
+            }} />
+          </div>
+        </div>
+        <div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: tokens.spacing[2],
+          }}>
+            <span style={{ fontSize: '14px', color: tokens.colors.content.tertiary }}>
+              {compareLabel}
+            </span>
+            <span style={{ fontSize: '14px', color: tokens.colors.content.tertiary }}>{bikeData.insights.gearing.similarBikesSpeed}</span>
+          </div>
+          <div style={{
+            height: '10px',
+            backgroundColor: tokens.colors.background.secondary,
+            borderRadius: '5px',
+            overflow: 'hidden',
+          }}>
+            <div style={{
+              width: `${compareValue * 100}%`,
+              height: '100%',
+              backgroundColor: tokens.colors.border.quaternary,
+              borderRadius: '5px',
+            }} />
+          </div>
+        </div>
+      </div>
+    );
+
+    // ==================== FIT COLOR HELPER ====================
+    const getFitColor = (fit) => {
+      const lower = fit.toLowerCase();
+      if (lower.includes('perfect') || lower.includes('right') || lower.includes('ideal')) return tokens.colors.content.positive;
+      if (lower.includes('slightly')) return tokens.colors.content.attention;
+      if (lower.includes('too')) return tokens.colors.content.attention;
+      return tokens.colors.content.secondary;
+    };
+
+    // ==================== RIDER NOTE ROW ====================
+    const RiderNoteRow = ({ note }) => (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '12px',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{
+            width: '24px',
+            height: '24px',
+            borderRadius: '50%',
+            backgroundColor: tokens.colors.background.quaternary,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '12px',
+            lineHeight: '18px',
+            fontWeight: 700,
+            color: tokens.colors.content.tertiary,
+            fontFamily: tokens.typography.fontFamily,
+            flexShrink: 0,
+          }}>
+            {note.name.charAt(0)}
+          </div>
+          <div>
+            <div style={{ fontSize: '14px', lineHeight: '21px', fontWeight: 500, color: tokens.colors.content.primary, fontFamily: tokens.typography.fontFamily }}>
+              {note.height} · {note.legLength}
+            </div>
+            <div style={{ fontSize: '12px', lineHeight: '18px', color: tokens.colors.content.tertiary, fontFamily: tokens.typography.fontFamily }}>
+              {note.name}
+            </div>
+          </div>
+        </div>
+        {(() => {
+          const fitColor = getFitColor(note.fit);
+          return (
+            <div style={{
+              fontSize: '12px',
+              lineHeight: '18px',
+              fontWeight: 500,
+              color: fitColor,
+              border: `1px solid ${fitColor}`,
+              padding: '4px 8px',
+              borderRadius: '16px',
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+              fontFamily: tokens.typography.fontFamily,
+            }}>
+              {note.fit}
+            </div>
+          );
+        })()}
+      </div>
+    );
+
+    // ==================== COMMUNITY RIDER FEEDBACK ====================
+    const CommunityRiderFeedback = ({ notes }) => (
+      <div style={{
+        marginTop: '12px',
+        backgroundColor: tokens.colors.background.secondary,
+        borderRadius: '8px',
+      }}>
+        <div style={{
+          padding: '12px 12px 0 12px',
+          fontSize: '12px',
+          lineHeight: '18px',
+          color: tokens.colors.content.tertiary,
+          textTransform: 'uppercase',
+          letterSpacing: '0.5px',
+          fontWeight: 500,
+          fontFamily: tokens.typography.fontFamily,
+        }}>
+          Community rider feedback
+        </div>
+        <div style={{
+          padding: '0 12px',
+          fontSize: '12px',
+          lineHeight: '18px',
+          color: tokens.colors.content.tertiary,
+          fontFamily: tokens.typography.fontFamily,
+        }}>
+          Height · Leg length
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {notes.map((note, i) => (
+            <React.Fragment key={i}>
+              {i > 0 && <div style={{ height: '1px', backgroundColor: tokens.colors.border.tertiary, margin: '0 12px' }} />}
+              <RiderNoteRow note={note} />
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+    );
+
+    // ==================== SELLER FIT CARD ====================
+    const SellerFitCard = ({ note }) => (
+      <div style={{
+        backgroundColor: tokens.colors.background.secondary,
+        borderRadius: '8px',
+      }}>
+        <div style={{
+          padding: '12px 12px 0 12px',
+          fontSize: '12px',
+          lineHeight: '18px',
+          color: tokens.colors.content.tertiary,
+          textTransform: 'uppercase',
+          letterSpacing: '0.5px',
+          fontWeight: 500,
+          fontFamily: tokens.typography.fontFamily,
+        }}>
+          Seller's fit opinion
+        </div>
+        <div style={{
+          padding: '0 12px',
+          fontSize: '12px',
+          lineHeight: '18px',
+          color: tokens.colors.content.tertiary,
+          fontFamily: tokens.typography.fontFamily,
+        }}>
+          Height · Leg length
+        </div>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '12px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{
+              width: '24px',
+              height: '24px',
+              borderRadius: '50%',
+              backgroundColor: tokens.colors.background.quaternary,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '12px',
+              lineHeight: '18px',
+              fontWeight: 700,
+              color: tokens.colors.content.tertiary,
+              fontFamily: tokens.typography.fontFamily,
+              flexShrink: 0,
+            }}>
+              {note.name.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <div style={{ fontSize: '14px', lineHeight: '21px', fontWeight: 500, color: tokens.colors.content.primary, fontFamily: tokens.typography.fontFamily }}>
+                {note.height} · {note.legLength}
+              </div>
+              <div style={{ fontSize: '12px', lineHeight: '18px', color: tokens.colors.content.tertiary, fontFamily: tokens.typography.fontFamily }}>
+                {note.name}
+              </div>
+            </div>
+          </div>
+          {(() => {
+            const fitColor = getFitColor(note.fit);
+            return (
+              <div style={{
+                fontSize: '12px',
+                lineHeight: '18px',
+                fontWeight: 500,
+                color: fitColor,
+                border: `1px solid ${fitColor}`,
+                padding: '4px 8px',
+                borderRadius: '16px',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
+                fontFamily: tokens.typography.fontFamily,
+              }}>
+                {note.fit}
+              </div>
+            );
+          })()}
+        </div>
+      </div>
+    );
+
+    // ==================== PRO CON LIST ====================
+    const ProConList = ({ pros, cons }) => (
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: tokens.spacing[6] }}>
+        <div>
+          <div style={{
+            fontSize: '14px',
+            fontWeight: 500,
+            color: tokens.colors.content.positive,
+            marginBottom: tokens.spacing[3],
+            display: 'flex',
+            alignItems: 'center',
+            gap: tokens.spacing[2],
+          }}>
+            <CheckIcon />
+            Strengths
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: tokens.spacing[3] }}>
+            {pros.map((pro, i) => (
+              <div key={i} style={{
+                fontSize: '14px',
+                color: tokens.colors.content.secondary,
+                lineHeight: '22px',
+                paddingLeft: tokens.spacing[1],
+              }}>
+                {pro}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <div style={{
+            fontSize: '14px',
+            fontWeight: 500,
+            color: tokens.colors.content.tertiary,
+            marginBottom: tokens.spacing[3],
+            display: 'flex',
+            alignItems: 'center',
+            gap: tokens.spacing[2],
+          }}>
+            <XIcon />
+            Considerations
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: tokens.spacing[3] }}>
+            {cons.map((con, i) => (
+              <div key={i} style={{
+                fontSize: '14px',
+                color: tokens.colors.content.tertiary,
+                lineHeight: '22px',
+                paddingLeft: tokens.spacing[1],
+              }}>
+                {con}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+
+    // ==================== HEADER ====================
+    const Header = ({ isMobile }) => (
+      <header style={{
+        borderBottom: `1px solid ${tokens.colors.border.tertiary}`,
+        backgroundColor: tokens.colors.background.tertiary,
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+      }}>
+        <div style={{
+          maxWidth: '1440px',
+          margin: '0 auto',
+          padding: isMobile ? `${tokens.spacing[3]} ${tokens.spacing[4]}` : `${tokens.spacing[4]} 80px`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+          <div style={{
+            fontSize: '24px',
+            fontWeight: 700,
+            color: tokens.colors.content.primary,
+            letterSpacing: '-0.5px',
+          }}>
+            buycycle
+          </div>
+          {!isMobile && (
+            <nav style={{ display: 'flex', gap: tokens.spacing[8] }}>
+              {['Cycling', 'Popular Brands', 'Road & Gravel', 'MTB', 'Cycling Gear', 'Clothing & Shoes'].map(item => (
+                <a key={item} href="#" style={{
+                  fontSize: '14px',
+                  color: tokens.colors.content.secondary,
+                  textDecoration: 'none',
+                }}>
+                  {item}
+                </a>
+              ))}
+            </nav>
+          )}
+          {isMobile && (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ cursor: 'pointer' }}>
+              <path d="M3 6H21M3 12H21M3 18H21" stroke={tokens.colors.content.primary} strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+          )}
+        </div>
+      </header>
+    );
+
+    // ==================== BREADCRUMB ====================
+    const Breadcrumb = ({ isMobile }) => (
+      <div style={{
+        maxWidth: '1440px',
+        margin: '0 auto',
+        padding: isMobile ? `${tokens.spacing[3]} ${tokens.spacing[4]}` : `${tokens.spacing[4]} 80px`,
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: tokens.spacing[2],
+          fontSize: isMobile ? '12px' : '14px',
+          color: tokens.colors.content.tertiary,
+          overflowX: 'auto',
+          whiteSpace: 'nowrap',
+        }}>
+          {['All bikes', 'Road & Gravel', 'Roadbike', 'Specialized Roadbike', 'Specialized', 'Tarmac'].map((item, i, arr) => (
+            <React.Fragment key={item}>
+              <a href="#" style={{ color: i === arr.length - 1 ? tokens.colors.content.primary : tokens.colors.content.tertiary, textDecoration: 'none' }}>
+                {item}
+              </a>
+              {i < arr.length - 1 && <span style={{ color: tokens.colors.content.quaternary }}>›</span>}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+    );
+
+    // ==================== IMAGE GALLERY ====================
+    const bikeImageUrl = "https://buycycle-prod-images.s3.eu-central-1.amazonaws.com/8f8d3f26-21ef-4b26-8d72-ed57d6b8e5c2/original";
+
+    const ImageGallery = ({ isMobile }) => (
+      <div>
+        <div style={{
+          backgroundColor: tokens.colors.background.secondary,
+          borderRadius: isMobile ? '0' : '12px',
+          height: isMobile ? '280px' : '480px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
+          marginBottom: tokens.spacing[3],
+          overflow: 'hidden',
+        }}>
+          <img
+            src={bikeImageUrl}
+            alt="Specialized Tarmac SL7"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+            onError={(e) => { e.target.style.display = 'none'; e.target.parentNode.innerHTML += '<div style="font-size: 120px;">🚴</div>'; }}
+          />
+          <div style={{
+            position: 'absolute',
+            top: tokens.spacing[4],
+            right: tokens.spacing[4],
+            display: 'flex',
+            gap: tokens.spacing[2],
+          }}>
+            <ShareIcon />
+            <HeartIcon filled={false} count={bikeData.favorites} />
+          </div>
+        </div>
+        {/* Thumbnail strip */}
+        <div style={{
+          display: 'flex',
+          gap: tokens.spacing[2],
+          overflowX: 'auto',
+          padding: isMobile ? `0 ${tokens.spacing[4]}` : 0,
+        }}>
+          {[1,2,3,4,5].map((_, i) => (
+            <div key={i} style={{
+              width: '80px',
+              height: '60px',
+              borderRadius: '8px',
+              backgroundColor: tokens.colors.background.secondary,
+              border: i === 0 ? `2px solid ${tokens.colors.content.primary}` : `1px solid ${tokens.colors.border.tertiary}`,
+              overflow: 'hidden',
+              cursor: 'pointer',
+            }}>
+              <img
+                src={bikeImageUrl}
+                alt={`Thumbnail ${i + 1}`}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+                onError={(e) => { e.target.outerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:24px;">🚴</div>'; }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+
+    // ==================== TAB NAVIGATION ====================
+    const TabNavigation = ({ activeTab, onTabChange, isMobile }) => {
+      const tabs = ['Photos', 'Product details', 'Buying with buycycle'];
+      return (
+        <div style={{
+          display: 'flex',
+          gap: isMobile ? tokens.spacing[4] : tokens.spacing[6],
+          borderBottom: `1px solid ${tokens.colors.border.tertiary}`,
+          marginBottom: tokens.spacing[6],
+          overflowX: 'auto',
+          whiteSpace: 'nowrap',
+        }}>
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => onTabChange(tab)}
+              style={{
+                padding: `${tokens.spacing[4]} 0`,
+                backgroundColor: 'transparent',
+                border: 'none',
+                borderBottom: activeTab === tab ? `2px solid ${tokens.colors.content.primary}` : '2px solid transparent',
+                marginBottom: '-1px',
+                fontSize: '16px',
+                fontWeight: activeTab === tab ? 500 : 400,
+                color: activeTab === tab ? tokens.colors.content.primary : tokens.colors.content.tertiary,
+                cursor: 'pointer',
+                fontFamily: tokens.typography.fontFamily,
+              }}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+      );
+    };
+
+    // ==================== SELLER DESCRIPTION ====================
+    const SellerDescription = ({ bike }) => (
+      <div style={{ marginBottom: tokens.spacing[8] }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: tokens.spacing[3],
+          marginBottom: tokens.spacing[4],
+        }}>
+          <h2 style={{
+            fontSize: '18px',
+            fontWeight: 600,
+            color: tokens.colors.content.primary,
+            fontFamily: tokens.typography.fontFamily,
+          }}>
+            Seller description
+          </h2>
+          <button style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: tokens.spacing[1],
+            padding: `${tokens.spacing[1]} ${tokens.spacing[2]}`,
+            backgroundColor: 'transparent',
+            border: 'none',
+            fontSize: '14px',
+            color: tokens.colors.content.tertiary,
+            cursor: 'pointer',
+            fontFamily: tokens.typography.fontFamily,
+          }}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <circle cx="7" cy="7" r="6" stroke={tokens.colors.content.tertiary} strokeWidth="1"/>
+              <path d="M5 5.5C5 4.67 5.67 4 6.5 4H7.5C8.33 4 9 4.67 9 5.5C9 6.33 8.33 7 7.5 7H7V8.5" stroke={tokens.colors.content.tertiary} strokeWidth="1" strokeLinecap="round"/>
+              <circle cx="7" cy="10" r="0.5" fill={tokens.colors.content.tertiary}/>
+            </svg>
+            Show original
+          </button>
+        </div>
+        <div style={{
+          fontSize: '14px',
+          lineHeight: '22px',
+          color: tokens.colors.content.secondary,
+        }}>
+          <p style={{ marginBottom: tokens.spacing[3] }}>
+            I am selling this {bike.brand} {bike.model} road bike in size {bike.frameSize} purchased in April 2025 (only 2000km).
+          </p>
+          <ul style={{
+            paddingLeft: tokens.spacing[4],
+            margin: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: tokens.spacing[2],
+          }}>
+            <li>Brand: {bike.brand}</li>
+            <li>Model: {bike.model}</li>
+            <li>Frame size: {bike.frameSize}</li>
+            <li>Shimano 105 Di2 12S power meter</li>
+            <li>CERAMICSPEED derailleur cage (value €600)</li>
+            <li>New chain and brake pads</li>
+          </ul>
+          <button style={{
+            marginTop: tokens.spacing[3],
+            padding: 0,
+            backgroundColor: 'transparent',
+            border: 'none',
+            fontSize: '14px',
+            color: tokens.colors.content.primary,
+            textDecoration: 'underline',
+            cursor: 'pointer',
+            fontFamily: tokens.typography.fontFamily,
+            display: 'flex',
+            alignItems: 'center',
+            gap: tokens.spacing[1],
+          }}>
+            Read More
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M3 4.5L6 7.5L9 4.5" stroke={tokens.colors.content.primary} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    );
+
+    // ==================== PRODUCT INFO ====================
+    const ProductInfo = ({ bike }) => (
+      <div style={{
+        backgroundColor: tokens.colors.background.tertiary,
+        borderRadius: '12px',
+        border: `1px solid ${tokens.colors.border.tertiary}`,
+        padding: tokens.spacing[6],
+      }}>
+        <div style={{ marginBottom: tokens.spacing[2] }}>
+          <span style={{ fontSize: '14px', color: tokens.colors.content.tertiary }}>{bike.brand}</span>
+        </div>
+        <h1 style={{
+          fontSize: '24px',
+          fontWeight: 600,
+          color: tokens.colors.content.primary,
+          marginBottom: tokens.spacing[3],
+          fontFamily: tokens.typography.fontFamily,
+          lineHeight: '32px',
+        }}>
+          {bike.model} {bike.year}
+        </h1>
+
+        <div style={{
+          display: 'flex',
+          gap: tokens.spacing[2],
+          flexWrap: 'wrap',
+          marginBottom: tokens.spacing[4],
+        }}>
+          {[bike.year, bike.frameSize, 'Shimano 105'].map((tag, i) => (
+            <span key={i} style={{
+              fontSize: '14px',
+              color: tokens.colors.content.tertiary,
+              backgroundColor: tokens.colors.background.secondary,
+              padding: `6px ${tokens.spacing[3]}`,
+              borderRadius: '24px',
+              height: '29px',
+              display: 'flex',
+              alignItems: 'center',
+            }}>
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        <div style={{
+          display: 'flex',
+          alignItems: 'baseline',
+          gap: tokens.spacing[3],
+          marginBottom: tokens.spacing[2],
+        }}>
+          <span style={{
+            fontSize: '32px',
+            fontWeight: 600,
+            color: tokens.colors.content.primary,
+          }}>
+            €{bike.price.toLocaleString()}
+          </span>
+          <span style={{
+            fontSize: '16px',
+            color: tokens.colors.content.tertiary,
+            textDecoration: 'line-through',
+          }}>
+            €{bike.originalPrice.toLocaleString()}
+          </span>
+        </div>
+
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: tokens.spacing[2],
+          fontSize: '14px',
+          color: tokens.colors.content.positive,
+          marginBottom: tokens.spacing[6],
+        }}>
+          <span style={{ textDecoration: 'underline', cursor: 'pointer' }}>
+            €{(bike.price + 35).toLocaleString()} with Buyer Protection
+          </span>
+          <ShieldIcon />
+        </div>
+
+        <button style={{
+          width: '100%',
+          height: '48px',
+          padding: `0 ${tokens.spacing[4]}`,
+          backgroundColor: tokens.colors.content.primary,
+          color: tokens.colors.content.reverse,
+          border: 'none',
+          borderRadius: '6px',
+          fontSize: '16px',
+          fontWeight: 400,
+          cursor: 'pointer',
+          marginBottom: tokens.spacing[3],
+          fontFamily: tokens.typography.fontFamily,
+        }}>
+          Show buying options
+        </button>
+
+        <button style={{
+          width: '100%',
+          height: '48px',
+          padding: `0 ${tokens.spacing[4]}`,
+          backgroundColor: 'transparent',
+          color: tokens.colors.content.primary,
+          border: `1px solid ${tokens.colors.border.quaternary}`,
+          borderRadius: '6px',
+          fontSize: '16px',
+          fontWeight: 400,
+          cursor: 'pointer',
+          fontFamily: tokens.typography.fontFamily,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: tokens.spacing[2],
+        }}>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M17 6L10 2L3 6V14L10 18L17 14V6Z" stroke={tokens.colors.content.primary} strokeWidth="1.5" strokeLinejoin="round"/>
+            <path d="M10 10V18M10 10L3 6M10 10L17 6" stroke={tokens.colors.content.primary} strokeWidth="1.5" strokeLinejoin="round"/>
+          </svg>
+          Make an offer
+        </button>
+
+        {/* Seller Info */}
+        <div style={{
+          marginTop: tokens.spacing[6],
+          paddingTop: tokens.spacing[4],
+          borderTop: `1px solid ${tokens.colors.border.tertiary}`,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: tokens.spacing[3] }}>
+              <div style={{
+                width: '48px',
+                height: '48px',
+                borderRadius: '50%',
+                backgroundColor: tokens.colors.background.secondary,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '20px',
+              }}>
+                👤
+              </div>
+              <div>
+                <div style={{
+                  fontSize: '14px',
+                  color: tokens.colors.content.tertiary,
+                }}>
+                  Sold by
+                </div>
+                <div style={{
+                  fontSize: '15px',
+                  fontWeight: 500,
+                  color: tokens.colors.content.primary,
+                }}>
+                  {bike.sellerName}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: tokens.spacing[1], marginTop: '2px' }}>
+                  {[...Array(bike.sellerRating)].map((_, i) => <StarFilledIcon key={i} />)}
+                </div>
+              </div>
+            </div>
+            <button style={{
+              padding: `${tokens.spacing[2]} ${tokens.spacing[4]}`,
+              backgroundColor: 'transparent',
+              border: `1px solid ${tokens.colors.border.quaternary}`,
+              borderRadius: '6px',
+              fontSize: '14px',
+              fontWeight: 500,
+              color: tokens.colors.content.primary,
+              cursor: 'pointer',
+              fontFamily: tokens.typography.fontFamily,
+            }}>
+              Contact seller
+            </button>
+          </div>
+          <div style={{
+            fontSize: '12px',
+            color: tokens.colors.content.tertiary,
+            marginTop: tokens.spacing[2],
+          }}>
+            {bike.sellerLocation}
+          </div>
+          <div style={{
+            fontSize: '12px',
+            color: tokens.colors.content.quaternary,
+            marginTop: tokens.spacing[1],
+          }}>
+            Last active: {bike.sellerLastActive}
+          </div>
+        </div>
+
+        {/* Buyer Protection Card */}
+        <div style={{
+          marginTop: tokens.spacing[4],
+          padding: tokens.spacing[4],
+          backgroundColor: tokens.colors.background.secondary,
+          borderRadius: '10px',
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: tokens.spacing[2],
+            marginBottom: tokens.spacing[2],
+          }}>
+            <ShieldIcon size={20} />
+            <span style={{
+              fontSize: '14px',
+              fontWeight: 600,
+              color: tokens.colors.content.primary,
+            }}>
+              Buyer Protection
+            </span>
+          </div>
+          <p style={{
+            fontSize: '14px',
+            color: tokens.colors.content.tertiary,
+            lineHeight: '20px',
+          }}>
+            The seller is only paid once you have received and approved your item.
+          </p>
+        </div>
+
+        {/* Trustpilot */}
+        <div style={{
+          marginTop: tokens.spacing[4],
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: tokens.spacing[2],
+        }}>
+          <span style={{ fontSize: '12px', color: tokens.colors.content.tertiary }}>
+            See our
+          </span>
+          <span style={{ fontSize: '12px', fontWeight: 500, color: tokens.colors.content.primary }}>
+            10,938 reviews
+          </span>
+          <span style={{ fontSize: '12px', color: tokens.colors.content.tertiary }}>
+            on
+          </span>
+          <span style={{ fontSize: '12px', fontWeight: 500, color: '#00B67A' }}>
+            ★ Trustpilot
+          </span>
+        </div>
+      </div>
+    );
+
+    // ==================== GENERAL INFO ====================
+    const GeneralInfo = ({ bike }) => (
+      <div style={{ marginBottom: tokens.spacing[8] }}>
+        <h2 style={{
+          fontSize: '18px',
+          fontWeight: 600,
+          color: tokens.colors.content.primary,
+          marginBottom: tokens.spacing[4],
+          fontFamily: tokens.typography.fontFamily,
+        }}>
+          General information
+        </h2>
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: tokens.spacing[2],
+        }}>
+          {[
+            { label: 'Condition', value: bike.condition, hasInfo: true },
+            { label: 'Year', value: bike.year },
+            { label: 'Frame size', value: bike.frameSize },
+            { label: 'Color', value: bike.color },
+            { label: 'Shifting type', value: bike.shiftingType },
+            { label: 'Brake type', value: bike.brakeType },
+            { label: 'Frame material', value: bike.frameMaterial },
+          ].map((item, i) => (
+            <div key={i} style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: tokens.spacing[1],
+              fontSize: '14px',
+              color: tokens.colors.content.secondary,
+              backgroundColor: tokens.colors.background.secondary,
+              padding: `6px ${tokens.spacing[3]}`,
+              borderRadius: '24px',
+              height: '29px',
+            }}>
+              {item.hasInfo && <InfoIcon />}
+              <span style={{ color: tokens.colors.content.tertiary }}>{item.label}:</span>{' '}
+              <span style={{ fontWeight: 500 }}>{item.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+
+    // ==================== BIKE DETAILS ====================
+    const BikeDetails = ({ bike }) => (
+      <div style={{ marginBottom: tokens.spacing[8] }}>
+        <h2 style={{
+          fontSize: '20px',
+          lineHeight: '28px',
+          fontWeight: 700,
+          color: tokens.colors.content.primary,
+          marginBottom: tokens.spacing[4],
+          fontFamily: tokens.typography.fontFamily,
+        }}>
+          Bike details
+        </h2>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {bike.bikeDetails.map((item, i) => (
+            <div key={i} style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '16px 16px',
+              backgroundColor: i % 2 === 0 ? tokens.colors.background.secondary : 'transparent',
+              borderRadius: '8px',
+            }}>
+              <span style={{
+                fontSize: '14px',
+                lineHeight: '21px',
+                fontWeight: 700,
+                color: tokens.colors.content.primary,
+                fontFamily: tokens.typography.fontFamily,
+                width: '180px',
+                flexShrink: 0,
+              }}>
+                {item.label}:
+              </span>
+              <span style={{
+                fontSize: '14px',
+                lineHeight: '21px',
+                color: tokens.colors.content.primary,
+                fontFamily: tokens.typography.fontFamily,
+                flex: 1,
+              }}>
+                {item.value}
+              </span>
+              {item.replaced && (() => {
+                const badgeColor = tokens.colors.content.information;
+                return (
+                  <span style={{
+                    fontSize: '12px',
+                    lineHeight: '18px',
+                    fontWeight: 500,
+                    color: badgeColor,
+                    border: `1px solid ${badgeColor}`,
+                    padding: '4px 8px',
+                    borderRadius: '16px',
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    fontFamily: tokens.typography.fontFamily,
+                  }}>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M4 2L8 6M8 2L4 6" stroke={badgeColor} strokeWidth="1.2" strokeLinecap="round"/>
+                      <path d="M2 8L6 8M6 8L10 8" stroke={badgeColor} strokeWidth="1.2" strokeLinecap="round"/>
+                    </svg>
+                    Replaced
+                  </span>
+                );
+              })()}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+
+    // ==================== ABOUT THIS MODEL ====================
+    const SizeAndFit = ({ insights, isMobile }) => {
+      const [showReviews, setShowReviews] = useState(false);
+      const reviewCount = insights.fit.riderNotes.length;
+
+      return (
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '12px',
+          marginBottom: '32px',
+        }}>
+          <h2 style={{
+            fontSize: '20px',
+            lineHeight: '28px',
+            fontWeight: 700,
+            color: tokens.colors.content.primary,
+            fontFamily: tokens.typography.fontFamily,
+          }}>
+            Size & fit
+          </h2>
+
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '8px' }}>
+            <div style={{
+              padding: '12px',
+              backgroundColor: tokens.colors.background.secondary,
+              borderRadius: '8px',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
+                <span style={{ fontSize: '12px', lineHeight: '18px', color: tokens.colors.content.tertiary, fontFamily: tokens.typography.fontFamily }}>
+                  Recommended height
+                </span>
+                <div style={{ position: 'relative', display: 'inline-flex' }} className="tooltip-trigger">
+                  <InfoIcon />
+                  <div className="tooltip-content" style={{
+                    position: 'absolute',
+                    top: 'calc(100% + 8px)',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    backgroundColor: tokens.colors.content.primary,
+                    color: tokens.colors.content.reverse,
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    lineHeight: '18px',
+                    width: '240px',
+                    pointerEvents: 'none',
+                    opacity: 0,
+                    transition: 'opacity 150ms ease',
+                    zIndex: 10,
+                  }}>
+                    {insights.fit.heightSource === 'manufacturer'
+                      ? `Based on the official ${bikeData.brand} sizing chart for this frame size.`
+                      : insights.fit.heightSource === 'seller_adjusted'
+                        ? 'This height range was adjusted by the seller based on their experience with this bike.'
+                        : 'This height range is estimated based on the frame size. We recommend double-checking on the manufacturer\u2019s website for the most accurate sizing.'}
+                    <div style={{
+                      position: 'absolute',
+                      top: '-4px',
+                      left: '50%',
+                      transform: 'translateX(-50%) rotate(45deg)',
+                      width: '8px',
+                      height: '8px',
+                      backgroundColor: tokens.colors.content.primary,
+                    }} />
+                  </div>
+                </div>
+              </div>
+              <div style={{ fontSize: '16px', lineHeight: '24px', fontWeight: 700, color: tokens.colors.content.primary, fontFamily: tokens.typography.fontFamily }}>
+                {insights.fit.heightRange}
+              </div>
+            </div>
+            <div style={{
+              padding: '12px',
+              backgroundColor: tokens.colors.background.secondary,
+              borderRadius: '8px',
+            }}>
+              <div style={{ fontSize: '12px', lineHeight: '18px', color: tokens.colors.content.tertiary, marginBottom: '4px', fontFamily: tokens.typography.fontFamily }}>
+                Frame size
+              </div>
+              <div style={{ fontSize: '16px', lineHeight: '24px', fontWeight: 700, color: tokens.colors.content.primary, fontFamily: tokens.typography.fontFamily }}>
+                {bikeData.frameSize}
+              </div>
+            </div>
+          </div>
+
+          <SellerFitCard note={insights.fit.sellerNote} />
+
+          {/* Community reviews */}
+          {reviewCount > 0 && (
+            <button
+              onClick={() => setShowReviews(!showReviews)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: 0,
+                backgroundColor: 'transparent',
+                border: 'none',
+                fontSize: '14px',
+                lineHeight: '21px',
+                fontWeight: 500,
+                color: tokens.colors.content.primary,
+                cursor: 'pointer',
+                fontFamily: tokens.typography.fontFamily,
+              }}
+            >
+              <span style={{ textDecoration: 'underline' }}>
+                {showReviews ? 'Hide' : 'Show'} {reviewCount} rider {reviewCount === 1 ? 'review' : 'reviews'}
+              </span>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transform: showReviews ? 'rotate(180deg)' : 'none' }}>
+                <path d="M3 4.5L6 7.5L9 4.5" stroke={tokens.colors.content.primary} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          )}
+          {showReviews && (
+            <CommunityRiderFeedback notes={insights.fit.riderNotes} />
+          )}
+        </div>
+      );
+    };
+
+    // ==================== MAIN APP ====================
+    const App = () => {
+      const [activeTab, setActiveTab] = useState('Product details');
+      const isMobile = useIsMobile();
+
+      return (
+        <div style={{ minHeight: '100vh', backgroundColor: tokens.colors.background.primary }}>
+          <Header isMobile={isMobile} />
+          <Breadcrumb isMobile={isMobile} />
+
+          <main style={{
+            maxWidth: '1440px',
+            margin: '0 auto',
+            padding: isMobile ? `0 0 ${tokens.spacing[8]}` : `0 80px ${tokens.spacing[12]}`,
+          }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: isMobile ? '1fr' : '1fr 380px',
+              gap: isMobile ? tokens.spacing[6] : tokens.spacing[8],
+              alignItems: 'start',
+            }}>
+              {/* Left Column */}
+              <div>
+                <ImageGallery isMobile={isMobile} />
+                <div style={{ marginTop: tokens.spacing[6], padding: isMobile ? `0 ${tokens.spacing[4]}` : 0 }}>
+                  <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} isMobile={isMobile} />
+                  <GeneralInfo bike={bikeData} />
+                  <SellerDescription bike={bikeData} />
+                  <SizeAndFit insights={bikeData.insights} isMobile={isMobile} />
+                  <BikeDetails bike={bikeData} />
+                </div>
+              </div>
+
+              {/* Right Column - Sticky on desktop */}
+              <div style={{
+                position: isMobile ? 'relative' : 'sticky',
+                top: isMobile ? 'auto' : '100px',
+                padding: isMobile ? `0 ${tokens.spacing[4]}` : 0,
+              }}>
+                <ProductInfo bike={bikeData} />
+              </div>
+            </div>
+          </main>
+
+          <style>{`
+            button:hover { opacity: 0.95; }
+            button:active { transform: scale(0.99); }
+            a:hover { color: ${tokens.colors.content.primary} !important; }
+            .tooltip-trigger:hover .tooltip-content { opacity: 1 !important; }
+          `}</style>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
