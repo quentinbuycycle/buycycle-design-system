@@ -5,6 +5,7 @@ date: "2026-02-16"
 team: "Product"
 tags: ["Buyer & Seller","Pre-transactional XP"]
 prototypes:
+  - "/prototypes/controls-enhanced.html"
   - "/prototypes/textfields-enhanced.html"
   - "/prototypes/buycycle-core-component-library-enhanced-interactions-and-animations.html"
 finalPrototypes: []
