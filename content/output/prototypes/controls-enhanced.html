@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controls Enhanced - Buycycle Design System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Neue Haas Grotesk Text Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #FCFCFC;
+            color: #090907;
+            line-height: 1.5;
+            padding: 48px 24px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .header h1 {
+            font-size: 56px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            font-size: 20px;
+            color: #535353;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .badge {
+            display: inline-flex;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #DAFDA0 0%, #FDFDA0 100%);
+            color: #2F4B02;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section-header {
+            border-bottom: 2px solid #EAEAEA;
+            padding-bottom: 16px;
+            margin-bottom: 32px;
+        }
+
+        .section-header h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .section-header p {
+            color: #535353;
+            font-size: 16px;
+        }
+
+        /* Comparison Grid */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .comparison-side {
+            padding: 32px;
+            background: white;
+            border-radius: 24px;
+        }
+
+        .comparison-side.before {
+            border: 2px solid #EAEAEA;
+        }
+
+        .comparison-side.after {
+            border: 2px solid #090907;
+            box-shadow: 0 8px 32px rgba(9, 9, 7, 0.12);
+        }
+
+        .comparison-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .comparison-header h3 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .comparison-badge {
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .comparison-badge.before {
+            background: #F3F3F3;
+            color: #535353;
+        }
+
+        .comparison-badge.after {
+            background: linear-gradient(135deg, #DAFDA0 0%, #FDFDA0 100%);
+            color: #2F4B02;
+        }
+
+        .specs {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .specs.before {
+            background: #F3F3F3;
+        }
+
+        .specs.after {
+            background: linear-gradient(135deg, rgba(218, 253, 160, 0.2) 0%, rgba(253, 253, 160, 0.2) 100%);
+            border: 1px solid rgba(218, 253, 160, 0.3);
+        }
+
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .spec-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .spec-label {
+            color: #535353;
+        }
+
+        .spec-value {
+            font-family: 'Courier New', monospace;
+            color: #090907;
+        }
+
+        .spec-value.enhanced {
+            font-weight: 600;
+        }
+
+        /* Enhanced Toggle Styles */
+        .toggle-enhanced {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 0;
+            background: transparent;
+            border: none;
+            user-select: none;
+        }
+
+        .toggle-enhanced.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .toggle-enhanced-track {
+            position: relative;
+            width: 60px;
+            height: 34px;
+            border-radius: 100px;
+            background: #EAEAEA;
+            transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .toggle-enhanced.checked .toggle-enhanced-track {
+            background: #DAFDA0;
+            box-shadow: 0 2px 8px -2px rgba(218, 253, 160, 0.5);
+        }
+
+        .toggle-enhanced-knob {
+            position: absolute;
+            top: 4px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #090907;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(4px);
+        }
+
+        .toggle-enhanced.checked .toggle-enhanced-knob {
+            transform: translateX(30px);
+        }
+
+        .toggle-enhanced:active:not(.disabled) .toggle-enhanced-knob {
+            transform: translateX(4px) scale(0.95);
+        }
+
+        .toggle-enhanced.checked:active:not(.disabled) .toggle-enhanced-knob {
+            transform: translateX(30px) scale(0.95);
+        }
+
+        .toggle-enhanced-label {
+            font-size: 16px;
+            line-height: 24px;
+            color: #090907;
+        }
+
+        /* Enhanced Checkbox Styles */
+        .checkbox-enhanced {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-enhanced.disabled {
+            cursor: not-allowed;
+        }
+
+        .checkbox-enhanced-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border: 1.5px solid #757575;
+            border-radius: 6px;
+            background: white;
+            transition: all 200ms ease-out;
+        }
+
+        .checkbox-enhanced:hover:not(.disabled):not(.checked) .checkbox-enhanced-box {
+            transform: scale(1.05);
+        }
+
+        .checkbox-enhanced:active:not(.disabled) .checkbox-enhanced-box {
+            transform: scale(0.95);
+        }
+
+        .checkbox-enhanced.checked .checkbox-enhanced-box {
+            background: #090907;
+            border-color: #090907;
+            box-shadow: 0 2px 8px -2px rgba(9, 9, 7, 0.3);
+        }
+
+        .checkbox-enhanced.disabled .checkbox-enhanced-box {
+            background: #D0D0D0;
+            border-color: #D0D0D0;
+        }
+
+        .checkbox-enhanced-checkmark {
+            display: none;
+            width: 20px;
+            height: 20px;
+        }
+
+        .checkbox-enhanced.checked .checkbox-enhanced-checkmark {
+            display: block;
+            animation: checkmark-slide 200ms ease-out;
+        }
+
+        @keyframes checkmark-slide {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(2px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .checkbox-enhanced-label {
+            font-size: 16px;
+            line-height: 24px;
+            color: #333333;
+        }
+
+        .checkbox-enhanced.disabled .checkbox-enhanced-label {
+            color: #D0D0D0;
+        }
+
+        /* Enhanced Radio Styles */
+        .radio-enhanced {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .radio-enhanced.disabled {
+            cursor: default;
+        }
+
+        .radio-enhanced-circle {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border: 1.5px solid #EAEAEA;
+            border-radius: 50%;
+            background: white;
+            transition: all 200ms ease-out;
+        }
+
+        .radio-enhanced:hover:not(.disabled):not(.checked) .radio-enhanced-circle {
+            border-color: #535353;
+            transform: scale(1.05);
+        }
+
+        .radio-enhanced:active:not(.disabled) .radio-enhanced-circle {
+            transform: scale(0.95);
+        }
+
+        .radio-enhanced.checked .radio-enhanced-circle {
+            border-color: #090907;
+            box-shadow: 0 2px 6px -2px rgba(9, 9, 7, 0.3);
+        }
+
+        .radio-enhanced-dot {
+            display: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #090907;
+        }
+
+        .radio-enhanced.checked .radio-enhanced-dot {
+            display: block;
+            animation: radio-pop 200ms ease-out;
+        }
+
+        @keyframes radio-pop {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .radio-enhanced-label {
+            font-size: 14px;
+            line-height: 21px;
+            color: #333333;
+        }
+
+        .radio-enhanced.disabled .radio-enhanced-label {
+            color: #EAEAEA;
+        }
+
+        /* Enhanced Rich Radio Styles */
+        .radio-rich-enhanced {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 520px;
+            padding: 16px 16px 16px 8px;
+            background: white;
+            border: 1px solid #EAEAEA;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 200ms ease-out;
+        }
+
+        .radio-rich-enhanced:hover:not(.disabled) {
+            border-color: #757575;
+            box-shadow: 0 4px 12px -2px rgba(9, 9, 7, 0.1);
+        }
+
+        .radio-rich-enhanced:active:not(.disabled) {
+            transform: scale(0.98);
+        }
+
+        .radio-rich-enhanced.checked {
+            border-color: #757575;
+            box-shadow: 0 2px 8px -2px rgba(9, 9, 7, 0.15);
+        }
+
+        .radio-rich-enhanced.disabled {
+            border-color: #D0D0D0;
+            cursor: default;
+        }
+
+        .radio-rich-enhanced-left {
+            display: flex;
+            gap: 4px;
+            align-items: flex-start;
+            flex: 1;
+        }
+
+        .radio-rich-enhanced-radio-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+        }
+
+        .radio-rich-enhanced-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .radio-rich-enhanced-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .radio-rich-enhanced-title {
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 500;
+            color: #090907;
+        }
+
+        .radio-rich-enhanced.disabled .radio-rich-enhanced-title {
+            color: #F3F3F3;
+        }
+
+        .radio-rich-enhanced-price {
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 500;
+            color: #090907;
+        }
+
+        .radio-rich-enhanced-description {
+            font-size: 14px;
+            line-height: 21px;
+            color: #535353;
+        }
+
+        .radio-rich-enhanced.disabled .radio-rich-enhanced-description {
+            color: #F3F3F3;
+        }
+
+        .radio-rich-enhanced-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            background: #EFF6FF;
+            border-radius: 100px;
+            flex-shrink: 0;
+            transition: transform 200ms ease-out;
+        }
+
+        .radio-rich-enhanced:hover:not(.disabled) .radio-rich-enhanced-tag {
+            transform: scale(1.05);
+        }
+
+        .radio-rich-enhanced.disabled .radio-rich-enhanced-tag {
+            opacity: 0.4;
+        }
+
+        .radio-rich-enhanced-tag-text {
+            font-size: 12px;
+            line-height: 18px;
+            color: #1D4ED8;
+            font-weight: 500;
+        }
+
+        /* Utilities */
+        .space-y-4 > * + * {
+            margin-top: 16px;
+        }
+
+        .space-y-3 > * + * {
+            margin-top: 12px;
+        }
+
+        /* Key Features Box */
+        .features {
+            background: linear-gradient(135deg, #090907 0%, #333333 100%);
+            border-radius: 24px;
+            padding: 48px;
+            color: white;
+            margin-bottom: 80px;
+        }
+
+        .features h2 {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .feature {
+            text-align: center;
+        }
+
+        .feature-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #DAFDA0;
+            margin-bottom: 8px;
+        }
+
+        .feature-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .features-list {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .features-list h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .features-list ul {
+            list-style: none;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .features-list li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 36px;
+            }
+
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .radio-rich-enhanced {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="badge">✨ Enhanced Version</div>
+            <h1>Controls Enhanced</h1>
+            <p>Refined interactions, smooth animations, and enhanced feedback following Emil Kowalski's animation principles</p>
+        </div>
+
+        <!-- Key Features -->
+        <div class="features">
+            <h2>Key Enhancements</h2>
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-value">250ms</div>
+                    <div class="feature-label">Smooth transitions</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-value">0.95</div>
+                    <div class="feature-label">Scale on press</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-value">1.05</div>
+                    <div class="feature-label">Scale on hover</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-value">60fps</div>
+                    <div class="feature-label">Transform-only</div>
+                </div>
+            </div>
+            <div class="features-list">
+                <h3>✨ New Features</h3>
+                <ul>
+                    <li>• Larger touch targets for better accessibility</li>
+                    <li>• Scale feedback on press (0.95) and hover (1.05)</li>
+                    <li>• Pop-in animations for checkbox/radio selections</li>
+                    <li>• Enhanced shadows for depth perception</li>
+                    <li>• Smooth 200-250ms cubic-bezier transitions</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Toggle Comparison -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Toggle - Before & After</h2>
+                <p>Enhanced with larger size, knob scale effect, and shadow</p>
+            </div>
+
+            <div class="comparison">
+                <!-- Before -->
+                <div class="comparison-side before">
+                    <div class="comparison-header">
+                        <h3>Before</h3>
+                        <span class="comparison-badge before">Original</span>
+                    </div>
+                    <div class="space-y-4">
+                        <button class="toggle" id="toggle-before-1" onclick="toggleSwitch('toggle-before-1')">
+                            <div class="toggle-track">
+                                <div class="toggle-knob"></div>
+                            </div>
+                            <span class="toggle-label">Enable notifications</span>
+                        </button>
+                        <button class="toggle checked" id="toggle-before-2" onclick="toggleSwitch('toggle-before-2')">
+                            <div class="toggle-track">
+                                <div class="toggle-knob"></div>
+                            </div>
+                            <span class="toggle-label">Dark mode</span>
+                        </button>
+                    </div>
+                    <div class="specs before">
+                        <div class="spec-row">
+                            <span class="spec-label">Track:</span>
+                            <span class="spec-value">56x32px</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Knob:</span>
+                            <span class="spec-value">24x24px</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Transition:</span>
+                            <span class="spec-value">300ms</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- After -->
+                <div class="comparison-side after">
+                    <div class="comparison-header">
+                        <h3>After</h3>
+                        <span class="comparison-badge after">Enhanced</span>
+                    </div>
+                    <div class="space-y-4">
+                        <button class="toggle-enhanced" id="toggle-after-1" onclick="toggleSwitchEnhanced('toggle-after-1')">
+                            <div class="toggle-enhanced-track">
+                                <div class="toggle-enhanced-knob"></div>
+                            </div>
+                            <span class="toggle-enhanced-label">Enable notifications</span>
+                        </button>
+                        <button class="toggle-enhanced checked" id="toggle-after-2" onclick="toggleSwitchEnhanced('toggle-after-2')">
+                            <div class="toggle-enhanced-track">
+                                <div class="toggle-enhanced-knob"></div>
+                            </div>
+                            <span class="toggle-enhanced-label">Dark mode</span>
+                        </button>
+                    </div>
+                    <div class="specs after">
+                        <div class="spec-row">
+                            <span class="spec-label">Track:</span>
+                            <span class="spec-value enhanced">60x34px ✨</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Knob:</span>
+                            <span class="spec-value enhanced">26x26px ✨</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Transition:</span>
+                            <span class="spec-value enhanced">250ms + scale ✨</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Checkbox Comparison -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Checkbox - Before & After</h2>
+                <p>Enhanced with larger size, rounded corners, and checkmark animation</p>
+            </div>
+
+            <div class="comparison">
+                <!-- Before -->
+                <div class="comparison-side before">
+                    <div class="comparison-header">
+                        <h3>Before</h3>
+                        <span class="comparison-badge before">Original</span>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="checkbox" id="checkbox-before-1" onclick="toggleCheckbox('checkbox-before-1')">
+                            <div class="checkbox-box size-24">
+                                <svg class="checkbox-checkmark" viewBox="0 0 24 24" fill="none">
+                                    <path d="M5 13l4 4L19 7" stroke="#FCFCFC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <span class="checkbox-label">I accept the terms</span>
+                        </label>
+                        <label class="checkbox checked" id="checkbox-before-2" onclick="toggleCheckbox('checkbox-before-2')">
+                            <div class="checkbox-box size-24">
+                                <svg class="checkbox-checkmark" viewBox="0 0 24 24" fill="none">
+                                    <path d="M5 13l4 4L19 7" stroke="#FCFCFC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <span class="checkbox-label">Subscribe to newsletter</span>
+                        </label>
+                    </div>
+                    <div class="specs before">
+                        <div class="spec-row">
+                            <span class="spec-label">Size:</span>
+                            <span class="spec-value">24x24px</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Border Radius:</span>
+                            <span class="spec-value">4px</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- After -->
+                <div class="comparison-side after">
+                    <div class="comparison-header">
+                        <h3>After</h3>
+                        <span class="comparison-badge after">Enhanced</span>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="checkbox-enhanced" id="checkbox-after-1" onclick="toggleCheckboxEnhanced('checkbox-after-1')">
+                            <div class="checkbox-enhanced-box">
+                                <svg class="checkbox-enhanced-checkmark" viewBox="0 0 24 24" fill="none">
+                                    <path d="M5 13l4 4L19 7" stroke="#FCFCFC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <span class="checkbox-enhanced-label">I accept the terms</span>
+                        </label>
+                        <label class="checkbox-enhanced checked" id="checkbox-after-2" onclick="toggleCheckboxEnhanced('checkbox-after-2')">
+                            <div class="checkbox-enhanced-box">
+                                <svg class="checkbox-enhanced-checkmark" viewBox="0 0 24 24" fill="none">
+                                    <path d="M5 13l4 4L19 7" stroke="#FCFCFC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <span class="checkbox-enhanced-label">Subscribe to newsletter</span>
+                        </label>
+                    </div>
+                    <div class="specs after">
+                        <div class="spec-row">
+                            <span class="spec-label">Size:</span>
+                            <span class="spec-value enhanced">26x26px ✨</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Border Radius:</span>
+                            <span class="spec-value enhanced">6px + animation ✨</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Radio Comparison -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Radio Button - Before & After</h2>
+                <p>Enhanced with larger circle, pop animation, and hover feedback</p>
+            </div>
+
+            <div class="comparison">
+                <!-- Before -->
+                <div class="comparison-side before">
+                    <div class="comparison-header">
+                        <h3>Before</h3>
+                        <span class="comparison-badge before">Original</span>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="radio" onclick="selectRadio('shipping-before', 0)">
+                            <div class="radio-circle">
+                                <div class="radio-dot"></div>
+                            </div>
+                            <span class="radio-label">Standard (5-7 days)</span>
+                        </label>
+                        <label class="radio checked" onclick="selectRadio('shipping-before', 1)">
+                            <div class="radio-circle">
+                                <div class="radio-dot"></div>
+                            </div>
+                            <span class="radio-label">Express (2-3 days)</span>
+                        </label>
+                        <label class="radio" onclick="selectRadio('shipping-before', 2)">
+                            <div class="radio-circle">
+                                <div class="radio-dot"></div>
+                            </div>
+                            <span class="radio-label">Overnight</span>
+                        </label>
+                    </div>
+                    <div class="specs before">
+                        <div class="spec-row">
+                            <span class="spec-label">Circle:</span>
+                            <span class="spec-value">24x24px</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Dot:</span>
+                            <span class="spec-value">12x12px</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- After -->
+                <div class="comparison-side after">
+                    <div class="comparison-header">
+                        <h3>After</h3>
+                        <span class="comparison-badge after">Enhanced</span>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="radio-enhanced" onclick="selectRadioEnhanced('shipping-after', 0)">
+                            <div class="radio-enhanced-circle">
+                                <div class="radio-enhanced-dot"></div>
+                            </div>
+                            <span class="radio-enhanced-label">Standard (5-7 days)</span>
+                        </label>
+                        <label class="radio-enhanced checked" onclick="selectRadioEnhanced('shipping-after', 1)">
+                            <div class="radio-enhanced-circle">
+                                <div class="radio-enhanced-dot"></div>
+                            </div>
+                            <span class="radio-enhanced-label">Express (2-3 days)</span>
+                        </label>
+                        <label class="radio-enhanced" onclick="selectRadioEnhanced('shipping-after', 2)">
+                            <div class="radio-enhanced-circle">
+                                <div class="radio-enhanced-dot"></div>
+                            </div>
+                            <span class="radio-enhanced-label">Overnight</span>
+                        </label>
+                    </div>
+                    <div class="specs after">
+                        <div class="spec-row">
+                            <span class="spec-label">Circle:</span>
+                            <span class="spec-value enhanced">26x26px ✨</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Dot:</span>
+                            <span class="spec-value enhanced">14x14px + pop ✨</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rich Radio Comparison -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Rich Radio - Before & After</h2>
+                <p>Enhanced with card scale, shadow effects, and tag animation</p>
+            </div>
+
+            <div class="space-y-12">
+                <!-- Before -->
+                <div>
+                    <div class="comparison-header" style="margin-bottom: 24px;">
+                        <h3>Before</h3>
+                        <span class="comparison-badge before">Original</span>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="radio-rich" onclick="selectRadioRich('rich-before', 0)">
+                            <div class="radio-rich-left">
+                                <div class="radio-rich-radio-area">
+                                    <div class="radio-circle">
+                                        <div class="radio-dot"></div>
+                                    </div>
+                                </div>
+                                <div class="radio-rich-content">
+                                    <div class="radio-rich-title-row">
+                                        <p class="radio-rich-title">Standard Shipping</p>
+                                        <p class="radio-rich-price">Free</p>
+                                    </div>
+                                    <p class="radio-rich-description">Delivered in 5-7 business days</p>
+                                </div>
+                            </div>
+                            <div class="radio-rich-tag">
+                                <p class="radio-rich-tag-text">Best Value</p>
+                            </div>
+                        </label>
+                        <label class="radio-rich checked" onclick="selectRadioRich('rich-before', 1)">
+                            <div class="radio-rich-left">
+                                <div class="radio-rich-radio-area">
+                                    <div class="radio-circle">
+                                        <div class="radio-dot"></div>
+                                    </div>
+                                </div>
+                                <div class="radio-rich-content">
+                                    <div class="radio-rich-title-row">
+                                        <p class="radio-rich-title">Express Shipping</p>
+                                        <p class="radio-rich-price">€9.99</p>
+                                    </div>
+                                    <p class="radio-rich-description">Delivered in 2-3 business days</p>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <p style="font-size: 12px; color: #535353; margin-top: 16px;">514px width, 8px radius</p>
+                </div>
+
+                <!-- After -->
+                <div>
+                    <div class="comparison-header" style="margin-bottom: 24px;">
+                        <h3>After</h3>
+                        <span class="comparison-badge after">Enhanced</span>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="radio-rich-enhanced" onclick="selectRadioRichEnhanced('rich-after', 0)">
+                            <div class="radio-rich-enhanced-left">
+                                <div class="radio-rich-enhanced-radio-area">
+                                    <div class="radio-enhanced-circle">
+                                        <div class="radio-enhanced-dot"></div>
+                                    </div>
+                                </div>
+                                <div class="radio-rich-enhanced-content">
+                                    <div class="radio-rich-enhanced-title-row">
+                                        <p class="radio-rich-enhanced-title">Standard Shipping</p>
+                                        <p class="radio-rich-enhanced-price">Free</p>
+                                    </div>
+                                    <p class="radio-rich-enhanced-description">Delivered in 5-7 business days</p>
+                                </div>
+                            </div>
+                            <div class="radio-rich-enhanced-tag">
+                                <p class="radio-rich-enhanced-tag-text">Best Value</p>
+                            </div>
+                        </label>
+                        <label class="radio-rich-enhanced checked" onclick="selectRadioRichEnhanced('rich-after', 1)">
+                            <div class="radio-rich-enhanced-left">
+                                <div class="radio-rich-enhanced-radio-area">
+                                    <div class="radio-enhanced-circle">
+                                        <div class="radio-enhanced-dot"></div>
+                                    </div>
+                                </div>
+                                <div class="radio-rich-enhanced-content">
+                                    <div class="radio-rich-enhanced-title-row">
+                                        <p class="radio-rich-enhanced-title">Express Shipping</p>
+                                        <p class="radio-rich-enhanced-price">€9.99</p>
+                                    </div>
+                                    <p class="radio-rich-enhanced-description">Delivered in 2-3 business days</p>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <p style="font-size: 12px; color: #090907; font-weight: 600; margin-top: 16px;">
+                        520px width, 12px radius, scale 0.98 on press, shadow on hover ✨
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Original toggle
+        function toggleSwitch(id) {
+            const toggle = document.getElementById(id);
+            if (!toggle.classList.contains('disabled')) {
+                toggle.classList.toggle('checked');
+            }
+        }
+
+        // Enhanced toggle
+        function toggleSwitchEnhanced(id) {
+            const toggle = document.getElementById(id);
+            if (!toggle.classList.contains('disabled')) {
+                toggle.classList.toggle('checked');
+            }
+        }
+
+        // Original checkbox
+        function toggleCheckbox(id) {
+            const checkbox = document.getElementById(id);
+            if (!checkbox.classList.contains('disabled')) {
+                checkbox.classList.toggle('checked');
+            }
+        }
+
+        // Enhanced checkbox
+        function toggleCheckboxEnhanced(id) {
+            const checkbox = document.getElementById(id);
+            if (!checkbox.classList.contains('disabled')) {
+                checkbox.classList.toggle('checked');
+            }
+        }
+
+        // Radio groups
+        const radioGroups = {
+            'shipping-before': [],
+            'shipping-after': [],
+            'rich-before': [],
+            'rich-after': []
+        };
+
+        // Organize radios by group
+        document.querySelectorAll('.radio').forEach((radio) => {
+            const parent = radio.closest('.comparison-side');
+            if (parent && parent.classList.contains('before')) {
+                radioGroups['shipping-before'].push(radio);
+            }
+        });
+
+        document.querySelectorAll('.radio-enhanced').forEach((radio) => {
+            const parent = radio.closest('.comparison-side');
+            if (parent && parent.classList.contains('after')) {
+                radioGroups['shipping-after'].push(radio);
+            }
+        });
+
+        document.querySelectorAll('.radio-rich').forEach((radio) => {
+            radioGroups['rich-before'].push(radio);
+        });
+
+        document.querySelectorAll('.radio-rich-enhanced').forEach((radio) => {
+            radioGroups['rich-after'].push(radio);
+        });
+
+        function selectRadio(group, index) {
+            const radios = radioGroups[group];
+            radios.forEach((radio, i) => {
+                if (!radio.classList.contains('disabled')) {
+                    if (i === index) {
+                        radio.classList.add('checked');
+                    } else {
+                        radio.classList.remove('checked');
+                    }
+                }
+            });
+        }
+
+        function selectRadioEnhanced(group, index) {
+            const radios = radioGroups[group];
+            radios.forEach((radio, i) => {
+                if (!radio.classList.contains('disabled')) {
+                    if (i === index) {
+                        radio.classList.add('checked');
+                    } else {
+                        radio.classList.remove('checked');
+                    }
+                }
+            });
+        }
+
+        function selectRadioRich(group, index) {
+            const radios = radioGroups[group];
+            radios.forEach((radio, i) => {
+                if (!radio.classList.contains('disabled')) {
+                    if (i === index) {
+                        radio.classList.add('checked');
+                    } else {
+                        radio.classList.remove('checked');
+                    }
+                }
+            });
+        }
+
+        function selectRadioRichEnhanced(group, index) {
+            const radios = radioGroups[group];
+            radios.forEach((radio, i) => {
+                if (!radio.classList.contains('disabled')) {
+                    if (i === index) {
+                        radio.classList.add('checked');
+                    } else {
+                        radio.classList.remove('checked');
+                    }
+                }
+            });
+        }
+
+        // Copy original styles for before section
+        const style = document.createElement('style');
+        style.textContent = `
+            /* Original Toggle */
+            .toggle {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                cursor: pointer;
+                padding: 0;
+                background: transparent;
+                border: none;
+                user-select: none;
+            }
+
+            .toggle.disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+            .toggle-track {
+                position: relative;
+                width: 56px;
+                height: 32px;
+                border-radius: 100px;
+                background: #EAEAEA;
+                transition: background-color 300ms;
+            }
+
+            .toggle.checked .toggle-track {
+                background: #DAFDA0;
+            }
+
+            .toggle-knob {
+                position: absolute;
+                top: 4px;
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                background: #090907;
+                transition: transform 300ms;
+                transform: translateX(4px);
+            }
+
+            .toggle.checked .toggle-knob {
+                transform: translateX(28px);
+            }
+
+            .toggle-label {
+                font-size: 16px;
+                line-height: 24px;
+                color: #090907;
+            }
+
+            /* Original Checkbox */
+            .checkbox {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                cursor: pointer;
+                user-select: none;
+            }
+
+            .checkbox.disabled {
+                cursor: not-allowed;
+            }
+
+            .checkbox-box {
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-center;
+                width: 20px;
+                height: 20px;
+                border: 1px solid #757575;
+                border-radius: 4px;
+                background: white;
+                transition: all 200ms;
+            }
+
+            .checkbox-box.size-24 {
+                width: 24px;
+                height: 24px;
+                border-width: 1.2px;
+            }
+
+            .checkbox.checked .checkbox-box {
+                background: #090907;
+                border-color: #090907;
+            }
+
+            .checkbox.disabled .checkbox-box {
+                background: #D0D0D0;
+                border-color: #D0D0D0;
+            }
+
+            .checkbox-checkmark {
+                display: none;
+                width: 16px;
+                height: 16px;
+            }
+
+            .checkbox-box.size-24 .checkbox-checkmark {
+                width: 18px;
+                height: 18px;
+            }
+
+            .checkbox.checked .checkbox-checkmark {
+                display: block;
+            }
+
+            .checkbox-label {
+                font-size: 16px;
+                line-height: 24px;
+                color: #333333;
+            }
+
+            .checkbox.disabled .checkbox-label {
+                color: #D0D0D0;
+            }
+
+            /* Original Radio */
+            .radio {
+                display: inline-flex;
+                align-items: center;
+                gap: 12px;
+                cursor: pointer;
+                user-select: none;
+            }
+
+            .radio.disabled {
+                cursor: default;
+            }
+
+            .radio-circle {
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-center;
+                width: 24px;
+                height: 24px;
+                border: 1.5px solid #EAEAEA;
+                border-radius: 50%;
+                background: white;
+                transition: border-color 200ms;
+            }
+
+            .radio:not(.disabled):not(.checked):hover .radio-circle {
+                border-color: #535353;
+            }
+
+            .radio.checked .radio-circle {
+                border-color: #090907;
+            }
+
+            .radio-dot {
+                display: none;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: #090907;
+            }
+
+            .radio.checked .radio-dot {
+                display: block;
+            }
+
+            .radio-label {
+                font-size: 14px;
+                line-height: 21px;
+                color: #333333;
+            }
+
+            .radio.disabled .radio-label {
+                color: #EAEAEA;
+            }
+
+            /* Original Rich Radio */
+            .radio-rich {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 514px;
+                padding: 16px 16px 16px 8px;
+                background: white;
+                border: 1px solid #EAEAEA;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: border-color 200ms;
+            }
+
+            .radio-rich:hover:not(.disabled) {
+                border-color: #757575;
+            }
+
+            .radio-rich.checked {
+                border-color: #757575;
+            }
+
+            .radio-rich.disabled {
+                border-color: #D0D0D0;
+                cursor: default;
+            }
+
+            .radio-rich-left {
+                display: flex;
+                gap: 4px;
+                align-items: flex-start;
+                flex: 1;
+            }
+
+            .radio-rich-radio-area {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                flex-shrink: 0;
+            }
+
+            .radio-rich-content {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                flex: 1;
+            }
+
+            .radio-rich-title-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+            }
+
+            .radio-rich-title {
+                font-size: 16px;
+                line-height: 24px;
+                font-weight: 500;
+                color: #090907;
+            }
+
+            .radio-rich.disabled .radio-rich-title {
+                color: #F3F3F3;
+            }
+
+            .radio-rich-price {
+                font-size: 16px;
+                line-height: 24px;
+                font-weight: 500;
+                color: #090907;
+            }
+
+            .radio-rich-description {
+                font-size: 14px;
+                line-height: 21px;
+                color: #535353;
+            }
+
+            .radio-rich.disabled .radio-rich-description {
+                color: #F3F3F3;
+            }
+
+            .radio-rich-tag {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 4px 8px;
+                background: #EFF6FF;
+                border-radius: 100px;
+                flex-shrink: 0;
+            }
+
+            .radio-rich.disabled .radio-rich-tag {
+                opacity: 0.4;
+            }
+
+            .radio-rich-tag-text {
+                font-size: 12px;
+                line-height: 18px;
+                color: #1D4ED8;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
