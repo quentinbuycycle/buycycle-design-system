@@ -9,6 +9,7 @@ prototypes:
   - "/prototypes/textfields-enhanced.html"
   - "/prototypes/buycycle-core-component-library-enhanced-interactions-and-animations.html"
 finalPrototypes:
+  - "/prototypes/button-enhanced.html"
   - "/prototypes/text-field-demo-enhanced.html"
   - "/prototypes/index-enhanced.html"
 ---
