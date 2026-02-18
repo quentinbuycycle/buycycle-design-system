@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TextField Enhanced - Buycycle Design System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Neue Haas Grotesk Text Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #FCFCFC;
+            color: #090907;
+            line-height: 1.5;
+            padding: 48px 24px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .header h1 {
+            font-size: 56px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            font-size: 20px;
+            color: #535353;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Enhancement Badge */
+        .enhancement-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #DAFDA0 0%, #FDFDA0 100%);
+            color: #2F4B02;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 32px;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section-header {
+            border-bottom: 2px solid #EAEAEA;
+            padding-bottom: 16px;
+            margin-bottom: 32px;
+        }
+
+        .section-header h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .section-header p {
+            color: #535353;
+            font-size: 16px;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 48px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        /* Card */
+        .card {
+            background: white;
+            border: 1px solid #EAEAEA;
+            border-radius: 16px;
+            padding: 32px;
+        }
+
+        .card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 16px;
+        }
+
+        .card-note {
+            font-size: 12px;
+            color: #535353;
+            margin-top: 12px;
+        }
+
+        /* Enhanced TextField Styles */
+        .text-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .text-field-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333333;
+            letter-spacing: 0.2px;
+        }
+
+        .text-field-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 48px;
+            padding: 0 16px;
+            background: white;
+            border: 1.5px solid #EAEAEA;
+            border-radius: 12px;
+            transition: all 200ms ease-out;
+        }
+
+        .text-field-input-wrapper:hover {
+            border-color: #A9A9A9;
+        }
+
+        .text-field-input-wrapper:focus-within {
+            border-width: 2px;
+            border-color: #757575;
+            box-shadow: 0 0 0 3px rgba(9, 9, 7, 0.08);
+        }
+
+        .text-field-input-wrapper.error {
+            border-width: 2px;
+            border-color: #B91C1C;
+            box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.08);
+        }
+
+        .text-field-input-wrapper.disabled {
+            background: #F3F3F3;
+            cursor: not-allowed;
+        }
+
+        .text-field-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 16px;
+            color: #090907;
+            transition: color 200ms ease-out;
+        }
+
+        .text-field-input::placeholder {
+            color: #A9A9A9;
+        }
+
+        .text-field-input:disabled {
+            cursor: not-allowed;
+        }
+
+        .text-field-icon {
+            width: 20px;
+            height: 20px;
+            color: #535353;
+            flex-shrink: 0;
+        }
+
+        .text-field-icon.leading {
+            margin-right: 8px;
+        }
+
+        .text-field-icon.trailing {
+            margin-left: 8px;
+            cursor: pointer;
+            transition: all 200ms ease-out;
+        }
+
+        .text-field-icon.trailing:hover {
+            color: #090907;
+            transform: scale(1.1);
+        }
+
+        .text-field-icon.trailing:active {
+            transform: scale(0.95);
+        }
+
+        .text-field-hint {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #535353;
+            padding: 0 2px;
+        }
+
+        .text-field-hint.error {
+            color: #B91C1C;
+        }
+
+        /* Comparison Section */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 80px;
+        }
+
+        .comparison-side {
+            padding: 40px;
+            background: white;
+            border-radius: 24px;
+        }
+
+        .comparison-side.before {
+            border: 2px solid #EAEAEA;
+        }
+
+        .comparison-side.after {
+            border: 2px solid #090907;
+            box-shadow: 0 8px 32px rgba(9, 9, 7, 0.12);
+        }
+
+        .comparison-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .comparison-header h3 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .comparison-badge {
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .comparison-badge.before {
+            background: #F3F3F3;
+            color: #535353;
+        }
+
+        .comparison-badge.after {
+            background: linear-gradient(135deg, #DAFDA0 0%, #FDFDA0 100%);
+            color: #2F4B02;
+        }
+
+        .comparison-specs {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .comparison-specs.before {
+            background: #F3F3F3;
+        }
+
+        .comparison-specs.after {
+            background: linear-gradient(135deg, rgba(218, 253, 160, 0.2) 0%, rgba(253, 253, 160, 0.2) 100%);
+            border: 1px solid rgba(218, 253, 160, 0.3);
+        }
+
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .spec-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .spec-label {
+            color: #535353;
+        }
+
+        .spec-value {
+            font-family: 'Courier New', monospace;
+            color: #090907;
+        }
+
+        .spec-value.enhanced {
+            font-weight: 600;
+        }
+
+        /* Form Example */
+        .form-example {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 48px;
+            background: white;
+            border: 2px solid #090907;
+            border-radius: 32px;
+            box-shadow: 0 16px 64px rgba(9, 9, 7, 0.15);
+        }
+
+        .form-example h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .form-example .subtitle {
+            font-size: 14px;
+            color: #535353;
+            margin-bottom: 32px;
+        }
+
+        .form-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .submit-button {
+            width: 100%;
+            height: 52px;
+            background: #090907;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 200ms ease-out;
+            box-shadow: 0 2px 8px rgba(9, 9, 7, 0.2);
+        }
+
+        .submit-button:hover {
+            background: #333333;
+            box-shadow: 0 4px 16px rgba(9, 9, 7, 0.3);
+        }
+
+        .submit-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+            padding: 48px;
+            background: linear-gradient(135deg, #090907 0%, #333333 100%);
+            border-radius: 24px;
+            color: white;
+            margin-bottom: 80px;
+        }
+
+        .feature {
+            text-align: center;
+        }
+
+        .feature-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #DAFDA0;
+            margin-bottom: 8px;
+        }
+
+        .feature-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 36px;
+            }
+
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .form-example {
+                padding: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="enhancement-badge">
+                ✨ Enhanced Version
+            </div>
+            <h1>TextField Enhanced</h1>
+            <p>Refined dimensions, focus ring effects, and smooth 200ms transitions following Emil Kowalski's animation principles</p>
+        </div>
+
+        <!-- Key Features -->
+        <div class="features-grid">
+            <div class="feature">
+                <div class="feature-value">48px</div>
+                <div class="feature-label">Height (vs 40px)</div>
+            </div>
+            <div class="feature">
+                <div class="feature-value">12px</div>
+                <div class="feature-label">Border Radius (vs 6px)</div>
+            </div>
+            <div class="feature">
+                <div class="feature-value">1.5px</div>
+                <div class="feature-label">Border Width (vs 1px)</div>
+            </div>
+            <div class="feature">
+                <div class="feature-value">200ms</div>
+                <div class="feature-label">Ease-out transitions</div>
+            </div>
+        </div>
+
+        <!-- Before & After Comparison -->
+        <div class="comparison">
+            <!-- Before -->
+            <div class="comparison-side before">
+                <div class="comparison-header">
+                    <h3>Before</h3>
+                    <span class="comparison-badge before">Original</span>
+                </div>
+                <div class="text-field">
+                    <label class="text-field-label">Email Address</label>
+                    <div class="text-field-input-wrapper" style="height: 40px; border-radius: 6px; border-width: 1px;">
+                        <input type="email" class="text-field-input" placeholder="you@example.com" id="email-before">
+                    </div>
+                    <div class="text-field-hint">
+                        <span>We'll never share your email</span>
+                    </div>
+                </div>
+                <div class="comparison-specs before">
+                    <div class="spec-row">
+                        <span class="spec-label">Height:</span>
+                        <span class="spec-value">40px</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">Border Radius:</span>
+                        <span class="spec-value">6px</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">Border Width:</span>
+                        <span class="spec-value">1px (2px focus)</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">Focus Effect:</span>
+                        <span class="spec-value">Border only</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- After -->
+            <div class="comparison-side after">
+                <div class="comparison-header">
+                    <h3>After</h3>
+                    <span class="comparison-badge after">Enhanced</span>
+                </div>
+                <div class="text-field">
+                    <label class="text-field-label">Email Address</label>
+                    <div class="text-field-input-wrapper">
+                        <input type="email" class="text-field-input" placeholder="you@example.com" id="email-after">
+                    </div>
+                    <div class="text-field-hint">
+                        <span>We'll never share your email</span>
+                    </div>
+                </div>
+                <div class="comparison-specs after">
+                    <div class="spec-row">
+                        <span class="spec-label">Height:</span>
+                        <span class="spec-value enhanced">48px ✨</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">Border Radius:</span>
+                        <span class="spec-value enhanced">12px ✨</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">Border Width:</span>
+                        <span class="spec-value enhanced">1.5px (2px focus) ✨</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">Focus Effect:</span>
+                        <span class="spec-value enhanced">Border + Ring ✨</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All States -->
+        <section class="section">
+            <div class="section-header">
+                <h2>All States</h2>
+                <p>7 automatic states with refined interactions</p>
+            </div>
+
+            <div class="grid-3">
+                <!-- Default -->
+                <div class="card">
+                    <h3>1. Default</h3>
+                    <div class="text-field">
+                        <label class="text-field-label">Default State</label>
+                        <div class="text-field-input-wrapper">
+                            <input type="text" class="text-field-input" placeholder="Enter text...">
+                        </div>
+                    </div>
+                    <p class="card-note">Border: 1.5px #EAEAEA</p>
+                </div>
+
+                <!-- Hover -->
+                <div class="card">
+                    <h3>2. Hover</h3>
+                    <div class="text-field">
+                        <label class="text-field-label">Hover State</label>
+                        <div class="text-field-input-wrapper">
+                            <input type="text" class="text-field-input" placeholder="Hover to see...">
+                        </div>
+                        <div class="text-field-hint">
+                            <span>Hover over the input</span>
+                        </div>
+                    </div>
+                    <p class="card-note">Border: 1.5px #A9A9A9</p>
+                </div>
+
+                <!-- Focused -->
+                <div class="card">
+                    <h3>3. Focused</h3>
+                    <div class="text-field">
+                        <label class="text-field-label">Focused State</label>
+                        <div class="text-field-input-wrapper">
+                            <input type="text" class="text-field-input" placeholder="Click to focus...">
+                        </div>
+                        <div class="text-field-hint">
+                            <span>Focus ring appears</span>
+                        </div>
+                    </div>
+                    <p class="card-note">Border: 2px #757575 + focus ring</p>
+                </div>
+
+                <!-- Activated -->
+                <div class="card">
+                    <h3>4. Activated</h3>
+                    <div class="text-field">
+                        <label class="text-field-label">Activated State</label>
+                        <div class="text-field-input-wrapper">
+                            <input type="text" class="text-field-input" value="john.doe" placeholder="Type something...">
+                        </div>
+                        <div class="text-field-hint">
+                            <span>Has text and is focused</span>
+                        </div>
+                    </div>
+                    <p class="card-note">Border: 2px #757575 + focus ring</p>
+                </div>
+
+                <!-- Resting -->
+                <div class="card">
+                    <h3>5. Resting</h3>
+                    <div class="text-field">
+                        <label class="text-field-label">Resting State</label>
+                        <div class="text-field-input-wrapper">
+                            <input type="text" class="text-field-input" value="john.doe@example.com">
+                        </div>
+                        <div class="text-field-hint">
+                            <span>Has text, not focused</span>
+                        </div>
+                    </div>
+                    <p class="card-note">Border: 1.5px #EAEAEA (subtle)</p>
+                </div>
+
+                <!-- Disabled -->
+                <div class="card">
+                    <h3>6. Disabled</h3>
+                    <div class="text-field">
+                        <label class="text-field-label">Disabled State</label>
+                        <div class="text-field-input-wrapper disabled">
+                            <input type="text" class="text-field-input" placeholder="Cannot interact..." disabled>
+                        </div>
+                        <div class="text-field-hint">
+                            <span>Input is disabled</span>
+                        </div>
+                    </div>
+                    <p class="card-note">Background: #F3F3F3</p>
+                </div>
+
+                <!-- Error -->
+                <div class="card">
+                    <h3>7. Error</h3>
+                    <div class="text-field">
+                        <label class="text-field-label" style="color: #B91C1C;">Error State</label>
+                        <div class="text-field-input-wrapper error">
+                            <input type="text" class="text-field-input" value="invalid-email">
+                        </div>
+                        <div class="text-field-hint error">
+                            <span>Please enter a valid email</span>
+                        </div>
+                    </div>
+                    <p class="card-note">Border: 2px #B91C1C + error ring</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feature Combinations -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Feature Combinations</h2>
+                <p>Enhanced features with refined interactions</p>
+            </div>
+
+            <div class="grid-2">
+                <!-- Search with Icons -->
+                <div class="card">
+                    <h3>Search (Both Icons)</h3>
+                    <div class="text-field">
+                        <div class="text-field-input-wrapper">
+                            <svg class="text-field-icon leading" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
+                            </svg>
+                            <input type="text" class="text-field-input" placeholder="Search bikes..." id="search-input">
+                            <svg class="text-field-icon trailing" fill="currentColor" viewBox="0 0 20 20" onclick="document.getElementById('search-input').value = ''">
+                                <path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="card-note">Trailing icon scales on hover (1.1) and press (0.95)</p>
+                </div>
+
+                <!-- Character Counter -->
+                <div class="card">
+                    <h3>Character Counter</h3>
+                    <div class="text-field">
+                        <label class="text-field-label">Bio</label>
+                        <div class="text-field-input-wrapper">
+                            <input type="text" class="text-field-input" placeholder="Tell us about yourself..." id="bio-input" maxlength="250" oninput="updateCounter()">
+                        </div>
+                        <div class="text-field-hint">
+                            <span>Share your cycling interests</span>
+                            <span id="char-counter">0/250</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Real-World Form -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Real-World Example</h2>
+                <p>Enhanced sign-up form</p>
+            </div>
+
+            <div class="form-example">
+                <h3>Create Account</h3>
+                <p class="subtitle">Join the buycycle community</p>
+
+                <form class="form-fields" onsubmit="event.preventDefault(); alert('Form submitted!');">
+                    <!-- Email -->
+                    <div class="text-field">
+                        <label class="text-field-label">Email</label>
+                        <div class="text-field-input-wrapper" id="email-wrapper">
+                            <input type="email" class="text-field-input" placeholder="you@example.com" id="form-email" required oninput="validateEmail()">
+                        </div>
+                        <div class="text-field-hint" id="email-hint">
+                            <span>We'll never share your email</span>
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="text-field">
+                        <label class="text-field-label">Password</label>
+                        <div class="text-field-input-wrapper">
+                            <input type="password" class="text-field-input" placeholder="At least 8 characters..." required>
+                        </div>
+                    </div>
+
+                    <!-- Bio -->
+                    <div class="text-field">
+                        <label class="text-field-label">Bio (Optional)</label>
+                        <div class="text-field-input-wrapper">
+                            <input type="text" class="text-field-input" placeholder="Tell us about yourself..." id="form-bio" maxlength="250" oninput="updateFormCounter()">
+                        </div>
+                        <div class="text-field-hint">
+                            <span>Share your cycling interests</span>
+                            <span id="form-bio-counter">0/250</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-button">Create Account</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Character counter
+        function updateCounter() {
+            const input = document.getElementById('bio-input');
+            const counter = document.getElementById('char-counter');
+            counter.textContent = `${input.value.length}/250`;
+        }
+
+        function updateFormCounter() {
+            const input = document.getElementById('form-bio');
+            const counter = document.getElementById('form-bio-counter');
+            counter.textContent = `${input.value.length}/250`;
+        }
+
+        // Email validation
+        function validateEmail() {
+            const input = document.getElementById('form-email');
+            const wrapper = document.getElementById('email-wrapper');
+            const hint = document.getElementById('email-hint');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (input.value.length > 0 && !emailRegex.test(input.value)) {
+                wrapper.classList.add('error');
+                hint.classList.add('error');
+                hint.innerHTML = '<span>Please enter a valid email address</span>';
+            } else {
+                wrapper.classList.remove('error');
+                hint.classList.remove('error');
+                hint.innerHTML = '<span>We\'ll never share your email</span>';
+            }
+        }
+    </script>
+</body>
+</html>
