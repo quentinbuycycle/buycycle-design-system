@@ -6,7 +6,8 @@ team: "Design"
 tags: ["Buyer","Pre-transactional XP"]
 prototypes:
   - "/prototypes/related-items-discovery-at-end-of-filtered-result-lists.html"
-finalPrototypes: []
+finalPrototypes:
+  - "/prototypes/index.html"
 ---
 
 ## Problem
