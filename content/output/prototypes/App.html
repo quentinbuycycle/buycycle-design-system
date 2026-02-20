@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Show Related Items — App Prototype</title>
+  <style>
+    /* ── Design System Tokens ── */
+    :root {
+      --font-primary: 'Neue Haas Grotesk Text Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-regular: 400;
+      --font-medium: 500;
+      --font-bold: 700;
+
+      --text-xs: 12px;
+      --text-sm: 14px;
+      --text-base: 16px;
+      --text-lg: 18px;
+
+      --leading-xs: 18px;
+      --leading-sm: 21px;
+      --leading-base: 24px;
+      --leading-lg: 27px;
+
+      --bg-primary: #FCFCFC;
+      --bg-secondary: #F3F3F3;
+      --bg-tertiary: #FFFFFF;
+
+      --content-primary: #090907;
+      --content-secondary: #333333;
+      --content-tertiary: #535353;
+      --content-quartenary: #A9A9A9;
+      --content-primary-reverse: #FCFCFC;
+      --content-alert: #B91C1C;
+      --content-warning: #EA580C;
+
+      --border-primary: #090907;
+      --border-secondary: #757575;
+      --border-tertiary: #EAEAEA;
+      --border-quartenary: #D0D0D0;
+
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-6: 24px;
+      --space-8: 32px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      background: #E5E5E5;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 32px 0;
+    }
+
+    /* ── Device Frame ── */
+    .device-frame {
+      width: 390px;
+      min-height: 844px;
+      background: var(--bg-primary);
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── iOS Status Bar ── */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px 8px;
+      background: var(--bg-primary);
+      flex-shrink: 0;
+    }
+
+    .status-bar-time {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--content-primary);
+      letter-spacing: 0.2px;
+    }
+
+    .status-bar-icons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ── Search Bar ── */
+    .search-bar {
+      padding: 0 var(--space-4) var(--space-3);
+      background: var(--bg-primary);
+      flex-shrink: 0;
+    }
+
+    .search-input {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      height: 40px;
+      padding: 0 var(--space-4);
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-tertiary);
+      border-radius: 6px;
+    }
+
+    .search-input svg {
+      width: 20px;
+      height: 20px;
+      color: var(--content-tertiary);
+      flex-shrink: 0;
+    }
+
+    .search-input span {
+      flex: 1;
+      font-size: var(--text-base);
+      line-height: var(--leading-base);
+      color: var(--content-quartenary);
+    }
+
+    .search-clear {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .search-clear svg {
+      width: 20px;
+      height: 20px;
+      color: var(--content-tertiary);
+    }
+
+    /* ── Filter Bar ── */
+    .filter-bar {
+      display: flex;
+      gap: var(--space-2);
+      padding: 0 var(--space-4) var(--space-3);
+      overflow-x: auto;
+      flex-shrink: 0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .filter-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      height: 40px;
+      padding: 0 var(--space-4);
+      background: var(--bg-primary);
+      border: 1px solid var(--border-quartenary);
+      border-radius: 6px;
+      font-family: var(--font-primary);
+      font-size: var(--text-sm);
+      line-height: var(--leading-sm);
+      font-weight: var(--font-regular);
+      color: var(--content-primary);
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .filter-btn svg {
+      width: 21px;
+      height: 21px;
+      color: var(--content-tertiary);
+    }
+
+    .filter-btn.selected {
+      border-color: var(--border-primary);
+    }
+
+    .filter-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background: #000000;
+      color: var(--content-primary-reverse);
+      font-size: 12px;
+      font-weight: var(--font-bold);
+      border-radius: 24px;
+    }
+
+    /* ── Results Header ── */
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-2) var(--space-4);
+      flex-shrink: 0;
+    }
+
+    .results-count {
+      font-size: var(--text-sm);
+      line-height: var(--leading-sm);
+      color: var(--content-tertiary);
+    }
+
+    .view-toggles {
+      display: flex;
+      gap: 2px;
+      border: 1px solid var(--border-tertiary);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .view-toggle {
+      width: 36px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border: none;
+      cursor: pointer;
+    }
+
+    .view-toggle.active {
+      background: var(--bg-secondary);
+    }
+
+    .view-toggle svg {
+      width: 18px;
+      height: 18px;
+      color: var(--content-tertiary);
+    }
+
+    /* ── Scrollable Content ── */
+    .scroll-content {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 83px;
+    }
+
+    /* ── Product Card (List View) ── */
+    .product-card-list {
+      display: flex;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--border-tertiary);
+      background: var(--bg-tertiary);
+    }
+
+    .product-card-list-image {
+      width: 140px;
+      height: 140px;
+      border-radius: 8px;
+      background: var(--bg-secondary);
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-card-list-image svg.placeholder-icon {
+      width: 48px;
+      height: 48px;
+      color: var(--content-quartenary);
+      opacity: 0.4;
+    }
+
+    .high-demand-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      background: rgba(234, 88, 12, 0.12);
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: var(--font-medium);
+      color: var(--content-warning);
+    }
+
+    .high-demand-badge svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .card-favorite {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      background: var(--bg-tertiary);
+      border-radius: 16px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      border: none;
+      font-family: var(--font-primary);
+      font-size: 11px;
+      color: var(--content-tertiary);
+      cursor: pointer;
+    }
+
+    .card-favorite svg {
+      width: 16px;
+      height: 16px;
+      color: var(--content-tertiary);
+    }
+
+    .product-card-list-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: var(--space-1) 0;
+    }
+
+    .card-brand {
+      font-size: var(--text-sm);
+      line-height: var(--leading-sm);
+      color: var(--content-tertiary);
+      font-weight: var(--font-regular);
+    }
+
+    .card-name {
+      font-size: var(--text-base);
+      line-height: var(--leading-base);
+      font-weight: var(--font-medium);
+      color: var(--content-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      font-size: var(--text-sm);
+      line-height: var(--leading-sm);
+      color: var(--content-tertiary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-2);
+      margin-top: auto;
+    }
+
+    .card-price {
+      font-size: var(--text-lg);
+      line-height: var(--leading-lg);
+      font-weight: var(--font-bold);
+      color: var(--content-primary);
+    }
+
+    .card-shipping {
+      font-size: var(--text-xs);
+      line-height: var(--leading-xs);
+      color: var(--content-tertiary);
+    }
+
+    .card-msrp {
+      font-size: var(--text-xs);
+      line-height: var(--leading-xs);
+      color: var(--content-quartenary);
+      text-decoration: line-through;
+    }
+
+    /* ── Discovery Separator ── */
+    .discovery-separator {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-8) var(--space-4) var(--space-6);
+    }
+
+    .discovery-separator hr {
+      flex: 1;
+      border: none;
+      border-top: 1px solid var(--border-tertiary);
+    }
+
+    .separator-label {
+      font-size: var(--text-xs);
+      line-height: var(--leading-xs);
+      color: var(--content-quartenary);
+      white-space: nowrap;
+    }
+
+    /* ── Browse Section ── */
+    .browse-section {
+      padding: 0 var(--space-4) var(--space-8);
+    }
+
+    .browse-heading {
+      font-size: var(--text-xs);
+      line-height: var(--leading-xs);
+      font-weight: var(--font-medium);
+      color: var(--content-quartenary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: var(--space-3);
+    }
+
+    .browse-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .browse-chip {
+      padding: var(--space-2) var(--space-4);
+      border-radius: 24px;
+      border: none;
+      background: #EAEAEA;
+      font-family: var(--font-primary);
+      font-size: var(--text-sm);
+      line-height: var(--leading-sm);
+      font-weight: var(--font-regular);
+      color: var(--content-primary);
+      cursor: pointer;
+      transition: background 150ms ease;
+    }
+
+    .browse-chip:hover {
+      background: #D0D0D0;
+    }
+
+    /* ── Bottom Tab Bar ── */
+    .tab-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 83px;
+      background: var(--bg-tertiary);
+      border-top: 1px solid var(--border-tertiary);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tab-bar-tabs {
+      display: flex;
+      flex: 1;
+      align-items: flex-start;
+    }
+
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding-top: 0;
+      position: relative;
+      height: 49px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: var(--font-primary);
+    }
+
+    .tab-marker {
+      width: 75px;
+      height: 3px;
+      background: transparent;
+      margin-bottom: 4px;
+    }
+
+    .tab-item.active .tab-marker {
+      background: var(--content-primary);
+    }
+
+    .tab-item svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .tab-item.active svg {
+      color: var(--content-primary);
+    }
+
+    .tab-item:not(.active) svg {
+      color: var(--content-tertiary);
+    }
+
+    .tab-label {
+      font-size: var(--text-xs);
+      line-height: var(--leading-xs);
+    }
+
+    .tab-item.active .tab-label {
+      color: var(--content-primary);
+      font-weight: var(--font-medium);
+    }
+
+    .tab-item:not(.active) .tab-label {
+      color: var(--content-tertiary);
+      font-weight: var(--font-regular);
+    }
+
+    .tab-badge-dot {
+      position: absolute;
+      top: 5px;
+      right: calc(50% - 16px);
+      width: 8px;
+      height: 8px;
+      background: var(--content-alert);
+      border-radius: 50%;
+    }
+
+    .home-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+    }
+
+    .home-indicator-bar {
+      width: 134px;
+      height: 5px;
+      background: var(--content-primary);
+      border-radius: 3px;
+    }
+
+    /* ── Shipping Icon ── */
+    .shipping-icon {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      vertical-align: -2px;
+      margin-left: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="device-frame">
+
+    <!-- ═══ STATUS BAR ═══ -->
+    <div class="status-bar">
+      <span class="status-bar-time">9:41</span>
+      <div class="status-bar-icons">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="3" width="3" height="9" rx="1" fill="#090907"/><rect x="5" y="2" width="3" height="10" rx="1" fill="#090907"/><rect x="10" y="1" width="3" height="11" rx="1" fill="#090907"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#090907"/></svg>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M1 8.5C3.5 5 6.5 3 8 3s4.5 2 7 5.5" stroke="#090907" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="10" r="1.5" fill="#090907"/></svg>
+        <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="3" stroke="#090907" stroke-opacity="0.35"/><rect x="2" y="2" width="19" height="9" rx="2" fill="#090907"/><path d="M24 4.5C24.8 5 25.5 5.7 25.5 6.5S24.8 8 24 8.5" stroke="#090907" stroke-opacity="0.35" stroke-width="1" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+
+    <!-- ═══ SEARCH BAR ═══ -->
+    <div class="search-bar">
+      <div class="search-input">
+        <svg viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M14 14L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span>Search in wheels</span>
+        <div class="search-clear">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M6 6L14 14M14 6L6 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ FILTER BAR ═══ -->
+    <div class="filter-bar">
+      <button class="filter-btn">
+        <svg viewBox="0 0 21 21" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 5.5h15M5 10.5h11M7 15.5h7"/></svg>
+        Filter
+      </button>
+      <button class="filter-btn">
+        Sort by
+        <svg viewBox="0 0 21 21" fill="none"><path d="M6 8.5L10.5 13L15 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="filter-btn selected">
+        Category
+        <span class="filter-badge">1</span>
+        <svg viewBox="0 0 21 21" fill="none"><path d="M6 8.5L10.5 13L15 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="filter-btn">
+        Condition
+        <svg viewBox="0 0 21 21" fill="none"><path d="M6 8.5L10.5 13L15 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <!-- ═══ RESULTS HEADER ═══ -->
+    <div class="results-header">
+      <span class="results-count">21 results</span>
+      <div class="view-toggles">
+        <button class="view-toggle active">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4h12M3 9h12M3 14h12"/></svg>
+        </button>
+        <button class="view-toggle">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="10" y="3" width="5" height="5" rx="1"/><rect x="3" y="10" width="5" height="5" rx="1"/><rect x="10" y="10" width="5" height="5" rx="1"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ SCROLLABLE CONTENT ═══ -->
+    <div class="scroll-content" id="scrollContent">
+      <!-- Product cards rendered by JS -->
+
+      <!-- Discovery Separator -->
+      <div class="discovery-separator">
+        <hr>
+        <span class="separator-label">End of filtered results</span>
+        <hr>
+      </div>
+
+      <!-- Browse Section -->
+      <div class="browse-section">
+        <div class="browse-heading">Browse</div>
+        <div class="browse-chips">
+          <button class="browse-chip">Road</button>
+          <button class="browse-chip">Gravel</button>
+          <button class="browse-chip">Triathlon</button>
+          <button class="browse-chip">Vintage</button>
+          <button class="browse-chip">Specialized</button>
+          <button class="browse-chip">Trek</button>
+          <button class="browse-chip">Giant</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ BOTTOM TAB BAR ═══ -->
+    <div class="tab-bar">
+      <div class="tab-bar-tabs">
+        <button class="tab-item">
+          <div class="tab-marker"></div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg>
+          <span class="tab-label">Home</span>
+        </button>
+        <button class="tab-item active">
+          <div class="tab-marker"></div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+          <span class="tab-label">Search</span>
+        </button>
+        <button class="tab-item">
+          <div class="tab-marker"></div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+          <span class="tab-label">Sell</span>
+        </button>
+        <button class="tab-item">
+          <div class="tab-marker"></div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          <span class="tab-label">Inbox</span>
+          <span class="tab-badge-dot"></span>
+        </button>
+        <button class="tab-item">
+          <div class="tab-marker"></div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          <span class="tab-label">Saved</span>
+        </button>
+      </div>
+      <div class="home-indicator">
+        <div class="home-indicator-bar"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const products = [
+      { brand: "Specialized", name: "Crux RAM Force eTap AXS", year: 2019, size: "52 cm", groupset: "Shimano Force eTap AXS", price: 3100, msrp: 4299, highDemand: true, favCount: 43 },
+      { brand: "Canyon", name: "Ultimate CF SL 7 2023", year: 2019, size: "M", groupset: "Shimano 105", price: 3100, msrp: 4299, highDemand: false, favCount: 43 },
+      { brand: "YT Industries", name: "Tues Cf Pro 2019r 27,5Lb eier...", year: 2019, size: "L", groupset: "SRAM GX", price: 3100, msrp: 4299, highDemand: false, favCount: 43 },
+      { brand: "Specialized", name: "Crux RAM Force eTap AXS", year: 2019, size: "52 cm", groupset: "Shimano Force eTap AXS", price: 3100, msrp: 4299, highDemand: true, favCount: 43 },
+      { brand: "Canyon", name: "Ultimate CF SL 7 2023", size: "M", groupset: "Shimano 105", price: 3100, msrp: null, highDemand: false, favCount: 43 },
+    ];
+
+    const bikeIcon = '<svg class="placeholder-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="14" cy="30" r="9"/><circle cx="34" cy="30" r="9"/><path d="M14 30l7-14h6l4 8-3 6"/><path d="M21 16l13 14"/><circle cx="27" cy="16" r="2"/></svg>';
+
+    const heartIcon = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.9 3.2a3.6 3.6 0 00-5.1 0L8 4l-.8-.8a3.6 3.6 0 00-5.1 5.1l.8.8L8 14.2l5.1-5.1.8-.8a3.6 3.6 0 000-5.1z"/></svg>';
+
+    const shippingIcon = '<svg class="shipping-icon" viewBox="0 0 14 14" fill="currentColor" opacity="0.4"><circle cx="7" cy="7" r="6"/></svg>';
+
+    function formatPrice(price) {
+      return '€' + price.toLocaleString('de-DE');
+    }
+
+    function createProductCard(product) {
+      const meta = [product.year, product.size, product.groupset].filter(Boolean).join(' · ');
+
+      const card = document.createElement('div');
+      card.className = 'product-card-list';
+      card.innerHTML = `
+        <div class="product-card-list-image">
+          ${bikeIcon}
+          ${product.highDemand ? `<div class="high-demand-badge"><svg viewBox="0 0 12 12" fill="none"><path d="M6 1L7.5 5H11L8.25 7.5L9.5 11L6 8.5L2.5 11L3.75 7.5L1 5H4.5L6 1Z" fill="currentColor"/></svg> High demand</div>` : ''}
+          <button class="card-favorite">${heartIcon} ${product.favCount}</button>
+        </div>
+        <div class="product-card-list-info">
+          <div class="card-brand">${product.brand}</div>
+          <div class="card-name">${product.name}</div>
+          ${meta ? `<div class="card-meta">${meta}</div>` : ''}
+          <div class="card-price-row">
+            <span class="card-price">${formatPrice(product.price)}</span>
+            <span class="card-shipping">incl.${shippingIcon}</span>
+            ${product.msrp ? `<span class="card-msrp">€${product.msrp.toLocaleString('de-DE')}</span>` : ''}
+          </div>
+        </div>
+      `;
+      return card;
+    }
+
+    const scrollContent = document.getElementById('scrollContent');
+    const separator = scrollContent.querySelector('.discovery-separator');
+
+    products.forEach(product => {
+      scrollContent.insertBefore(createProductCard(product), separator);
+    });
+  </script>
+</body>
+</html>
