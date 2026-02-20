@@ -7,6 +7,7 @@ tags: ["Buyer","Pre-transactional XP"]
 prototypes:
   - "/prototypes/related-items-discovery-at-end-of-filtered-result-lists.html"
 finalPrototypes:
+  - "/prototypes/App.html"
   - "/prototypes/index.html"
 ---
 
