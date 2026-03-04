@@ -5,6 +5,7 @@ date: "2026-03-04"
 team: "Design"
 tags: ["Seller","Seller XP"]
 prototypes:
+  - "/prototypes/pdp-frameset.html"
   - "/prototypes/index.html"
   - "/prototypes/merging-bike-frameset-sell-funnel-with-structured-frameset-component-selection.html"
 finalPrototypes: []
