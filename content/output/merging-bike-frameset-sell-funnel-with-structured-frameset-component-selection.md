@@ -8,9 +8,7 @@ prototypes:
   - "/prototypes/pdp-frameset.html"
   - "/prototypes/index.html"
   - "/prototypes/merging-bike-frameset-sell-funnel-with-structured-frameset-component-selection.html"
-finalPrototypes:
-  - "/prototypes/pdp-frameset.html"
-  - "/prototypes/index.html"
+finalPrototypes: []
 ---
 
 ## Problem
