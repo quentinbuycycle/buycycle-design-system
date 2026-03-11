@@ -1,0 +1,881 @@
+<!-- AGENTS.MD READ SUCCESSFULLY -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Create your listing - buycycle</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+    @import url('https://fonts.cdnfonts.com/css/neue-haas-grotesk-text-pro');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --content-primary: #090907;
+      --content-secondary: #333333;
+      --content-tertiary: #535353;
+      --content-quartenary: #A9A9A9;
+      --content-primary-reverse: #FCFCFC;
+      --content-information: #1D4ED8;
+      --content-positive: #146C43;
+      --bg-primary: #FCFCFC;
+      --bg-secondary: #F3F3F3;
+      --bg-tertiary: #FFFFFF;
+      --bg-information: #EFF6FF;
+      --bg-primary-reverse: #090907;
+      --bg-positive: #E8F8F0;
+      --bg-quartenary: #EAEAEA;
+      --border-tertiary: #EAEAEA;
+      --border-quartenary: #D0D0D0;
+      --border-secondary: #757575;
+      --border-positive: #146C43;
+    }
+
+    body {
+      font-family: 'Neue Haas Grotesk Text Pro', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-tertiary);
+      color: var(--content-primary);
+      min-height: 100vh;
+      max-width: 390px;
+      margin: 0 auto;
+      padding-bottom: 100px; /* space for sticky button */
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ------------------------------------------------
+       Top Navigation
+       ------------------------------------------------ */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 56px;
+      padding: 0 16px;
+    }
+
+    .nav-back {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-logo {
+      font-size: 20px;
+      font-weight: 700;
+      font-style: italic;
+      color: var(--content-primary);
+      letter-spacing: -0.3px;
+    }
+
+    .nav-divider {
+      height: 1px;
+      background: var(--border-tertiary);
+    }
+
+    /* ------------------------------------------------
+       Page Content
+       ------------------------------------------------ */
+    .page-content {
+      padding: 24px 16px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .page-title {
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 32px;
+      color: var(--content-primary);
+    }
+
+    /* ------------------------------------------------
+       Quick Import Banner
+       ------------------------------------------------ */
+    .quick-import {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .quick-import:active {
+      background: var(--bg-quartenary);
+    }
+
+    .quick-import-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--bg-accent-green, #DAFDA0);
+      border: 1px solid #CEF194;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .quick-import-icon img {
+      width: 28px;
+      height: 28px;
+    }
+
+    .quick-import-text {
+      flex: 1;
+      min-width: 0;
+      padding-right: 24px;
+    }
+
+    .quick-import-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .quick-import-title {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 24px;
+      color: var(--content-primary);
+    }
+
+    .tag-optional {
+      background: var(--bg-information);
+      color: var(--content-information);
+      font-size: 12px;
+      line-height: 16px;
+      letter-spacing: 0.24px;
+      padding: 2px 8px;
+      border-radius: 24px;
+      white-space: nowrap;
+    }
+
+    .quick-import-subtitle {
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--content-secondary);
+    }
+
+    .quick-import-arrow {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ------------------------------------------------
+       Accordion Section
+       ------------------------------------------------ */
+    .accordion-section {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .accordion-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      width: 100%;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .step-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-primary-reverse);
+      color: var(--content-primary-reverse);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      flex-shrink: 0;
+    }
+
+    .accordion-title {
+      flex: 1;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 24px;
+      color: var(--content-primary);
+    }
+
+    .accordion-chevron {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    /* ------------------------------------------------
+       Product Type Cards (Mobile: Vertical Stack)
+       ------------------------------------------------ */
+    .product-type-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .product-type-label {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;
+      color: var(--content-primary);
+    }
+
+    .product-type-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .product-type-card {
+      width: 100%;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-tertiary);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: border-color 0.2s cubic-bezier(0.32, 0.72, 0, 1), transform 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      will-change: transform;
+    }
+
+    .product-type-card:active {
+      transform: scale(0.97);
+    }
+
+    .product-type-card:focus-visible {
+      outline: 2px solid var(--content-primary);
+      outline-offset: 2px;
+    }
+
+    .product-type-card.selected {
+      border: 2px solid var(--content-primary);
+      padding: 15px;
+    }
+
+    .radio-indicator {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-tertiary);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s cubic-bezier(0.32, 0.72, 0, 1), background-color 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    .radio-indicator::after {
+      content: '';
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: white;
+      transform: scale(0.6);
+      opacity: 0;
+      transition: transform 0.2s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.15s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    .product-type-card.selected .radio-indicator {
+      border-color: var(--content-primary);
+      background: var(--content-primary);
+    }
+
+    .product-type-card.selected .radio-indicator::after {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .product-type-card-label {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 24px;
+      color: var(--content-primary);
+      flex: 1;
+    }
+
+    .product-type-card-illustration {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .product-type-card-illustration img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+      opacity: 0.55;
+      transition: opacity 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    .product-type-card.selected .product-type-card-illustration img {
+      opacity: 1;
+    }
+
+    /* ------------------------------------------------
+       Frameset Component Selector
+       ------------------------------------------------ */
+    .frameset-selector {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.28s cubic-bezier(0.32, 0.72, 0, 1),
+                  opacity 0.2s cubic-bezier(0.32, 0.72, 0, 1),
+                  margin-top 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+      margin-top: 0;
+    }
+
+    .frameset-selector.visible {
+      max-height: 500px;
+      opacity: 1;
+      margin-top: 4px;
+    }
+
+    .frameset-selector-inner {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .component-zone {
+      /* no extra margin for first zone */
+    }
+
+    .component-zone + .component-zone {
+      padding-top: 16px;
+      border-top: 1px solid var(--border-tertiary);
+      margin-top: 16px;
+    }
+
+    .component-zone-label {
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--content-tertiary);
+      margin-bottom: 8px;
+    }
+
+    .component-zone-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      height: 36px;
+      padding: 0 12px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.2s cubic-bezier(0.32, 0.72, 0, 1), transform 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      will-change: transform, opacity;
+    }
+
+    .pill--included {
+      background: var(--bg-positive);
+      color: var(--content-positive);
+      border: none;
+      font-weight: 700;
+      cursor: default;
+    }
+
+    .pill--included.removable {
+      cursor: pointer;
+    }
+
+    .pill--included .pill-remove {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      font-size: 16px;
+      line-height: 1;
+      opacity: 0.45;
+      transition: opacity 0.15s cubic-bezier(0.32, 0.72, 0, 1);
+      margin-left: 4px;
+      cursor: pointer;
+      color: var(--content-positive);
+    }
+
+    .pill--included .pill-remove:active {
+      opacity: 1;
+    }
+
+    .pill--permanent {
+      cursor: default;
+    }
+
+    .pill--available {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-tertiary);
+      color: var(--content-tertiary);
+    }
+
+    .pill--available:active {
+      border-color: var(--border-quartenary);
+      background: var(--bg-quartenary);
+    }
+
+    /* Animation states */
+    .pill.adding {
+      animation: pillAdd 0.2s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    }
+
+    .pill.removing {
+      animation: pillRemove 0.15s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    }
+
+    @keyframes pillAdd {
+      from { opacity: 0; transform: translateY(8px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes pillRemove {
+      from { opacity: 1; transform: translateY(0) scale(1); }
+      to   { opacity: 0; transform: translateY(-8px) scale(0.95); }
+    }
+
+    .pill--available.returning {
+      animation: pillReturn 0.2s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    }
+
+    @keyframes pillReturn {
+      from { opacity: 0; transform: translateY(-8px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .component-count {
+      font-size: 12px;
+      color: var(--content-quartenary);
+      line-height: 16px;
+      padding-top: 12px;
+    }
+
+    /* ------------------------------------------------
+       Section Divider
+       ------------------------------------------------ */
+    .section-divider {
+      height: 1px;
+      background: var(--border-tertiary);
+      margin: 4px 0;
+    }
+
+    /* ------------------------------------------------
+       Reduced Motion
+       ------------------------------------------------ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .frameset-selector {
+        transition: opacity 0.15s ease;
+      }
+      .pill.adding,
+      .pill.removing,
+      .pill--available.returning {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ------------------------------------------------
+       Form Fields
+       ------------------------------------------------ */
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field-label {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;
+      color: var(--content-primary);
+    }
+
+    .dropdown-input {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 48px;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border-tertiary);
+      border-radius: 12px;
+      background: var(--bg-tertiary);
+      cursor: pointer;
+      transition: border-color 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    .dropdown-input:focus-within {
+      border-color: var(--content-primary);
+      border-width: 2px;
+    }
+
+    .dropdown-placeholder {
+      flex: 1;
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--content-quartenary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dropdown-chevron {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    /* ------------------------------------------------
+       Sticky Continue Button
+       ------------------------------------------------ */
+    .sticky-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      background: var(--bg-tertiary);
+      padding: 12px 16px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      max-width: 390px;
+      margin: 0 auto;
+    }
+
+    .sticky-footer::before {
+      content: '';
+      position: absolute;
+      top: -24px;
+      left: 0;
+      right: 0;
+      height: 24px;
+      background: linear-gradient(to top, var(--bg-tertiary), transparent);
+      pointer-events: none;
+    }
+
+    .continue-btn {
+      width: 100%;
+      height: 48px;
+      background: var(--bg-primary-reverse);
+      color: var(--content-primary-reverse);
+      border: none;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 24px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.1s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.1s cubic-bezier(0.32, 0.72, 0, 1);
+      will-change: transform;
+    }
+
+    .continue-btn:active {
+      transform: scale(0.97);
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Navigation -->
+  <nav class="top-nav">
+    <div class="nav-back" aria-label="Go back">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <span class="nav-logo">buycycle.</span>
+  </nav>
+  <div class="nav-divider"></div>
+
+  <!-- Page Content -->
+  <div class="page-content">
+    <!-- Title -->
+    <h1 class="page-title">Create your listing</h1>
+
+
+    <!-- Quick Import Banner -->
+    <div class="quick-import">
+      <div class="quick-import-icon">
+        <img src="https://www.figma.com/api/mcp/asset/93b5e17b-70e5-4ed8-a958-1d884d12cf8b" alt="Import">
+      </div>
+      <div class="quick-import-text">
+        <div class="quick-import-top">
+          <span class="quick-import-title">Save time with quick import</span>
+          <span class="tag-optional">Optional</span>
+        </div>
+        <div class="quick-import-subtitle">Already have a listing? Import it from eBay, facebook and more</div>
+      </div>
+      <svg class="quick-import-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M4 12H20M20 12L13 5M20 12L13 19" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <!-- Step 1: Find Your Bike -->
+    <div class="accordion-section">
+      <div class="accordion-header">
+        <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+          <div class="step-number">1</div>
+          <span class="accordion-title">What are you selling?</span>
+        </div>
+        <svg class="accordion-chevron" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 15L12 9L6 15" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <!-- Product Type Selection -->
+      <div class="product-type-section">
+        <div class="product-type-cards" role="radiogroup" aria-label="What bike are you selling?">
+          <div class="product-type-card selected" data-type="complete" role="radio" aria-checked="true" tabindex="0" onclick="selectProductType(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();selectProductType(this)}">
+            <div class="radio-indicator" aria-hidden="true"></div>
+            <span class="product-type-card-label">Complete Bike</span>
+            <div class="product-type-card-illustration">
+              <img src="bike.png" alt="Complete bike illustration">
+            </div>
+          </div>
+          <div class="product-type-card" data-type="frameset" role="radio" aria-checked="false" tabindex="0" onclick="selectProductType(this)" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();selectProductType(this)}">
+            <div class="radio-indicator" aria-hidden="true"></div>
+            <span class="product-type-card-label">Frameset Only</span>
+            <div class="product-type-card-illustration">
+              <img src="Frameset.png" alt="Frameset illustration">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Frameset Component Selector -->
+      <div class="frameset-selector" id="framesetSelector">
+        <div class="frameset-selector-inner">
+          <div class="component-zone">
+            <div class="component-zone-label">Included with your frame</div>
+            <div class="component-zone-pills" id="includedZone">
+              <span class="pill pill--included pill--permanent">Frame</span>
+              <span class="pill pill--included removable" data-component="Fork">Fork<span class="pill-remove" onclick="removeComponent(event, 'Fork')">×</span></span>
+            </div>
+          </div>
+          <div class="component-zone">
+            <div class="component-zone-label">Add components</div>
+            <div class="component-zone-pills" id="availableZone">
+              <span class="pill pill--available" data-component="Headset" onclick="addComponent('Headset')">Headset</span>
+              <span class="pill pill--available" data-component="Seatpost" onclick="addComponent('Seatpost')">Seatpost</span>
+              <span class="pill pill--available" data-component="Stem" onclick="addComponent('Stem')">Stem</span>
+              <span class="pill pill--available" data-component="Handlebar/Cockpit" onclick="addComponent('Handlebar/Cockpit')">Handlebar/Cockpit</span>
+              <span class="pill pill--available" data-component="Seatclamp integrated" onclick="addComponent('Seatclamp integrated')">Seatclamp integrated</span>
+            </div>
+          </div>
+          <div class="component-count" id="componentCount">2 components included</div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+    </div>
+
+    <!-- Step 2: Find Your Bike/Frameset -->
+    <div class="accordion-section" id="step2Section">
+      <div class="accordion-header">
+        <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+          <div class="step-number">2</div>
+          <span class="accordion-title" id="step2Title">Find your bike</span>
+        </div>
+        <svg class="accordion-chevron" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 15L12 9L6 15" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <!-- Brand Dropdown -->
+      <div class="form-field">
+        <label class="field-label">Brand</label>
+        <div class="dropdown-input">
+          <span class="dropdown-placeholder">Type or select the brand first</span>
+          <svg class="dropdown-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M15 8L10 13L5 8" stroke="#090907" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sticky Continue Button -->
+  <div class="sticky-footer">
+    <button class="continue-btn" type="button">Continue</button>
+  </div>
+
+  <script>
+    // --- Constants ---
+    const ALL_COMPONENTS = ['Fork', 'Headset', 'Seatpost', 'Stem', 'Handlebar/Cockpit', 'Seatclamp integrated'];
+    const DEFAULT_INCLUDED = ['Frame', 'Fork'];
+
+    // --- State ---
+    let includedComponents = new Set(DEFAULT_INCLUDED);
+
+    // --- Product Type Selection ---
+    function selectProductType(card) {
+      document.querySelectorAll('.product-type-card').forEach(c => {
+        c.classList.remove('selected');
+        c.setAttribute('aria-checked', 'false');
+      });
+      card.classList.add('selected');
+      card.setAttribute('aria-checked', 'true');
+
+      const type = card.dataset.type;
+      const selector = document.getElementById('framesetSelector');
+
+      if (type === 'frameset') {
+        selector.classList.add('visible');
+      } else {
+        selector.classList.remove('visible');
+        resetFramesetSelector();
+      }
+
+      // Update Step 2 title
+      const step2Title = document.getElementById('step2Title');
+      if (step2Title) {
+        step2Title.textContent = type === 'frameset' ? 'Find your frameset' : 'Find your bike';
+      }
+    }
+
+    // --- Reset to default state ---
+    function resetFramesetSelector() {
+      includedComponents = new Set(DEFAULT_INCLUDED);
+
+      const includedZone = document.getElementById('includedZone');
+      includedZone.innerHTML = '<span class="pill pill--included pill--permanent">Frame</span>';
+      DEFAULT_INCLUDED.forEach(name => {
+        const pill = document.createElement('span');
+        pill.className = 'pill pill--included removable';
+        pill.dataset.component = name;
+        pill.innerHTML = `${name}<span class="pill-remove" onclick="removeComponent(event, '${name}')">×</span>`;
+        includedZone.appendChild(pill);
+      });
+
+      const availableZone = document.getElementById('availableZone');
+      availableZone.innerHTML = '';
+      ALL_COMPONENTS.forEach(name => {
+        if (!DEFAULT_INCLUDED.includes(name)) {
+          const pill = document.createElement('span');
+          pill.className = 'pill pill--available';
+          pill.dataset.component = name;
+          pill.textContent = name;
+          pill.onclick = () => addComponent(name);
+          availableZone.appendChild(pill);
+        }
+      });
+
+      updateCount();
+    }
+
+    // --- Counter ---
+    function updateCount() {
+      const count = includedComponents.size;
+      const label = count === 1 ? 'component' : 'components';
+      document.getElementById('componentCount').textContent = `${count} ${label} included`;
+    }
+
+    // --- Add component ---
+    function addComponent(name) {
+      if (includedComponents.has(name)) return;
+      includedComponents.add(name);
+
+      const availablePill = document.querySelector(`#availableZone [data-component="${name}"]`);
+      if (availablePill) {
+        availablePill.classList.add('removing');
+        availablePill.addEventListener('animationend', () => {
+          availablePill.remove();
+
+          const pill = document.createElement('span');
+          pill.className = 'pill pill--included removable adding';
+          pill.dataset.component = name;
+          pill.innerHTML = `${name}<span class="pill-remove" onclick="removeComponent(event, '${name}')">×</span>`;
+          document.getElementById('includedZone').appendChild(pill);
+
+          pill.addEventListener('animationend', () => pill.classList.remove('adding'), { once: true });
+
+          updateCount();
+        }, { once: true });
+      }
+    }
+
+    // --- Remove component ---
+    function removeComponent(event, name) {
+      event.stopPropagation();
+      if (!includedComponents.has(name)) return;
+      includedComponents.delete(name);
+
+      const includedPill = document.querySelector(`#includedZone [data-component="${name}"]`);
+      if (includedPill) {
+        includedPill.classList.add('removing');
+        includedPill.addEventListener('animationend', () => {
+          includedPill.remove();
+
+          const pill = document.createElement('span');
+          pill.className = 'pill pill--available returning';
+          pill.dataset.component = name;
+          pill.textContent = name;
+          pill.onclick = () => addComponent(name);
+          document.getElementById('availableZone').appendChild(pill);
+
+          pill.addEventListener('animationend', () => pill.classList.remove('returning'), { once: true });
+
+          updateCount();
+        }, { once: true });
+      }
+    }
+
+    // Init
+    updateCount();
+  </script>
+</body>
+</html>
