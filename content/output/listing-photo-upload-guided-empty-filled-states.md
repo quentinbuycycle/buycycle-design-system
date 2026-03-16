@@ -6,7 +6,8 @@ team: "Product Team"
 tags: ["Seller","Seller XP"]
 prototypes:
   - "/prototypes/listing-photo-upload-guided-empty-filled-states.html"
-finalPrototypes: []
+finalPrototypes:
+  - "/prototypes/index.html"
 ---
 
 ## Problem
