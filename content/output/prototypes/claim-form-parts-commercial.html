@@ -757,6 +757,14 @@
             <span class="checkbox-box" data-cb="2"><input type="checkbox"><span class="checkbox-check">✓</span></span>
             <span><span class="checkbox-text">I understand that after submission, I'll have 5 days to negotiate directly with the seller.</span><div class="checkbox-sub">If you can't reach a resolution together, buycycle's claims team will step in and review the case.</div></span>
           </label>
+          <label class="checkbox-item" tabindex="0">
+            <span class="checkbox-box" data-cb="3"><input type="checkbox"><span class="checkbox-check">✓</span></span>
+            <span><span class="checkbox-text">No unauthorized returns.</span><div class="checkbox-sub">Returns must be approved by the buycycle claims team. buycycle will provide shipping for returns and is not liable for unauthorized returns.</div></span>
+          </label>
+          <label class="checkbox-item" tabindex="0">
+            <span class="checkbox-box" data-cb="4"><input type="checkbox"><span class="checkbox-check">✓</span></span>
+            <span><span class="checkbox-text">I will not use the item while a claim is active.</span></span>
+          </label>
         </div>
 
         <div style="border-top:1px solid var(--border-tertiary);margin:var(--space-4) 0"></div>
@@ -817,7 +825,7 @@ const state = {
   cause: null,
   resolution: null,
   amount: 0,
-  checkboxes: [false, false, false]
+  checkboxes: [false, false, false, false, false]
 };
 
 // === FULL TAXONOMY DATA ===
