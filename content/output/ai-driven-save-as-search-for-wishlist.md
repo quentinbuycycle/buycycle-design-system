@@ -5,6 +5,7 @@ date: "2026-04-24"
 team: "Product Design"
 tags: ["Buyer","Pre-transactional XP"]
 prototypes:
+  - "/prototypes/buycycle_save_search.html"
   - "/prototypes/ai-driven-save-as-search-for-wishlist.html"
 finalPrototypes: []
 ---
