@@ -10,7 +10,7 @@
     body {
       font-family: 'Neue Haas Grotesk Text Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
       min-width: 1512px;
-      background: #f3f3f3;
+      background: #fcfcfc;
     }
 
     /* ─── TRUSTPILOT BAR ─── */
@@ -22,169 +22,44 @@
       justify-content: space-between;
       padding: 0 68px;
     }
-    .tp-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .tp-stars {
-      display: flex;
-      gap: 2px;
-    }
+    .tp-left { display: flex; align-items: center; gap: 12px; }
+    .tp-stars { display: flex; gap: 2px; }
     .tp-star {
-      width: 14px;
-      height: 14px;
+      width: 14px; height: 14px;
       background: #00b67a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: white;
     }
-    .tp-text {
-      color: #fcfcfc;
-      font-size: 12px;
-      line-height: 18px;
-    }
-    .tp-right {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-    }
-    .tp-item {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      color: #fcfcfc;
-      font-size: 12px;
-      line-height: 18px;
-    }
-    .tp-check-icon {
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
-      opacity: 0.9;
-    }
+    .tp-text { color: #fcfcfc; font-size: 12px; line-height: 18px; }
+    .tp-right { display: flex; align-items: center; gap: 28px; }
+    .tp-item { display: flex; align-items: center; gap: 7px; color: #fcfcfc; font-size: 12px; line-height: 18px; }
+    .tp-check-icon { width: 16px; height: 16px; flex-shrink: 0; }
 
     /* ─── MAIN NAV ─── */
     .main-nav {
       background: #fcfcfc;
       height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between;
       padding: 0 32px;
     }
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 60px;
-      width: 1020px;
-    }
-    .logo {
-      font-size: 22px;
-      font-weight: 700;
-      color: #090907;
-      letter-spacing: -0.04em;
-      flex-shrink: 0;
-      cursor: pointer;
-    }
-    .logo span {
-      font-weight: 700;
-    }
+    .nav-left { display: flex; align-items: center; gap: 60px; width: 1020px; }
+    .logo { font-size: 22px; font-weight: 700; color: #090907; letter-spacing: -0.04em; flex-shrink: 0; cursor: pointer; }
     .search-bar {
-      width: 600px;
-      height: 40px;
-      border: 1px solid #eaeaea;
-      border-radius: 2px;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      padding: 0 8px 0 0;
-      gap: 0;
-      cursor: text;
-      flex-shrink: 0;
+      width: 600px; height: 40px;
+      border: 1px solid #eaeaea; border-radius: 2px; background: #fff;
+      display: flex; align-items: center; padding: 0 8px 0 0; cursor: text; flex-shrink: 0;
     }
-    .search-text {
-      flex: 1;
-      padding: 0 12px;
-      font-size: 16px;
-      color: rgba(9,9,7,0.5);
-      line-height: 40px;
-      white-space: nowrap;
-    }
-    .search-icon-wrap {
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-    .nav-icon {
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      flex-shrink: 0;
-      position: relative;
-    }
-    .flag {
-      width: 23px;
-      height: 23px;
-      border-radius: 50%;
-      overflow: hidden;
-      cursor: pointer;
-      flex-shrink: 0;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .profile-wrap {
-      position: relative;
-    }
-    .profile-pic {
-      width: 40px;
-      height: 40px;
-      border-radius: 100px;
-      background: #d4c8b8;
-      overflow: hidden;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      cursor: pointer;
-    }
-    .notif-dot {
-      position: absolute;
-      top: 0;
-      right: -2px;
-      width: 8px;
-      height: 8px;
-      background: #b91c1c;
-      border-radius: 50%;
-      border: 1.5px solid #fcfcfc;
-    }
+    .search-text { flex: 1; padding: 0 12px; font-size: 16px; color: rgba(9,9,7,0.5); line-height: 40px; white-space: nowrap; }
+    .search-icon-wrap { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .nav-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; position: relative; }
+    .flag { width: 23px; height: 23px; border-radius: 50%; overflow: hidden; cursor: pointer; flex-shrink: 0; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+    .profile-wrap { position: relative; }
+    .profile-pic { width: 40px; height: 40px; border-radius: 100px; background: #d4c8b8; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; cursor: pointer; }
     .sell-btn {
-      background: #090907;
-      color: #fcfcfc;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 21px;
-      padding: 0 18px;
-      height: 36px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      white-space: nowrap;
+      background: #090907; color: #fcfcfc; font-family: inherit;
+      font-size: 14px; font-weight: 500; line-height: 21px;
+      padding: 0 18px; height: 36px; border-radius: 10px; border: none; cursor: pointer;
       box-shadow: 0 2px 4px rgba(9,9,7,0.3);
     }
     .sell-btn:hover { background: #333; }
@@ -192,65 +67,148 @@
     /* ─── CATEGORY BAND ─── */
     .cat-band {
       background: #fcfcfc;
-      border-top: 1px solid #eaeaea;
-      border-bottom: 1px solid #eaeaea;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
+      border-top: 1px solid #eaeaea; border-bottom: 1px solid #eaeaea;
+      height: 50px; display: flex; align-items: center; padding: 0 16px;
     }
-    .cat-divider {
-      width: 1px;
-      height: 48px;
-      background: #eaeaea;
-      flex-shrink: 0;
-    }
-    .cat-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 0 12px;
-      height: 50px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.15s;
-    }
+    .cat-divider { width: 1px; height: 48px; background: #eaeaea; flex-shrink: 0; }
+    .cat-item { display: flex; align-items: center; gap: 8px; padding: 0 12px; height: 50px; cursor: pointer; white-space: nowrap; transition: background 0.15s; }
     .cat-item:hover { background: #f5f5f5; }
-    .cat-label {
-      font-size: 14px;
-      color: #090907;
-      line-height: 21px;
-    }
-    .cat-icon {
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
-    }
-    .new-tag {
-      background: #fdfda0;
-      color: #4b4b02;
-      font-size: 12px;
-      font-weight: 500;
-      line-height: 18px;
-      padding: 3px 8px;
-      border-radius: 24px;
-    }
+    .cat-label { font-size: 14px; color: #090907; line-height: 21px; }
+    .cat-icon { width: 20px; height: 20px; flex-shrink: 0; }
+    .new-tag { background: #fdfda0; color: #4b4b02; font-size: 12px; font-weight: 500; line-height: 18px; padding: 3px 8px; border-radius: 24px; }
 
-    /* ─── PAGE PLACEHOLDER ─── */
+    /* ─── BREADCRUMB ─── */
+    .breadcrumb {
+      background: #fcfcfc;
+      height: 43px;
+      display: flex; align-items: center;
+      padding: 0 16px;
+      gap: 0;
+    }
+    .bc-item { display: flex; align-items: center; gap: 8px; }
+    .bc-link { font-size: 14px; color: #333; line-height: 21px; cursor: pointer; }
+    .bc-link:hover { text-decoration: underline; }
+    .bc-current { font-size: 14px; font-weight: 500; color: #090907; line-height: 21px; }
+    .bc-chevron { color: #535353; display: flex; align-items: center; padding: 0 4px; }
+
+    /* ─── PAGE LAYOUT ─── */
     .page-body {
-      height: 700px;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 8px;
+      padding: 24px 128px 80px;
+      gap: 90px;
+      align-items: flex-start;
     }
-    .placeholder-label {
-      font-size: 13px;
-      color: #a9a9a9;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+    .left-col { width: 750px; flex-shrink: 0; }
+    .right-col { width: 416px; flex-shrink: 0; }
+
+    /* ─── LEFT PLACEHOLDER ─── */
+    .left-placeholder {
+      width: 750px;
+      height: 2000px;
+      background: #f3f3f3;
+      border-radius: 8px;
+      display: flex; align-items: flex-start; justify-content: center;
+      padding-top: 32px;
     }
+    .placeholder-label { font-size: 13px; color: #a9a9a9; letter-spacing: 0.06em; text-transform: uppercase; }
+
+    /* ─── RIGHT ISLAND ─── */
+    .island {
+      position: sticky;
+      top: calc(50vh - 366px);
+      width: 416px;
+    }
+    .island-card {
+      background: #fcfcfc;
+      border: 1px solid #eaeaea;
+      border-radius: 12px;
+      box-shadow: 0 1px 6px rgba(83,83,83,0.15), 0 -1px 6px rgba(83,83,83,0.15);
+      overflow: hidden;
+    }
+    .island-inner { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* Product info */
+    .product-header { position: relative; display: flex; flex-direction: column; gap: 8px; }
+    .share-btn {
+      position: absolute; top: 0; right: 0;
+      width: 32px; height: 32px;
+      background: #f3f3f3; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .share-btn:hover { background: #eaeaea; }
+    .brand { font-size: 16px; color: #333; line-height: 24px; }
+    .model { font-size: 24px; font-weight: 500; color: #090907; line-height: 32px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 40px; }
+    .tags { display: flex; gap: 4px; flex-wrap: wrap; }
+    .tag { background: #f3f3f3; color: #333; font-size: 12px; line-height: 18px; padding: 4px 12px; border-radius: 24px; white-space: nowrap; }
+    .price-row { display: flex; align-items: baseline; gap: 8px; }
+    .price { font-size: 24px; font-weight: 500; color: #090907; line-height: 27px; }
+    .price-original { font-size: 12px; color: #535353; line-height: 18px; text-decoration: line-through; }
+
+    /* Demand banner */
+    .demand-banner {
+      background: #fff7ed; border-radius: 8px; padding: 8px;
+      display: flex; align-items: flex-start; gap: 4px;
+    }
+    .demand-text { font-size: 14px; font-weight: 500; color: #ea580c; line-height: 21px; }
+
+    /* CTA buttons */
+    .cta-stack { display: flex; flex-direction: column; gap: 8px; }
+    .btn-primary {
+      width: 100%; height: 48px;
+      background: #090907; color: #fcfcfc;
+      font-family: inherit; font-size: 16px; font-weight: 500;
+      border: none; border-radius: 12px; cursor: pointer;
+    }
+    .btn-primary:hover { background: #333; }
+    .btn-outline {
+      width: 100%; height: 48px;
+      background: transparent; color: #090907;
+      font-family: inherit; font-size: 16px;
+      border: 1.5px solid #757575; border-radius: 12px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-outline:hover { border-color: #090907; }
+
+    /* Divider */
+    .divider { height: 1px; background: #eaeaea; width: 100%; }
+
+    /* Seller card */
+    .seller-section { display: flex; flex-direction: column; gap: 12px; }
+    .seller-profile { display: flex; align-items: center; gap: 12px; }
+    .seller-pic {
+      width: 80px; height: 80px; border-radius: 150px;
+      background: #d4c8b8; overflow: hidden; flex-shrink: 0;
+      display: flex; align-items: flex-end; justify-content: center;
+    }
+    .seller-info { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+    .seller-name { font-size: 18px; font-weight: 500; color: #090907; line-height: 27px; }
+    .seller-name span { text-decoration: underline; cursor: pointer; }
+    .seller-stars { display: flex; gap: 2px; }
+    .star-filled { color: #f59e0b; font-size: 15px; }
+    .star-empty { color: #d1d5db; font-size: 15px; }
+    .seller-details { display: flex; flex-direction: column; gap: 4px; }
+    .seller-detail { font-size: 14px; color: #535353; line-height: 21px; }
+
+    /* Buyer protection */
+    .buyer-protection {
+      background: #e8f8f0; border-radius: 8px;
+      padding: 12px 16px;
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .bp-icon { width: 30px; height: 30px; flex-shrink: 0; margin-top: 2px; }
+    .bp-text { font-size: 12px; color: #146c43; line-height: 18px; }
+    .bp-text strong { font-weight: 500; }
+    .bp-text a { color: #146c43; font-weight: 500; }
+
+    /* Trustpilot footer */
+    .tp-footer { display: flex; align-items: center; justify-content: space-between; }
+    .tp-reviews { font-size: 12px; color: #090907; line-height: 18px; display: flex; align-items: center; gap: 4px; }
+    .tp-reviews-bold { font-weight: 500; }
+    .tp-logo-text { font-weight: 700; font-size: 12px; color: #000; }
+    .tp-rating { display: flex; align-items: center; gap: 8px; }
+    .tp-rating-stars { display: flex; gap: 2px; }
+    .tp-rating-star { width: 16px; height: 16px; background: #00b67a; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; }
+    .tp-excellent { font-size: 12px; font-weight: 500; color: #090907; line-height: 18px; }
   </style>
 </head>
 <body>
@@ -259,41 +217,25 @@
   <div class="tp-bar">
     <div class="tp-left">
       <div class="tp-stars">
-        <div class="tp-star">★</div>
-        <div class="tp-star">★</div>
-        <div class="tp-star">★</div>
-        <div class="tp-star">★</div>
-        <div class="tp-star">★</div>
+        <div class="tp-star">★</div><div class="tp-star">★</div><div class="tp-star">★</div><div class="tp-star">★</div><div class="tp-star">★</div>
       </div>
       <span class="tp-text">4,9 · Hervorragend</span>
     </div>
     <div class="tp-right">
       <div class="tp-item">
-        <svg class="tp-check-icon" viewBox="0 0 16 16" fill="none">
-          <circle cx="8" cy="8" r="7" stroke="#fcfcfc" stroke-width="1.2"/>
-          <path d="M4.5 8l2.5 2.5 4-4" stroke="#fcfcfc" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <svg class="tp-check-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#fcfcfc" stroke-width="1.2"/><path d="M4.5 8l2.5 2.5 4-4" stroke="#fcfcfc" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Europe's biggest bike selection
       </div>
       <div class="tp-item">
-        <svg class="tp-check-icon" viewBox="0 0 16 16" fill="none">
-          <circle cx="8" cy="8" r="7" stroke="#fcfcfc" stroke-width="1.2"/>
-          <path d="M4.5 8l2.5 2.5 4-4" stroke="#fcfcfc" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <svg class="tp-check-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#fcfcfc" stroke-width="1.2"/><path d="M4.5 8l2.5 2.5 4-4" stroke="#fcfcfc" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Only certified offers
       </div>
       <div class="tp-item">
-        <svg class="tp-check-icon" viewBox="0 0 16 16" fill="none">
-          <circle cx="8" cy="8" r="7" stroke="#fcfcfc" stroke-width="1.2"/>
-          <path d="M4.5 8l2.5 2.5 4-4" stroke="#fcfcfc" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <svg class="tp-check-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#fcfcfc" stroke-width="1.2"/><path d="M4.5 8l2.5 2.5 4-4" stroke="#fcfcfc" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         100% buyers protection
       </div>
       <div class="tp-item">
-        <svg class="tp-check-icon" viewBox="0 0 16 16" fill="none">
-          <circle cx="8" cy="8" r="7" stroke="#fcfcfc" stroke-width="1.2"/>
-          <path d="M4.5 8l2.5 2.5 4-4" stroke="#fcfcfc" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <svg class="tp-check-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#fcfcfc" stroke-width="1.2"/><path d="M4.5 8l2.5 2.5 4-4" stroke="#fcfcfc" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Financing
       </div>
     </div>
@@ -306,36 +248,22 @@
       <div class="search-bar">
         <span class="search-text">Find bikes and more</span>
         <div class="search-icon-wrap">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#090907" stroke-width="1.6" stroke-linecap="round">
-            <circle cx="11" cy="11" r="7"/>
-            <line x1="16.5" y1="16.5" x2="22" y2="22"/>
-          </svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#090907" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
         </div>
       </div>
     </div>
     <div class="nav-right">
-      <!-- Language -->
       <div class="flag">🇩🇪</div>
-      <!-- Wishlist -->
       <div class="nav-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-        </svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </div>
-      <!-- Messages -->
       <div class="nav-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        </svg>
-        <span class="notif-dot" style="position:absolute;top:-2px;right:-2px;width:8px;height:8px;background:#b91c1c;border-radius:50%;border:1.5px solid #fcfcfc;"></span>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span style="position:absolute;top:-2px;right:-2px;width:8px;height:8px;background:#b91c1c;border-radius:50%;border:1.5px solid #fcfcfc;"></span>
       </div>
-      <!-- Profile -->
       <div class="profile-wrap">
         <div class="profile-pic">
-          <svg width="40" height="44" viewBox="0 0 40 44" fill="none">
-            <circle cx="20" cy="16" r="8" fill="#b8a898"/>
-            <path d="M4 42c0-8.837 7.163-16 16-16s16 7.163 16 16" fill="#b8a898"/>
-          </svg>
+          <svg width="40" height="44" viewBox="0 0 40 44" fill="none"><circle cx="20" cy="16" r="8" fill="#b8a898"/><path d="M4 42c0-8.837 7.163-16 16-16s16 7.163 16 16" fill="#b8a898"/></svg>
         </div>
       </div>
       <button class="sell-btn">Sell</button>
@@ -345,59 +273,152 @@
   <!-- ─── CATEGORY BAND ─── -->
   <div class="cat-band">
     <div class="cat-divider"></div>
-
     <div class="cat-item">
-      <!-- Cycling icon -->
-      <svg class="cat-icon" viewBox="0 0 20 20" fill="none">
-        <circle cx="4.5" cy="14.5" r="3" stroke="#090907" stroke-width="1.4"/>
-        <circle cx="15.5" cy="14.5" r="3" stroke="#090907" stroke-width="1.4"/>
-        <path d="M4.5 14.5L8 7h4l3.5 7.5" stroke="#090907" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M8 7l3.5-3 2.5 3" stroke="#090907" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="11.5" cy="4.5" r="1.5" fill="#090907"/>
-      </svg>
+      <svg class="cat-icon" viewBox="0 0 20 20" fill="none"><circle cx="4.5" cy="14.5" r="3" stroke="#090907" stroke-width="1.4"/><circle cx="15.5" cy="14.5" r="3" stroke="#090907" stroke-width="1.4"/><path d="M4.5 14.5L8 7h4l3.5 7.5" stroke="#090907" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11.5" cy="4.5" r="1.5" fill="#090907"/></svg>
       <span class="cat-label">Cycling</span>
     </div>
-
     <div class="cat-item"><span class="cat-label">Road & Gravel</span></div>
     <div class="cat-item"><span class="cat-label">Mountain Bikes</span></div>
     <div class="cat-item"><span class="cat-label">Framesets</span></div>
     <div class="cat-item"><span class="cat-label">Parts</span></div>
     <div class="cat-item"><span class="cat-label">Apparel</span></div>
-
     <div class="cat-divider"></div>
-
     <div class="cat-item">
-      <!-- Running icon -->
-      <svg class="cat-icon" viewBox="0 0 20 20" fill="none">
-        <circle cx="13" cy="3.5" r="1.8" fill="#090907"/>
-        <path d="M11 7l-2 4 2.5 2.5L10 18" stroke="#090907" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M9 11L6 13" stroke="#090907" stroke-width="1.4" stroke-linecap="round"/>
-        <path d="M11.5 9.5l3 1.5-1.5 3" stroke="#090907" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <svg class="cat-icon" viewBox="0 0 20 20" fill="none"><circle cx="13" cy="3.5" r="1.8" fill="#090907"/><path d="M11 7l-2 4 2.5 2.5L10 18" stroke="#090907" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 11L6 13" stroke="#090907" stroke-width="1.4" stroke-linecap="round"/><path d="M11.5 9.5l3 1.5-1.5 3" stroke="#090907" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span class="cat-label">Running</span>
       <span class="new-tag">New</span>
     </div>
-
     <div class="cat-divider"></div>
-
     <div class="cat-item">
-      <!-- Outdoors / tent icon -->
-      <svg class="cat-icon" viewBox="0 0 20 20" fill="none">
-        <path d="M2 17L10 3l8 14H2z" stroke="#090907" stroke-width="1.4" stroke-linejoin="round"/>
-        <path d="M7 17l3-7 3 7" stroke="#090907" stroke-width="1.4" stroke-linejoin="round"/>
-      </svg>
+      <svg class="cat-icon" viewBox="0 0 20 20" fill="none"><path d="M2 17L10 3l8 14H2z" stroke="#090907" stroke-width="1.4" stroke-linejoin="round"/><path d="M7 17l3-7 3 7" stroke="#090907" stroke-width="1.4" stroke-linejoin="round"/></svg>
       <span class="cat-label">Outdoors</span>
       <span class="new-tag">New</span>
     </div>
-
     <div class="cat-divider"></div>
-
     <div class="cat-item"><span class="cat-label">All Sports</span></div>
   </div>
 
-  <!-- ─── PAGE PLACEHOLDER ─── -->
+  <!-- ─── BREADCRUMB ─── -->
+  <div class="breadcrumb">
+    <span class="bc-link">All bikes</span>
+    <span class="bc-chevron">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7.5 5l5 5-5 5" stroke="#535353" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <span class="bc-link">Road & Gravel</span>
+    <span class="bc-chevron">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7.5 5l5 5-5 5" stroke="#535353" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <span class="bc-current">Road</span>
+  </div>
+
+  <!-- ─── PAGE BODY ─── -->
   <div class="page-body">
-    <span class="placeholder-label">Product page — coming next</span>
+
+    <!-- Left column placeholder -->
+    <div class="left-col">
+      <div class="left-placeholder">
+        <span class="placeholder-label">Product details — coming next</span>
+      </div>
+    </div>
+
+    <!-- Right sticky island -->
+    <div class="right-col">
+      <div class="island">
+        <div class="island-card">
+          <div class="island-inner">
+
+            <!-- Product header -->
+            <div class="product-header">
+              <div class="share-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#090907" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              </div>
+              <div class="brand">Specialized</div>
+              <div class="model">S-Works Venge 2020</div>
+              <div class="tags">
+                <span class="tag">2019</span>
+                <span class="tag">50cm</span>
+                <span class="tag">Shimano Dura Ace Di2</span>
+              </div>
+              <div class="price-row">
+                <span class="price">€6.750</span>
+                <span class="price-original">€10.999</span>
+              </div>
+            </div>
+
+            <!-- Demand banner -->
+            <div class="demand-banner">
+              <span style="font-size:18px;line-height:21px;flex-shrink:0;">🔥</span>
+              <span class="demand-text">In high demand! 12 buyers made offers in 7 days.</span>
+            </div>
+
+            <!-- CTA buttons -->
+            <div class="cta-stack">
+              <button class="btn-primary">Buy now</button>
+              <button class="btn-outline">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h8M8 14h5"/></svg>
+                Make an offer
+              </button>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Seller card -->
+            <div class="seller-section">
+              <div class="seller-profile">
+                <div class="seller-pic">
+                  <svg width="80" height="88" viewBox="0 0 80 88" fill="none"><circle cx="40" cy="32" r="16" fill="#b8a898"/><path d="M8 84c0-17.673 14.327-32 32-32s32 14.327 32 32" fill="#b8a898"/></svg>
+                </div>
+                <div class="seller-info">
+                  <div>
+                    <div class="seller-name">Sold by <span>Nina</span></div>
+                    <div class="seller-stars">
+                      <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">★</span>
+                    </div>
+                  </div>
+                  <div class="seller-details">
+                    <span class="seller-detail">Overseen, Netherlands</span>
+                    <span class="seller-detail">Last active: 9h ago</span>
+                  </div>
+                </div>
+              </div>
+              <button class="btn-outline">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                Message
+              </button>
+            </div>
+
+            <!-- Buyer protection -->
+            <div class="buyer-protection">
+              <svg class="bp-icon" viewBox="0 0 30 30" fill="none">
+                <path d="M15 3L5 7v8c0 6.075 4.3 11.74 10 13 5.7-1.26 10-6.925 10-13V7L15 3z" fill="#e8f8f0" stroke="#146c43" stroke-width="1.5" stroke-linejoin="round"/>
+                <path d="M10.5 15l3 3 6-6" stroke="#146c43" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <p class="bp-text"><strong>Buyer Protection:</strong> The seller is only paid once you have received and approved your item. <a href="#">Learn more</a></p>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Trustpilot footer -->
+            <div class="tp-footer">
+              <div class="tp-reviews">
+                <span class="tp-reviews-bold">3,283</span>
+                <span style="color:#535353;">reviews on</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.6 8H22l-6.8 5 2.6 8L12 18l-5.8 5 2.6-8L2 10h7.4z"/></svg>
+                <span class="tp-logo-text">Trustpilot</span>
+              </div>
+              <div class="tp-rating">
+                <div class="tp-rating-stars">
+                  <div class="tp-rating-star">★</div><div class="tp-rating-star">★</div><div class="tp-rating-star">★</div><div class="tp-rating-star">★</div><div class="tp-rating-star">★</div>
+                </div>
+                <span class="tp-excellent">Excellent</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </body>
