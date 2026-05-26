@@ -102,15 +102,72 @@
     .right-col { width: 416px; flex-shrink: 0; }
 
     /* ─── LEFT PLACEHOLDER ─── */
-    .left-placeholder {
-      width: 750px;
-      height: 2000px;
-      background: #f3f3f3;
-      border-radius: 8px;
+    .placeholder-label { font-size: 13px; color: #a9a9a9; letter-spacing: 0.06em; text-transform: uppercase; }
+
+    /* ─── PICTURE SECTION ─── */
+    .picture-section { display: flex; flex-direction: column; gap: 8px; width: 750px; }
+
+    .main-image-wrap { position: relative; width: 750px; height: 499px; flex-shrink: 0; }
+    .main-image {
+      width: 750px; height: 499px;
+      border-radius: 12px; overflow: hidden;
+      background: #e8e4de;
+      cursor: zoom-in;
+    }
+    .main-image img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity 0.2s; }
+
+    .wishlist-btn {
+      position: absolute; bottom: 13px; right: 13px;
+      background: #fcfcfc; border-radius: 8px;
+      display: flex; align-items: center; gap: 4px;
+      padding: 0 8px; height: 44px;
+      cursor: pointer; box-shadow: 0 1px 4px rgba(9,9,7,0.1);
+      border: none; font-family: inherit;
+      transition: background 0.15s;
+    }
+    .wishlist-btn:hover { background: #f3f3f3; }
+    .wishlist-btn span { font-size: 16px; color: #090907; line-height: 24px; }
+
+    .thumb-strip {
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; width: 750px;
+    }
+    .thumb-nav {
+      width: 24px; height: 24px; flex-shrink: 0;
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: #090907; padding: 0;
+    }
+    .thumb-nav:hover { opacity: 0.6; }
+    .thumb-nav:disabled { opacity: 0.2; cursor: default; }
+
+    .thumb {
+      width: 165px; height: 110px; flex-shrink: 0;
+      border-radius: 8px; overflow: hidden;
+      cursor: pointer; position: relative;
+      border: 1.5px solid transparent;
+      transition: border-color 0.15s;
+    }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .thumb.active { border-color: #090907; }
+    .thumb-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.35);
+      border-radius: 6px;
+      pointer-events: none;
+      transition: opacity 0.15s;
+    }
+    .thumb.active .thumb-overlay,
+    .thumb:hover .thumb-overlay { opacity: 0; }
+
+    /* below picture — remaining left content placeholder */
+    .left-below {
+      margin-top: 24px;
+      width: 750px; height: 1400px;
+      background: #f3f3f3; border-radius: 8px;
       display: flex; align-items: flex-start; justify-content: center;
       padding-top: 32px;
     }
-    .placeholder-label { font-size: 13px; color: #a9a9a9; letter-spacing: 0.06em; text-transform: uppercase; }
 
     /* ─── RIGHT ISLAND ─── */
     .island {
@@ -314,10 +371,42 @@
   <!-- ─── PAGE BODY ─── -->
   <div class="page-body">
 
-    <!-- Left column placeholder -->
+    <!-- Left column -->
     <div class="left-col">
-      <div class="left-placeholder">
-        <span class="placeholder-label">Product details — coming next</span>
+      <div class="picture-section">
+
+        <!-- Main image -->
+        <div class="main-image-wrap">
+          <div class="main-image">
+            <img id="main-img" src="" alt="Product photo" />
+          </div>
+          <button class="wishlist-btn" onclick="this.classList.toggle('liked')">
+            <svg id="heart-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <span>43</span>
+          </button>
+        </div>
+
+        <!-- Thumbnail strip -->
+        <div class="thumb-strip">
+          <button class="thumb-nav" id="thumb-prev" disabled onclick="shiftThumbs(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#090907" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <div class="thumb active" onclick="selectThumb(0)"><img src="" /><div class="thumb-overlay"></div></div>
+          <div class="thumb" onclick="selectThumb(1)"><img src="" /><div class="thumb-overlay"></div></div>
+          <div class="thumb" onclick="selectThumb(2)"><img src="" /><div class="thumb-overlay"></div></div>
+          <div class="thumb" onclick="selectThumb(3)"><img src="" /><div class="thumb-overlay"></div></div>
+          <button class="thumb-nav" id="thumb-next" onclick="shiftThumbs(1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#090907" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Rest of left content — coming next -->
+      <div class="left-below">
+        <span class="placeholder-label">Bike info — coming next</span>
       </div>
     </div>
 
@@ -421,5 +510,56 @@
 
   </div>
 
+  <script>
+    // Placeholder colours simulating different photos
+    const colors = ['#d4cfc8', '#c8d0d4', '#cfd4cb', '#d4cbc8'];
+    const labels = ['Front view', 'Detail', 'Drivetrain', 'Rear view'];
+
+    // Build SVG placeholder per photo
+    function placeholderSvg(color, label) {
+      return `data:image/svg+xml,${encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="750" height="499">
+          <rect width="750" height="499" fill="${color}"/>
+          <text x="375" y="255" text-anchor="middle" font-family="Helvetica,Arial,sans-serif"
+            font-size="14" fill="rgba(9,9,7,0.35)" letter-spacing="0.05em">${label.toUpperCase()}</text>
+        </svg>`)}`;
+    }
+
+    function thumbSvg(color) {
+      return `data:image/svg+xml,${encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="165" height="110">
+          <rect width="165" height="110" fill="${color}"/>
+        </svg>`)}`;
+    }
+
+    const thumbEls = document.querySelectorAll('.thumb');
+    const mainImg = document.getElementById('main-img');
+    let activeIndex = 0;
+
+    // Set initial images
+    mainImg.src = placeholderSvg(colors[0], labels[0]);
+    thumbEls.forEach((t, i) => { t.querySelector('img').src = thumbSvg(colors[i]); });
+
+    function selectThumb(index) {
+      thumbEls[activeIndex].classList.remove('active');
+      activeIndex = index;
+      thumbEls[activeIndex].classList.add('active');
+      mainImg.src = placeholderSvg(colors[index], labels[index]);
+    }
+
+    // Wishlist heart toggle
+    document.querySelector('.wishlist-btn').addEventListener('click', function() {
+      const heart = document.getElementById('heart-icon');
+      const isLiked = heart.getAttribute('fill') === '#090907';
+      heart.setAttribute('fill', isLiked ? 'none' : '#090907');
+    });
+
+    // Chevron nav (just cycles through thumbs for prototype)
+    let thumbOffset = 0;
+    function shiftThumbs(dir) {
+      const next = (activeIndex + dir + colors.length) % colors.length;
+      selectThumb(next);
+    }
+  </script>
 </body>
 </html>
