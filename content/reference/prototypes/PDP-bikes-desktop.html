@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1512">
+  <title>PDP — Bikes — Desktop</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Neue Haas Grotesk Text Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      min-width: 1512px;
+      background: #f3f3f3;
+    }
+
+    /* ─── TRUSTPILOT BAR ─── */
+    .tp-bar {
+      background: #090907;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 68px;
+    }
+    .tp-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .tp-stars {
+      display: flex;
+      gap: 2px;
+    }
+    .tp-star {
+      width: 14px;
+      height: 14px;
+      background: #00b67a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: white;
+    }
+    .tp-text {
+      color: #fcfcfc;
+      font-size: 12px;
+      line-height: 18px;
+    }
+    .tp-right {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    .tp-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #fcfcfc;
+      font-size: 12px;
+      line-height: 18px;
+    }
+    .tp-check-icon {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      opacity: 0.9;
+    }
+
+    /* ─── MAIN NAV ─── */
+    .main-nav {
+      background: #fcfcfc;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 60px;
+      width: 1020px;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: #090907;
+      letter-spacing: -0.04em;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .logo span {
+      font-weight: 700;
+    }
+    .search-bar {
+      width: 600px;
+      height: 40px;
+      border: 1px solid #eaeaea;
+      border-radius: 2px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 8px 0 0;
+      gap: 0;
+      cursor: text;
+      flex-shrink: 0;
+    }
+    .search-text {
+      flex: 1;
+      padding: 0 12px;
+      font-size: 16px;
+      color: rgba(9,9,7,0.5);
+      line-height: 40px;
+      white-space: nowrap;
+    }
+    .search-icon-wrap {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .flag {
+      width: 23px;
+      height: 23px;
+      border-radius: 50%;
+      overflow: hidden;
+      cursor: pointer;
+      flex-shrink: 0;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .profile-wrap {
+      position: relative;
+    }
+    .profile-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 100px;
+      background: #d4c8b8;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .notif-dot {
+      position: absolute;
+      top: 0;
+      right: -2px;
+      width: 8px;
+      height: 8px;
+      background: #b91c1c;
+      border-radius: 50%;
+      border: 1.5px solid #fcfcfc;
+    }
+    .sell-btn {
+      background: #090907;
+      color: #fcfcfc;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 21px;
+      padding: 0 18px;
+      height: 36px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(9,9,7,0.3);
+    }
+    .sell-btn:hover { background: #333; }
+
+    /* ─── CATEGORY BAND ─── */
+    .cat-band {
+      background: #fcfcfc;
+      border-top: 1px solid #eaeaea;
+      border-bottom: 1px solid #eaeaea;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+    }
+    .cat-divider {
+      width: 1px;
+      height: 48px;
+      background: #eaeaea;
+      flex-shrink: 0;
+    }
+    .cat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      height: 50px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+    .cat-item:hover { background: #f5f5f5; }
+    .cat-label {
+      font-size: 14px;
+      color: #090907;
+      line-height: 21px;
+    }
+    .cat-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .new-tag {
+      background: #fdfda0;
+      color: #4b4b02;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 18px;
+      padding: 3px 8px;
+      border-radius: 24px;
+    }
+
+    /* ─── PAGE PLACEHOLDER ─── */
+    .page-body {
+      height: 700px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .placeholder-label {
+      font-size: 13px;
+      color: #a9a9a9;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── TRUSTPILOT BAR ─── -->
+  <div class="tp-bar">
+    <div class="tp-left">
+      <div class="tp-stars">
+        <div class="tp-star">★</div>
+        <div class="tp-star">★</div>
+        <div class="tp-star">★</div>
+        <div class="tp-star">★</div>
+        <div class="tp-star">★</div>
+      </div>
+      <span class="tp-text">4,9 · Hervorragend</span>
+    </div>
+    <div class="tp-right">
+      <div class="tp-item">
+        <svg class="tp-check-icon" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" stroke="#fcfcfc" stroke-width="1.2"/>
+          <path d="M4.5 8l2.5 2.5 4-4" stroke="#fcfcfc" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Europe's biggest bike selection
+      </div>
+      <div class="tp-item">
+        <svg class="tp-check-icon" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" stroke="#fcfcfc" stroke-width="1.2"/>
+          <path d="M4.5 8l2.5 2.5 4-4" stroke="#fcfcfc" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Only certified offers
+      </div>
+      <div class="tp-item">
+        <svg class="tp-check-icon" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" stroke="#fcfcfc" stroke-width="1.2"/>
+          <path d="M4.5 8l2.5 2.5 4-4" stroke="#fcfcfc" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        100% buyers protection
+      </div>
+      <div class="tp-item">
+        <svg class="tp-check-icon" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" stroke="#fcfcfc" stroke-width="1.2"/>
+          <path d="M4.5 8l2.5 2.5 4-4" stroke="#fcfcfc" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Financing
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── MAIN NAV ─── -->
+  <div class="main-nav">
+    <div class="nav-left">
+      <div class="logo">buycycle.</div>
+      <div class="search-bar">
+        <span class="search-text">Find bikes and more</span>
+        <div class="search-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#090907" stroke-width="1.6" stroke-linecap="round">
+            <circle cx="11" cy="11" r="7"/>
+            <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <!-- Language -->
+      <div class="flag">🇩🇪</div>
+      <!-- Wishlist -->
+      <div class="nav-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </div>
+      <!-- Messages -->
+      <div class="nav-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#090907" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        <span class="notif-dot" style="position:absolute;top:-2px;right:-2px;width:8px;height:8px;background:#b91c1c;border-radius:50%;border:1.5px solid #fcfcfc;"></span>
+      </div>
+      <!-- Profile -->
+      <div class="profile-wrap">
+        <div class="profile-pic">
+          <svg width="40" height="44" viewBox="0 0 40 44" fill="none">
+            <circle cx="20" cy="16" r="8" fill="#b8a898"/>
+            <path d="M4 42c0-8.837 7.163-16 16-16s16 7.163 16 16" fill="#b8a898"/>
+          </svg>
+        </div>
+      </div>
+      <button class="sell-btn">Sell</button>
+    </div>
+  </div>
+
+  <!-- ─── CATEGORY BAND ─── -->
+  <div class="cat-band">
+    <div class="cat-divider"></div>
+
+    <div class="cat-item">
+      <!-- Cycling icon -->
+      <svg class="cat-icon" viewBox="0 0 20 20" fill="none">
+        <circle cx="4.5" cy="14.5" r="3" stroke="#090907" stroke-width="1.4"/>
+        <circle cx="15.5" cy="14.5" r="3" stroke="#090907" stroke-width="1.4"/>
+        <path d="M4.5 14.5L8 7h4l3.5 7.5" stroke="#090907" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M8 7l3.5-3 2.5 3" stroke="#090907" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="11.5" cy="4.5" r="1.5" fill="#090907"/>
+      </svg>
+      <span class="cat-label">Cycling</span>
+    </div>
+
+    <div class="cat-item"><span class="cat-label">Road & Gravel</span></div>
+    <div class="cat-item"><span class="cat-label">Mountain Bikes</span></div>
+    <div class="cat-item"><span class="cat-label">Framesets</span></div>
+    <div class="cat-item"><span class="cat-label">Parts</span></div>
+    <div class="cat-item"><span class="cat-label">Apparel</span></div>
+
+    <div class="cat-divider"></div>
+
+    <div class="cat-item">
+      <!-- Running icon -->
+      <svg class="cat-icon" viewBox="0 0 20 20" fill="none">
+        <circle cx="13" cy="3.5" r="1.8" fill="#090907"/>
+        <path d="M11 7l-2 4 2.5 2.5L10 18" stroke="#090907" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M9 11L6 13" stroke="#090907" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M11.5 9.5l3 1.5-1.5 3" stroke="#090907" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="cat-label">Running</span>
+      <span class="new-tag">New</span>
+    </div>
+
+    <div class="cat-divider"></div>
+
+    <div class="cat-item">
+      <!-- Outdoors / tent icon -->
+      <svg class="cat-icon" viewBox="0 0 20 20" fill="none">
+        <path d="M2 17L10 3l8 14H2z" stroke="#090907" stroke-width="1.4" stroke-linejoin="round"/>
+        <path d="M7 17l3-7 3 7" stroke="#090907" stroke-width="1.4" stroke-linejoin="round"/>
+      </svg>
+      <span class="cat-label">Outdoors</span>
+      <span class="new-tag">New</span>
+    </div>
+
+    <div class="cat-divider"></div>
+
+    <div class="cat-item"><span class="cat-label">All Sports</span></div>
+  </div>
+
+  <!-- ─── PAGE PLACEHOLDER ─── -->
+  <div class="page-body">
+    <span class="placeholder-label">Product page — coming next</span>
+  </div>
+
+</body>
+</html>

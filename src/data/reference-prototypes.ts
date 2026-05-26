@@ -18,6 +18,10 @@ export const referencePrototypes: ProductArea[] = [
     title: 'Buyer XP',
     features: [
       {
+        title: 'Product Page',
+        webDesktop: 'PDP-bikes-desktop.html',
+      },
+      {
         title: 'Checkout',
         webDesktop: 'checkout-desktop.html',
         webMobile: 'checkout-mobile-optionA.html',
