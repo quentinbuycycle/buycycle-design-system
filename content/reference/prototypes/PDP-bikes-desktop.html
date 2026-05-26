@@ -511,40 +511,27 @@
   </div>
 
   <script>
-    // Placeholder colours simulating different photos
-    const colors = ['#d4cfc8', '#c8d0d4', '#cfd4cb', '#d4cbc8'];
-    const labels = ['Front view', 'Detail', 'Drivetrain', 'Rear view'];
-
-    // Build SVG placeholder per photo
-    function placeholderSvg(color, label) {
-      return `data:image/svg+xml,${encodeURIComponent(`
-        <svg xmlns="http://www.w3.org/2000/svg" width="750" height="499">
-          <rect width="750" height="499" fill="${color}"/>
-          <text x="375" y="255" text-anchor="middle" font-family="Helvetica,Arial,sans-serif"
-            font-size="14" fill="rgba(9,9,7,0.35)" letter-spacing="0.05em">${label.toUpperCase()}</text>
-        </svg>`)}`;
-    }
-
-    function thumbSvg(color) {
-      return `data:image/svg+xml,${encodeURIComponent(`
-        <svg xmlns="http://www.w3.org/2000/svg" width="165" height="110">
-          <rect width="165" height="110" fill="${color}"/>
-        </svg>`)}`;
-    }
+    const photos = [
+      'https://images.unsplash.com/photo-1485965120184-e220f721d03e',
+      'https://images.unsplash.com/photo-1532298229144-0ec0c57515c7',
+      'https://images.unsplash.com/photo-1571068316344-75bc76f77890',
+      'https://images.unsplash.com/photo-1507035895480-2b3156c31fc8',
+    ];
 
     const thumbEls = document.querySelectorAll('.thumb');
     const mainImg = document.getElementById('main-img');
     let activeIndex = 0;
 
-    // Set initial images
-    mainImg.src = placeholderSvg(colors[0], labels[0]);
-    thumbEls.forEach((t, i) => { t.querySelector('img').src = thumbSvg(colors[i]); });
+    mainImg.src = photos[0] + '?w=750&h=499&fit=crop&auto=format';
+    thumbEls.forEach((t, i) => {
+      t.querySelector('img').src = photos[i] + '?w=165&h=110&fit=crop&auto=format';
+    });
 
     function selectThumb(index) {
       thumbEls[activeIndex].classList.remove('active');
       activeIndex = index;
       thumbEls[activeIndex].classList.add('active');
-      mainImg.src = placeholderSvg(colors[index], labels[index]);
+      mainImg.src = photos[index] + '?w=750&h=499&fit=crop&auto=format';
     }
 
     // Wishlist heart toggle
